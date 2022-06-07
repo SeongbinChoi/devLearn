@@ -1,0 +1,285 @@
+@charset "UTF-8";
+
+*{
+	margin: 0;  padding: 0; box-sizing: border-box;
+}
+
+
+.banner {
+	background-image: url(https://cdn.inflearn.com/assets/images/become_instructor/header_background.jpg);
+    background-size: cover;
+    background-position: 50%;
+    padding: 5rem 1rem;
+    color: white;
+}
+
+h1.title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.banner .container .banner_title .subtitle {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 1.625rem;
+    color: #fff;
+}
+
+.banner .buttons {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.banner .buttons .btn.btn_primary {
+	background-color: #2bae6d;
+    color: #fff;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.banner .buttons .btn.btn_light{
+	background-color: #fff;
+    color: #2bae6d;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+
+.contentBody {
+	display: flex;
+}
+
+.contentBody a {
+	color: black; text-decoration: none; outline: none;
+}
+
+.contentBody a:hover {
+	text-decoration: none;
+}
+
+.container .card_cover {
+	display: flex;
+	justify-content: center;
+}
+
+.container .card_cover .count_card {
+	display: flex;
+	padding: 0 50px;
+	color: #000A12;
+}
+
+.container .card_cover .count_card .icon_cover{
+	margin-right: 24px;
+}
+
+.container .card_cover .count_card .icon_cover i {
+	font-size: 3.5rem;
+}
+
+.container .card_cover .count_card .value_cover {
+	display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.container .card_cover .count_card .value_cover .label {
+	font-size: 14px;
+    font-weight: 700;
+    color: #48d08c;
+}
+
+.container .card_cover .count_card .value_cover .value {
+	font-size: 26px;
+    color: #191919;
+    font-weight: 700;
+}
+
+.container .card_cover .count_card+.count_card{
+	border-left: 2px solid #d8d8d8;
+}
+
+.container .wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.container .wrapper .text_content {
+	color: #212529;
+    margin-right: 67px;
+}
+
+.container .wrapper .text_content .title{
+	font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 29px;
+}
+
+.container .wrapper .text_content .text{
+    font-size: 1rem;
+}
+
+.container .wrapper .text_content .text.text-1{
+    margin-bottom: 1.5rem;
+}
+
+.container .wrapper .text_content .text.bold{
+    font-weight: 700;
+}
+
+.container .wrapper .img_content {
+	height: 318px;
+}
+
+.container .wrapper .img_content img{
+	height: 100%;
+	object-fit: contain;
+}
+
+.container .wrapper2 {
+	max-width: 1314px;
+	margin: 0 auto;
+}
+
+.container .wrapper2 {
+	max-width: 1314px;
+	margin: 0 auto;
+}
+
+.container .wrapper2 .section_title {
+	font-size: 28px;
+    font-weight: 700;
+    color: #000a12;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.columns.is-multiline {
+	flex-wrap: wrap;
+}
+
+.columns.is-multiline .column {
+	display: block;
+	padding: 0.75rem;
+}
+
+.column.is-4{
+	flex: none;
+	width: 33.3333333333%
+}
+
+.why_item {
+	color: #454545;
+    max-width: 340px;
+    margin: 0 auto 2.375rem;
+}
+
+.why_item .icon_container {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 4rem;
+    color: #372670;
+}
+
+.why_item .content_container h6 {
+    font-weight: 700;
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 1.4rem;
+    color: #000a12;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 2rem;
+}
+
+.tabs .step.e_tab {
+    width: 50%;
+    text-align: center;
+    font-size: 24px;
+    padding: 1rem 0;
+    
+    cursor: pointer;
+}
+
+.tabs .faq.e_tab {
+    width: 50%;
+    text-align: center;
+    font-size: 24px;
+    padding: 1rem 0;
+    color: #b0b0b0;
+    border-bottom: 1px solid #b0b0b0;
+    cursor: pointer;
+}
+
+.tabs .e_tab.is-active {
+    font-weight: 700;
+    color: #000a12;
+    border-bottom: 1.6px solid #000a12;
+}
+
+.step_content {
+	padding: 0 24px;
+}
+
+.step_content .step_card {
+    width: 48%;
+    padding: 1.5rem;
+    box-shadow: 1px 1px 2px 2px #f8f8f9;
+    margin-bottom: 20px;
+}
+
+.step_content .step_card .step_title {
+    font-weight: 700;
+}
+
+.step_content .step_card .step_title .green {
+    color: #2fc97a;
+}
+
+.title {
+    color: #000a12;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 1.43rem;
+}
+
+.subtitle {
+    font-size: 16px;
+    color: #454545;
+    margin-bottom: 1.75rem;
+    margin-top: auto;
+}
+
+.buttons {
+    display: block;
+    flex-wrap: wrap;
+}
+
+.buttons>button {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    height: 44px;
+}
+
+.container .buttons .btn.btn_primary {
+	background-color: #2bae6d;
+    color: #fff;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.container .wrapper2 .buttons .btn.btn_light{
+	background-color: #fff;
+    color: #2bae6d;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}

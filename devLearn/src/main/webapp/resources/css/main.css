@@ -1,0 +1,116 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+
+.search-border {
+	height: 50px;
+	border-color: #6799FF;
+}
+.search-border > input{
+}
+
+.search-border > input:focus {
+	border: none;
+	outline: none;
+
+}
+
+
+.carousel-item img {
+	height: 500px;
+}
+
+
+.currentCourse-card:hover {
+	border-right: 2px solid #aaa;
+	border-bottom: 2px solid #aaa;
+}
+
+.currentCourseImg {
+	width: 1rem;
+}
+
+.courses {
+	display: flex;
+	gap:15px;
+}
+
+.course-Prices {
+	display: flex;
+	gap: 5px;
+}
+.course-originalPrice {
+	color: #ccc;
+	text-decoration: line-through;
+	
+}
+.course-price {
+	color : blue;
+	font-weight: 800;
+}
+
+.card-body a {
+	font-size: 14px;
+}
+
+.card-txt >span {
+	font-size: 14px;
+}
+
+.progress-rate::after {
+	content: "  |  "
+}
+	
+.apply-section {
+	display: flex;
+	gap: 15px;	
+	flex-basis: 0;
+}
+
+.course-card:hover{
+	background: rgba(255,0,0,0.6);
+	z-index: 9999;
+}
+
+.course-img {
+	width: 100%;
+}
+
+.applys {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-column-gap: 15px;
+
+}
+
+.apply-card {
+	padding : 5%;
+}
+
+
+.fa-star {
+	color: tomato;
+}
+
+.course_review {
+	width: 75px;
+	height: 30px;
+	background: #FFF6DB;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: bold;
+	color: tomato;
+	border: none;
+	margin-bottom: 10px;
+}
+
+.course_review-cnt {
+	color: tomato;
+	font-weight: 300;
+	font-size: 13px;
+}

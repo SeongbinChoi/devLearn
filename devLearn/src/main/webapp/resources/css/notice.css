@@ -1,0 +1,132 @@
+@charset "UTF-8";
+
+*{
+	margin: 0;  padding: 0; box-sizing: border-box;
+}
+
+
+.banner {
+	height: 200px;
+	background: #333B3D;
+	color: white;
+}
+
+.banner .title span {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+
+.contentBody {
+	display: flex;
+}
+
+.contentBody a {
+	color: black; text-decoration: none; outline: none;
+}
+
+.contentBody a:hover {
+	text-decoration: none;
+}
+
+.contentBody .picked {
+	color: #0d6efd;
+}
+
+.sideMenu {
+	font-weight: bold;
+	color: gray;
+}
+
+.sideMenu a {
+	color: gray;
+}
+
+.contentHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.contentHeader .nav a {
+	font-weight: bold;
+	color: gray;
+}
+
+.contentHeader .nav a:active {
+	color: #0d6efd;
+}
+
+.contentHeader .nav a:hover {
+	color: #0d6efd;
+}
+
+.contentHeader {
+	display: flex;
+	justify-content: space-between;
+}
+
+.contentHeader .nav a {
+	font-weight: bold;
+	color: gray;
+}
+
+.contentHeader .nav a:active {
+	color: #0d6efd;
+}
+
+.contentHeader .nav a:hover {
+	color: #0d6efd;
+}
+
+.notice .notice_title {
+	font-size: 26px;
+	font-weight: bold;
+}
+
+.notice .notice_body {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.notice .body_content {
+	font-size: .75rem;
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* 원하는 줄 수 표시 */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.notice .notice_footer {
+	font-weight: bold;
+	color: #BDBDBD;
+}
+
+.notice_content {
+	
+}
+
+.title_start {
+	color : #0d6efd;
+	margin-right: 7px;
+}
+
+.answerNum {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	border: 1px solid #BDBDBD;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	color: gray;
+}
+
+.answerNum .num_center {
+	text-align: center;
+}
+
+.mr {
+	margin-right: 8px;
+}

@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+.banner {
+	height: 200px;
+	background: #333B3D;
+	color: white;
+}
+
+.banner .title span {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.content{
+	display: flex;
+
+}
+
+.sideMenu a{
+	color: gray;
+	font-weight: bold;
+}
+
+.my-question a {
+	color: gray;
+	font-weight: bold;
+}
+.search-border {
+	margin: 0 auto;
+	width:80%;
+	height: 50px;
+	
+}
+.search-input {
+	border: none;
+	width: 80%;
+}
+
+.search-input:focus{
+	border: none;
+	outline: none;
+}
+.faq{
+	text-decoration: none;
+}

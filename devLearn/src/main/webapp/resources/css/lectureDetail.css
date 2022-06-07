@@ -1,0 +1,318 @@
+@charset "UTF-8";
+
+*{
+	margin: 0;  padding: 0; box-sizing: border-box;
+}
+
+main p {
+	margin-bottom: 0;
+}
+
+
+main a {
+	color: black;
+	text-decoration: none;
+}
+
+main a:hover {
+	color: black;
+}
+
+.banner {
+	height: 350px;
+	background: #002333;
+}
+
+.banner .title {
+	color: white;
+	height: 350px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.banner .title .title_left {
+	width: 40%;
+}
+
+.banner .title .title_right {
+	width: 50%;
+}
+
+.banner .title .title_right_2 {
+	font-size: 30px;
+	font-weight: bold;
+}
+
+.banner .title img {
+	width: 450px;
+	height: 250px;
+	border-radius: 8px;
+}
+
+.banner .title span {
+	font-size: 25px;
+	
+}
+
+
+.contentBody {
+	display: flex;
+}
+
+
+
+
+.sideBar .card {
+	border-radius: 25px 25px 8px 8px;
+}
+
+.sideBar .card-header {
+	font-weight: bold;
+	font-size: 18px;
+	text-align: center;
+	color: white;
+	border-radius: 25px 25px 0px 0px;
+	background: #E5503C;
+}
+
+.sideBar .price {
+	display: flex;
+	align-items: flex-end;
+}
+
+.sideBar .price p:nth-child(1) {
+	margin-right: 10px;
+	color: red;
+}
+
+.sideBar .price p:nth-child(1), .price p:nth-child(2) {
+	font-size: 27px;
+	font-weight: bold;
+}
+
+.sideBar .price p:nth-child(3) {
+	font-size: 20px;
+	font-weight: bold;
+	color: lightgray;
+}
+
+
+.sideBar .btn {
+	font-weight: bold;
+	padding: 10px 0;
+}
+
+.sideBar .card-footer {
+	font-size: 15px;
+	font-weight: bold;
+	color: #6E6E6E;
+}
+
+.sideBar .card-footer li {
+	margin: 5px 0;
+}
+
+.info_final {
+	margin-bottom: 100px;
+}
+
+
+/* 커리큘럼 */
+#scrollspyHeading2 {
+	margin-top: 100px;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+#scrollspyHeading2 span {
+	font-size: 16px;
+	color: #BDBDBD;
+}
+
+.accordion .accordion-body {
+	padding: 0 20px;
+}
+
+.accordion .accordion-unit {
+	padding: 16px 0;
+	border-bottom: 1px solid lightgray;
+}
+
+.accordion .accordion-unit:last-child {
+	border-bottom: none;
+}
+
+.cur_final {
+	margin: 100px 0;
+}
+
+
+/* 수강평 */
+#scrollspyHeading3 {
+	font-size: 25px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+#scrollspyHeading3 span {
+	font-size: 16px;
+	color: #BDBDBD;
+}
+
+.review_total {
+	display: flex;
+	justify-content: space-between;
+}
+
+.review_total .left_box, .right_box {
+	border: 1px solid #BDBDBD;
+	border-radius: 8px;
+	height: 200px;
+	font-weight: bold;
+}
+
+.review_total .left_box {
+	width: 30%;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.review_total .left_box p:first-child {
+	font-size: 45px;
+}
+
+.review_total .left_box p:last-child {
+	font-size: 17px;
+	color: #BDBDBD;
+	margin-top: 5px;
+}
+
+.review_total .right_box {
+	width: 67%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 35px 30px;
+}
+
+.bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.progress {
+	width: 93%;
+}
+
+/* 수강평 등록 */
+.reg_review {
+	width: 100%;
+	height: 350px;
+	border: 1px solid #BDBDBD;
+	border-radius: 8px;
+	margin-top: 15px;
+	margin-bottom: 60px;
+	background: #FAFAFA;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.reg_review .review_star {
+	margin-bottom: 8px;
+	font-size: 25px;
+}
+
+.reg_review .review_star span {
+	cursor: pointer;
+}
+
+.reg_review p:first-child {
+	font-size: 15px;
+	font-weight: bold;
+	color: gray;
+}
+
+.reg_review textarea {
+	width: 90%;
+	height: 120px;
+	margin: 20px 0;
+	resize: none;
+	border: 1px solid lightgray;
+	border-radius: 8px;
+	padding: 8px 5px;
+}
+
+.reg_review p:last-child {
+	width: 90%;
+	text-align: right;
+}
+
+
+/* 리뷰 리스트 */
+
+
+.review_tab ul {
+	display: flex;
+	list-style: none;
+}
+
+.review_tab ul li {
+	margin-right: 25px;
+	font-weight: bold;
+	color: gray;
+}
+
+
+.review_unit {
+	margin: 30px 30px;
+}
+
+.review_unit .user_info {
+	display: flex;
+	margin-bottom: 20px;
+}
+
+.review_unit .user_info .user_img {
+	width: 50px;
+	height: 50px;
+	margin-right: 20px;
+}
+
+.review_unit .user_info .user_img img {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+}
+
+
+.star_nickname .review_star {
+	font-size: 15px;
+}
+
+.star_nickname p {
+	font-weight: bold;
+}
+
+.review_content p:last-child {
+	font-size: 14px;
+	font-weight: bold;
+	color: #BDBDBD;
+	margin-top: 5px;
+}
+
+
+.moreButton button {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #BDBDBD;
+	border-radius: 4px;
+	background: lightgray;
+	font-weight: bold;
+}

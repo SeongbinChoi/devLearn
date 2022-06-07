@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+.login-brand .navbar-brand span {
+	font-family: 'Bebas Neue', cursive;
+	font-weight: bold;
+	font-size: 30px;
+	color: #87CE00;
+}
+
+#elevationRole {
+	background-color: #87CE00;
+	font-weight: 600;
+	color: #fff;
+}
+
+.header-top {
+  box-shadow: 0 2px 2px -2px black;
+ }
+
+.nav-item {
+	color : black;
+	font-size: 16px;
+}
+
+.nav-link {
+	color: black;
+}

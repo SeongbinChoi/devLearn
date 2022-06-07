@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+*{
+	margin: 0;  padding: 0; box-sizing: border-box;
+}
+
+.banner {
+	height: 200px;
+	background: #B9F1F1;
+}
+
+.banner .title span {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.contents {
+	display: flex;
+}
+
+.mentor_header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.mentor_header .mentor_img {
+	width: 60px;
+	height: 60px;
+}
+
+.mentor_header .mentor_img img.is-rounded {
+    border-radius: 50%;
+}
+
+.mentor_header .mentor_review {
+	width: 75px;
+	height: 30px;
+	background: #FFF6DB;
+	border-radius: 4px;
+	font-size: 13px;
+	font-weight: bold;
+	color: tomato;
+	border: none;
+}
+
+.card-title {
+	font-weight: bold;
+	height: 48px;
+	display: -webkit-box;
+	-webkit-line-clamp: 2; /* 원하는 줄 수 표시 */
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.card-text {
+	font-size: 15px;
+	font-weight: bold;
+	color: #BDBDBD;
+}
+
+.fa-star {
+	color: tomato;
+}
+
+
+.info-title {
+	font-weight: bold;
+	background: lightgray;
+}
+
+.modal-footer {
+	display: flex;
+	justify-content: space-between;
+}
+
+.calendar_layout {
+	border: 1px solid lightgray;
+	border-radius: 4px;
+	height: 250px;
+}
+
+
+.check {
+	display: flex;
+	align-items: center;
+}
+
+
+.check-footer {
+	justify-content: flex-end;
+}

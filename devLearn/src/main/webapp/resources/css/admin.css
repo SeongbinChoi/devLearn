@@ -1,0 +1,16 @@
+@charset "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	list-style: none;
+}
+
+.contents {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	margin-left: 135px;
+	height:100%;
+}

@@ -1,0 +1,120 @@
+@charset "UTF-8";
+
+* {
+	margin: 0; padding: 0; box-sizing: border-box;
+}
+
+.chart-section {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin-bottom: 30px;
+}
+
+.profile, .recent-lecture, .my-lectuer, .statistics, .over-lectuer {
+	width: 500px;
+	height: 300px;
+	border: 1px solid #ddd;
+	margin-bottom: 50px;
+	background: #fff;
+	border-radius: 15px;
+	position: relative;
+}
+
+.profile:hover, .recent-lecture:hover, .my-lectuer:hover, .statistics:hover, .over-lectuer:hover {
+	box-shadow: 5px 5px #ddd;	
+}
+
+.cardEnd {
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+}
+
+.cardEnd a {
+	text-decoration: none;
+	color: #ccc;
+}
+
+
+.cardEnd a:hover {
+	cursor: pointer;
+}
+
+.chart-section p:first-of-type:not(.content p, .curr-content p, .statistics-num p) {
+	padding-top: 10px;
+	padding-left: 20px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.content:not(.lec-title) {
+	margin: 0 auto;
+	height: 200px;
+	width: 95%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.curr-content {
+	margin: 0 auto;
+	height: 200px;
+	width: 95%;
+}
+
+.curr-content p:first-of-type {
+	font-weight: 700;
+}
+
+.curr-prog-sec { 
+	margin: 0 auto;
+	width: 100%;
+}
+
+.curr-content span {
+	margin-bottom: 20px;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.curr-lec-prog {
+	width: 90%;
+	height: 12px;
+}
+
+.myLectureTable {
+	margin: 0 auto;
+	width: 95%;
+	height: 200px;
+	table-layout: fixed;
+}
+
+.myLectureTable td:first-child {
+	width: 85%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.myLectureTable td:last-child {
+	text-align: right;
+}
+
+.cards {
+	width: 150px;
+	height: 200px;
+}
+
+.statistics-num {
+	width: 150px;
+	height: 150px;
+	text-align: center;
+	line-height: 150px;
+}
+
+.statistics-num p {
+	font-size: 50px;
+	font-weight: 800;
+	color: #aaa;
+}

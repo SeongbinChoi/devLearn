@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+.banner {
+	height: 200px;
+	background: #333B3D;
+	color: white;
+}
+
+.banner .title span {
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.content{
+	display: flex;
+	flex-wrap: wrap;
+
+}
+.sideMenu a {
+	color: gray;
+	font-weight: bold;
+}
+
+.faq{
+	text-decoration: none;
+}
+
+.titleSection{
+	color: gray;
+	margin-bottom: 10px;
+	display: flex;
+	position: relative;
+}
+.titleSection-title{
+	font-size: 18px;
+	font-weight: bold;
+}
+.titleSection-title-btn{
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+
+.listTable{
+	width: 100%;
+}
+.listTable tr th{
+	text-align: center;
+}
+.listTable  tr th:first-child  {
+	width: 7%;
+}
+
+.listTable  tr  th:nth-child(2) {
+	width: 15%;
+}
+
+
+.listTable  tr  th:last-child {
+	width: 15%;
+}
+
+.listTable  tr td {
+	text-align: center;
+}
+
+.listTable  tr  td:nth-child(3) {
+	text-align: left;
+	padding-left: 15px;
+}
