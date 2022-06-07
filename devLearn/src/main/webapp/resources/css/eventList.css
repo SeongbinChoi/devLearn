@@ -51,8 +51,7 @@
 }
 
 .events_header .events_img {
-	width: 240px;
-	height: 200px;
+	display: flex;
 }
 
 .events_header .events_img img.is-rounded {
@@ -71,8 +70,9 @@
 }
 
 .card-title {
+	font-size: 20px;
 	font-weight: bold;
-	height: 48px;
+	height: 30px;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
@@ -85,9 +85,15 @@
 	color: #BDBDBD;
 }
 
+.card-time {
+	font-size: 13px;
+	color: #BDBDBD;
+}
+
 .btn-table   {
 	text-align: right;
 }
+
 .btn-table td {
 	border:none; 
 }
