@@ -14,9 +14,9 @@
 	
    <!-- 2단 관리자 -->
 	<definition name=".adminLayout" template="/WEB-INF/views/admin/layout/layout2.jsp">
-	    <put-attribute name="title" value="spring" />
-	  	<put-attribute name="left" value="/WEB-INF/views/admin/layout/left.jsp" />
-		<put-attribute name="body" value="/WEB-INF/views/admin/main/main.jsp" />
+	    <put-attribute name="title" value="admin" />
+	  	<put-attribute name="left" value="/WEB-INF/views/admin/layout/sideBar.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/admin/main/dashboard.jsp" />
 	</definition>
 	<definition name=".admin.*.*.*" extends=".adminLayout">
 		<put-attribute name="body" value="/WEB-INF/views/admin/{1}/{2}/{3}.jsp"/>
