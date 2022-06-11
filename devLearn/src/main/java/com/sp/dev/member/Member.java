@@ -4,7 +4,7 @@ public class Member {
 	private String memberEmail; // 회원 로그인 아이디(이메일)
 	private String memberPwd;	// 패스워드
 	private String memberName;	// 실명
-	private String nickName;	// 닉네임
+	private String memberNickname;	// 닉네임
 	private String memberRole;	// 등급(회원, 멘토, 강사, 관리자 등)
 	private int pwdFail;		// 비밀번호 실패 횟수
 	private String regDate;		// 회원가입 날짜
@@ -36,11 +36,11 @@ public class Member {
 	public void setMemberName(String memberName) {
 		this.memberName = memberName;
 	}
-	public String getNickName() {
-		return nickName;
+	public String getMemberNickname() {
+		return memberNickname;
 	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
 	}
 	public String getMemberRole() {
 		return memberRole;
@@ -109,7 +109,6 @@ public class Member {
 		this.phoneNum = phoneNum;
 	}
 	
-		
 	
 	
 	

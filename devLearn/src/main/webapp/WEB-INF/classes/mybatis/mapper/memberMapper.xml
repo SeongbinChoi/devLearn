@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
 	<select id="loginMember" parameterType="String" resultType="com.sp.dev.member.Member">
-		SELECT m.memberEmail, memberPwd, memberRole, pwdFail, enabled, 
+		SELECT m.memberEmail, memberName, memberNickname, memberPwd, memberRole, pwdFail, enabled, 
 	    	infoUpdate, lastLogin
 	    FROM member m
     WHERE m.memberEmail = #{memberEmail}

@@ -4,7 +4,7 @@ package com.sp.dev.member;
 public class SessionInfo {
 	private String memberEmail;
 	private String memberName;
-	private String NickName;
+	private String memberNickname;
 	private String memberRole;
 	
 	public String getMemberEmail() {
@@ -19,11 +19,11 @@ public class SessionInfo {
 	public void setMemberName(String memberName) {
 		this.memberName = memberName;
 	}
-	public String getNickName() {
-		return NickName;
+	public String getMemberNickname() {
+		return memberNickname;
 	}
-	public void setNickName(String nickName) {
-		NickName = nickName;
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
 	}
 	public String getMemberRole() {
 		return memberRole;
@@ -31,8 +31,6 @@ public class SessionInfo {
 	public void setMemberRole(String memberRole) {
 		this.memberRole = memberRole;
 	}
-	
-	
 	
 	
 	
