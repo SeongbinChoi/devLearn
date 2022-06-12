@@ -88,6 +88,7 @@ class MemberController {
 		info.setMemberName(dto.getMemberName());
 		info.setMemberNickname(dto.getMemberNickname());
 		info.setMemberRole(dto.getMemberRole());
+		info.setPhoneNum(dto.getPhoneNum());
 		
 		session.setMaxInactiveInterval(30 * 60);
 		session.setAttribute("member", info);

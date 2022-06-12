@@ -6,6 +6,7 @@ public class SessionInfo {
 	private String memberName;
 	private String memberNickname;
 	private String memberRole;
+	private String phoneNum;
 	
 	public String getMemberEmail() {
 		return memberEmail;
@@ -31,7 +32,12 @@ public class SessionInfo {
 	public void setMemberRole(String memberRole) {
 		this.memberRole = memberRole;
 	}
-	
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
+	}
 	
 	
 }
