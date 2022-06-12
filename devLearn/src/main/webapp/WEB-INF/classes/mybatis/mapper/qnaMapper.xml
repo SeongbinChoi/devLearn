@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="qna">
+	<!-- 시퀀스 번호 가져오기 -->
+	<select id="seq" resultType="Integer">
+		SELECT communityQna_seq.NEXTVAL FROM dual
+	</select>
+
+	<!-- qna에 게시글 추가 -->
+	<insert id="insertQna" parameterType="com.sp.dev.community.Qna">
+		INSERT INTO communityQna(qnaNum, memberEmail, subject, hitCount, regDate, 
+			groupNum, depth, OrderNo, parent, selected, content, replyNum)
+    		VALUES(#{qnaNum}, #{memberEmail}, #{subject}, 0, SYSDATE, #{groupNum}, #{depth}, 
+    			#{OrderNo}, #{parent}, 0, #{content}, 0)
+	</insert>
+	
+	<!-- 검색시 조건 sql -->
+	<sql id="where-list">
+		<if test="keyword != '' ">
+			( INSTR(subject, #{keyword} &gt; 0
+				OR INSTR(DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+		</if>
+	</sql>
+	
+	
+	<!-- 리스트의 갯수 세기 -->
+	<select id="dataCount" parameterType="Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM communityQna
+	</select>
+	
+	
+	<!-- 리스트 가져오기 -->
+	<select id="listQna" parameterType="map" resultType="com.sp.dev.community.Qna">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT qnaNum, memberNickName, subject, 
+				REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>) content, 
+				cq.regDate, groupNum, depth, orderNo, parent, hitCount, selected, replyNum
+				FROM communityQna cq
+				JOIN member m ON cq.memberEmail = m.memberEmail
+				<where>
+					<if test="keyword != null and keyword != '' ">
+						<include refid="where-list"/>
+					</if>
+				</where>
+				ORDER BY groupNum DESC, orderNo ASC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	
+	<!-- qnaNum을 통해 게시글 가져오기 -->
+	<select id="readQna" parameterType="Integer" resultType="com.sp.dev.community.Qna">
+		SELECT qnaNum, cq.memberEmail, memberName, memberNickName, subject, content, 
+			groupNum, depth, orderNo, parent, cq.regDate, hitCount, selected, replyNum
+		FROM communityQna cq
+		JOIN member m ON cq.memberEmail = m.memberEmail
+		WHERE qnaNum = #{qnaNum}
+	</select>
+	
+	
+	<!-- 게시글 조회수 증가 -->
+	<update id="updateHitCount" parameterType="Integer">
+		UPDATE communityQna SET hitCount = hitCount+1 WHERE qnaNum = #{qnaNum}
+	</update>
+	
+	
+	<!-- 이전글 -->
+	<select id="preReadQna" parameterType="map" resultType="com.sp.dev.community.Qna">
+		SELECT * FROM (
+			SELECT qnaNum, subject
+				FROM communityQna cq
+				JOIN member m ON cq.memberEmail = m.memberEmail
+				<where>
+					<if test="keyword != null and keyword != '' ">
+						<include refid="where-list"/>
+					</if>
+					<![CDATA[
+					AND ( (groupNum = #{groupNum} AND orderNo < #{orderNo})
+						  OR (groupNum > #{groupNum}) )
+					]]>
+				</where>
+				ORDER BY groupNum ASC, orderNo DESC
+			) WHERE ROWNUM = 1
+	</select>
+	
+	
+	<!-- 다음글 -->
+	<select id="nextReadQna" parameterType="map" resultType="com.sp.dev.community.Qna">
+		SELECT * FROM (
+		    SELECT qnaNum, subject
+				FROM communityQna cq
+				JOIN member m ON cq.memberEmail = m.memberEmail
+			    <where>
+					<if test="keyword != null and keyword != '' ">
+						<include refid="where-list"/>
+					</if>
+					<![CDATA[
+						AND ( (groupNum = #{groupNum} AND orderNo > #{orderNo})
+							  OR (groupNum < #{groupNum}) )
+					]]>
+			    </where>
+			    ORDER BY groupNum DESC, orderNo ASC
+			) WHERE ROWNUM = 1
+	</select>
+	
+	
+	<!-- 답변달면 변경되는 사항들 -->
+	<!-- orderNo가 증가한다. 즉, 게시글의 답변, 답변의 답변라는것을 표현하기 위해 증가한다. -->
+	<update id="updateOrderNo" parameterType="map">
+		UPDATE communityQna SET orderNo=orderNo+1
+		WHERE groupNum=#{groupNum} AND orderNo &gt; #{orderNo}
+	</update>
+	
+	
+	<!-- 게시글 해결됨으로 수정 -->
+	<update id="updateSelected" parameterType="Integer">
+		UPDATE communityQna SET selected = 1 WHERE qnaNum IN
+			( SELECT qnaNum FROM communityQna START WITH qnaNum = #{qnaNum}
+				CONNECT BY PRIOR qnaNum = parent )
+	</update>
+	
+	
+	<!-- 게시글의 답변갯수 세기 -->
+	<select id="replyCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(CASE WHEN groupNum=#{groupNum} AND NOT parent=#{parent} THEN 1 END) replyNum
+    		FROM communityQna;
+	</select>
+	
+	
+	<!-- 게시글의 답변갯수 업데이트 -->
+	<update id="updateReplyCount" parameterType="Integer">
+		UPDATE communityQna SET replyNum = replyNum+1 WHERE qnaNum = #{original_replyNum}
+	</update>
+	
+	
+	<!-- 게시글 수정 -->
+	<update id="updateQna" parameterType="com.sp.dev.community.Qna">
+		UPDATE communityQna SET subject=#{subject}, content=#{content}
+			WHERE qnaNum = #{qnaNum} AND memberEmail = #{memberEmail}
+	</update>
+	
+	
+	<!-- 게시글 삭제 -->
+	<update id="deleteQna" parameterType="Integer">
+		DELETE FROM communityQna WHERE qnaNum IN
+			( SELECT qnaNum FROM communityQna START WITH qnaNum = #{qnaNum}
+				CONNECT BY PRIOR qnaNum = parent )
+	</update>
+	
+	
+</mapper>

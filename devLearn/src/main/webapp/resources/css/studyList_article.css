@@ -4,7 +4,6 @@
 	margin: 0;  padding: 0; box-sizing: border-box;
 }
 
-
 .banner {
 	height: 200px;
 	background: #333B3D;
@@ -16,6 +15,10 @@
 	font-weight: bold;
 }
 
+.sMark {
+	width: 26px;
+	height: 26px;
+}
 
 .contentBody {
 	display: flex;
@@ -87,9 +90,6 @@
 	color: gray;
 }
 
-.content_sub {
-	margin-bottom: 42px;
-}
 
 
 .contentHeader .nav-filter {
@@ -101,6 +101,9 @@
 	margin-left: 5px;
 }
 
+.content_sub {
+	margin-bottom: 42px;
+}
 
 .sub_info {
 	display: flex;
@@ -130,17 +133,10 @@
     letter-spacing: -.3px;
 }
 
+
 .question .question_title {
 	font-size: 22px;
 	font-weight: bold;
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	overflow: hidden;
-}
-
-.question .question_title p {
-	margin-bottom: 0;
 }
 
 .question .question_body {
@@ -150,6 +146,7 @@
 }
 
 .question .body_content {
+	height: 44px;
 	display: -webkit-box;
 	-webkit-line-clamp: 2; /* 원하는 줄 수 표시 */
 	-webkit-box-orient: vertical;
@@ -181,11 +178,6 @@
 	text-align: center;
 }
 
-.qMark {
-	width: 26px;
-	height: 26px;
-}
-
 .answer_info .answer_info_title {
 	height: 42px;
     font-weight: 500;
@@ -194,11 +186,10 @@
 
 .profile_image {
 	padding: 24px 36px;
-    border-bottom: none;
-	
+    border-bottom: none;	
 }
 
-.mark_unsolved {
+.mark_ing {
 	width: 47px;
 	height: 25px;
 	background: #0d6efd;
@@ -206,11 +197,12 @@
 	font-size: 13px;
 	font-weight: bold;
 	text-align: center;
+	
 	margin-right: 5px;
 	line-height: 25px;
 }
 
-.mark_solved {
+.mark_finsh {
 	width: 57px;
 	height: 25px;
 	background: lightgray;
