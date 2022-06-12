@@ -73,12 +73,12 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
 						uri += "?" + queryString;
 
 					session.setAttribute("preLoginURI", uri);
-					resp.sendRedirect(cp + "/member/login");
+					resp.sendRedirect(cp + "/");
 				}
 			} else {
 				if(uri.indexOf("admin")!=-1 && Integer.parseInt(info.getMemberRole()) < 51) {
 					result = false;
-					resp.sendRedirect(cp+"/member/noAuthorized");
+					resp.sendRedirect(cp+"/");
 				}
 			}
 		} catch (Exception e) {

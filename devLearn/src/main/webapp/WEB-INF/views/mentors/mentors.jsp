@@ -25,6 +25,10 @@ $(function(){
 
 });
 
+function login() {
+	$("#loginModal").modal("show");
+}
+
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
 		type:method,
