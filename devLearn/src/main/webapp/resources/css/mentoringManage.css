@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+.status-section {
+	height: 60px;
+	padding: 12px 8px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+}
+	
+.status-section ul {
+	padding: 0;
+	margin: 0 0 0 40px;
+	list-style: none;
+
+}
+
+.status-section li {
+	float: left;
+	margin-right: 25px;
+}
+
+.status-section li a:not(.is-active) {
+	text-decoration: none;
+	color: #aaa;
+}
+
+.status-section li a:hover {
+	color: #0d6efd;
+	font-weight: 700;
+}
+
+.is-active {
+	color: #0d6efd;
+	font-weight: 700;
+	text-decoration: none;
+}
+
+.list-table {
+	width: 100%;
+	margin: 20px auto;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.list-table td, .list-table th {
+	border: 1px solid #ddd;
+	height: 50px;
+	vertical-align: middle;
+}
+
+.list-table td:nth-child(4n+2) {
+	padding-left: 5px;
+	text-align: left;
+}
+
+.list-table td:last-child {
+	text-align: center;
+}
+
+.ck.ck-editor {
+	max-width: 97%;
+}
+
+.ck-editor__editable {
+    min-height: 400px;
+}
+
+.ck-content .image>figcaption {
+	min-height: 25px;
+}
+

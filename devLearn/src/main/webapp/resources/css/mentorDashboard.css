@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+* {
+	margin: 0; padding: 0; box-sizing: border-box;
+}
+.chart-section {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.chart-months {
+	width: 500px;
+	height: 500px;
+	padding: 12px 8px;
+	border: 1px solid #ddd;
+}
+
+.chart-boxes{
+	display: flex;
+	width: 500px;
+	height: 500px;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: space-between;
+}
+
+.chart-section p:first-of-type {
+	padding-top: 10px;
+	padding-left: 20px;
+	font-size: 20px;
+	font-weight: 600;
+}
+
+.chart-section p:nth-of-type(2) {
+	text-align: center;
+	font-size: 50px;
+	font-weight: 800;
+	padding-top: 40px;
+}
+
+.mentee, .grade {
+	width: 240px;
+	height: 240px;
+	padding: 12px 8px;
+	border: 1px solid #ddd;
+}
+
+.total-rev {
+	width: 500px;
+	height: 245px;
+	padding: 12px 8px;
+		
+	border: 1px solid #ddd;
+}
