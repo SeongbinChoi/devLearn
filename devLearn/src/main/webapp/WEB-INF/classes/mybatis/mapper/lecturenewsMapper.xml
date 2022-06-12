@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lecturenews">
+	<select id="">
+		SELECT lecturenews_seq.NEXTVAL from dual
+	</select>
+	
+	<insert id="insertLecNews" parameterType="com.sp.dev.lecturenews.LecNews">
+		insert into lectureNews(newsNum, lectureNum, subject, regDate, content)
+		values(#{newsNum}, #{lectureNum}, #{subject}, SYSDATE, #{content})
+	</insert>
+	
+	<!-- 검색 -->
+	<sql id="">
+		
+	</sql>
+	
+	<!-- 개수 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		select NVL(count(*), 0)
+		from lectureNews ln
+		join member m on ln.memberEmail=m.memberEmail
+		<where>
+			<if test="keyword != null and keyword != '' ">
+				<include refid="where-list"></include>			
+			</if>
+		</where>
+	</select>
+	
+	<!-- 리스트 -->
+	<select id="listNews" parameterType="map" resultType="com.sp.dev.lecturenews.LecNews">
+		select * from (
+			select rownum rnum, tb.* from (
+				select ln.newsNum, lectureNum, subject, regDate, content, NVL(fileCount, 0) fileCount
+				from lectureNews ln
+				join lectureNewsFile lnf on ln.newsNum=lnf.newsNum
+				left outer join (
+					select newsNum, count(*) fileCount from lectureNewsFile
+					group by newsNum
+				) f on ln.newsNum = f.newsNum
+				<where>
+					<if test="keyword != null and keyword != ''">
+						<include refid=""></include>
+					</if>
+				</where>
+				order by newsNum DESC
+			) tb where rownum &lt;= #{end}
+		) where rnum &gt;= #{start}
+	</select>
+	
+	<!-- 글보기 -->
+	<select id="readNews" parameterType="Integer" resultType="com.sp.dev.lecturenews.LecNews">
+		select ln.newsNum, ln.memberEmail, subject, content, regDate
+		from lecturenews ln
+		join member m on ln.memberEmail=m.userEmail
+		where newsNum = #{newsNum}
+	</select>
+	
+	<!-- 수정 -->
+	<update id="updatelectureNews" parameterType="com.sp.dev.lecturenews.LecNews">
+		update lectureNews set subject=#{subject}, content=#{content} where newsNum=#{newsNum}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deletelectureNews" parameterType="Integer">
+		delete from lectureNews where newsNum=#{newsNum}
+	</delete>
+	
+	<!-- 파일 -->
+	<insert id="insertFile" parameterType="com.sp.dev.lecturenews.LecNews">
+		INSERT INTO lectureNewsFile(newsFileNum, newsNum, saveFilename, originalFilename)
+		VALUES (lectureNewsFile_seq.NEXTVAL, #{newsNum}, #{saveFilename}, #{originalFilename})
+	</insert>
+	
+	<select id="listFile" parameterType="Integer" resultType="com.sp.dev.lecturenews.LecNews">
+		SELECT newsFileNum, newsNum, saveFilename, originalFilename
+		FROM lectureNewsFile WHERE newsNum=#{newsNum}  
+	</select>
+	
+	<select id="readFile" parameterType="Integer" resultType="com.sp.dev.lecturenews.LecNews">
+		SELECT newsFileNum, newsNum, saveFilename, originalFilename
+		FROM lectureNewsFile WHERE newsFileNum=#{newsFileNum}      
+	</select>
+	
+	<delete id="deleteFile" parameterType="map">
+		DELETE FROM lectureNewsFile WHERE ${field} = #{newsNum}
+	</delete>
+
+</mapper>
