@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberManage">
+
+	<select id="listMember" parameterType="java.util.Map" resultType="com.sp.dev.admin.memberManage.MemberManage">
+		SELECT DISTINCT m.membereMail eMail, memberName name, memberRole mRole, enabled,
+		    phoneNum
+		FROM member m
+		LEFT OUTER JOIN memberProfile p ON p.membereMail = m.membereMail
+		LEFT OUTER JOIN memberState s ON s.membereMail = m.membereMail
+		<where>
+			<if test="enabled!=''">
+				enabled = #{enabled}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countMember" parameterType="java.util.Map" resultType="Integer">
+		SELECT NVL(COUNT(membereMail), 0) FROM member
+		<where>
+			<if test="enabled!=''">
+				enabled = #{enabled}
+			</if>
+		</where>
+	</select>		
+		
+	<select id="readMember" resultType="com.sp.dev.admin.memberManage.MemberManage">
+		SELECT m.membereMail eMail, memberName name, memberRole mRole, m.regDate reg_date , emailCheck, enabled, infoUpdate, 
+		    lastLogin, phoneNum, businesseMail bMail
+		FROM member m
+		LEFT OUTER JOIN memberProfile p ON p.membereMail = m.membereMail
+		WHERE m.membereMail = #{eMail}
+	</select>
+	
+	<select id="readMemberState" parameterType="String" resultType="com.sp.dev.admin.memberManage.MemberManage">
+	    SELECT * FROM(
+		    SELECT stateNum, memberEmail, stateCode, memo, regDate stateDate, adminId
+		    FROM memberState
+		    WHERE memberEmail = #{eMail}
+		    ORDER BY stateNum DESC
+	    ) WHERE ROWNUM = 1
+	</select>
+	
+	<select id="listMemberState" parameterType="String" resultType="com.sp.dev.admin.memberManage.MemberManage">
+		SELECT memberEmail, stateCode, memo, regDate stateDate, adminId
+	    FROM memberState
+	    WHERE memberEmail = #{eMail}
+	    ORDER BY stateNum DESC
+	</select>
+	
+	
+	<insert id="insertMemberState" parameterType="com.sp.dev.admin.memberManage.MemberManage">
+		INSERT INTO memberState (stateNum, memberEmail, stateCode, memo, regDate, adminId) VALUES 
+			(MEMBERSTATE_SEQ.NEXTVAL, #{eMail}, #{stateCode}, #{memo, jdbcType=VARCHAR}, SYSDATE , #{adminId,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateMemberEnable" parameterType="java.util.Map">
+		UPDATE MEMBER SET enabled = #{enabled} where memberEmail = #{eMail}
+	</update>
+	
+	<update id="updateMemberRole" parameterType="java.util.Map">
+		UPDATE member SET memberRole = #{mRole} WHERE memberEmail = #{eMail}
+	</update>
+</mapper>

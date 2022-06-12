@@ -3,11 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<div class="container">
-	<div class="sidebar">
-		<jsp:include page="sideBar.jsp"/>
-	</div>
-</div>
 	<div class="container">
 		<div class="contents pt-5">
 	 		<div class="row">
@@ -137,17 +132,3 @@
 	 		</div>
 	 	</div>
 </div>
-
-<script type="text/javascript">
-	let angle = document.querySelectorAll(".fa-angle-down");
-	for(let i = 0; i < angle.length; i++) {
-		angle[i].addEventListener("click", (e) => {
-			let angleParent = e.target.parentElement.parentElement;
-			angleParent.classList.toggle("showMenu");
-		});
-	}
-
-</script>
-
-</body>
-</html>			   

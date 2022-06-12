@@ -11,6 +11,6 @@ public class AdminController {
 	@RequestMapping(value = "admin", method = RequestMethod.GET)
 	public String admin() throws Exception {
 		
-		return ".admin.admin";
+		return ".admin.main.dashboard";
 	}
 }

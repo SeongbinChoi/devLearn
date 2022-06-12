@@ -14,3 +14,140 @@
 	margin-left: 135px;
 	height:100%;
 }
+
+.wrapper {
+	display: flex;
+}
+
+
+.sidebar {
+	margin: 0;
+	padding: 0;
+	position: fixed;
+	left: 0;
+	width: 270px;
+	height: 100%;
+	background: #042331;
+}
+
+.sidebar header {
+	font-size: 22px;
+	color: white;
+	text-align: center;
+	line-height: 70px;
+	background: #063146;
+}
+
+.sidebar ul {
+	padding: 0;
+}
+
+.sidebar .nav-links a {
+	display: block;
+	text-decoration: none;
+	width: 100%;
+	line-height: 65px;
+	font-size: 20px;
+	color: #fff;
+}
+
+.sidebar .nav-links li {
+	position: relative;
+}
+
+.sidebar .nav-links li i {
+	height: 50px;
+	min-width: 78px;
+	text-align: center;
+	line-height: 65px;
+	color: #fff;
+	font-size: 20px;
+}
+
+.sidebar .nav-links li a {
+	display: flex;
+	align-items: center;
+}
+
+.sidebar .nav-links li:hover a {
+	padding-left: 10px;
+}
+
+.sidebar .nav-links li a {
+	transition: .4s;
+}
+
+.sidebar .nav-links li .icon-link {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.sidebar .nav-links li .sub-menu {
+	padding: 6px 6px 14px 80px;
+	margin-top: -10px;
+	background: #063140;
+	display: none;
+}
+
+.sidebar .nav-links li.showMenu .sub-menu {
+	display: block;
+}
+
+.sidebar .nav-links li .sub-menu a {
+	height: 40px;
+	color: #fff;
+	font-size: 15px;
+	padding: 5px 0;
+	white-space: nowrap;
+	opacity: 0.6;
+	transition: all 0.3s ease;
+}
+
+.sidebar .nav-links li .sub-menu a:hover {
+	opacity: 1;
+}
+
+.sidebar.close .nav-links li .sub-menu {
+	position: absolute;
+	left: 100%;
+	top: -10px;
+	margin-top: 0;
+	padding: 10px 20px;
+	border-radius: 0 6px 6px 0;
+	transition: all 0.4s ease;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.sidebar.close .nav-links li:hover .sub-menu {
+	top: 0;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.sidebar .nav-links li .sub-menu .link_name{
+	display: none;
+}
+
+.sidebar.close .nav-links li .sub-menu .link_name {
+	font-size: 18px;
+	opacity: 1;
+	display: block;
+}
+
+.sidebar.close .nav-links li .sub-menu.blank {
+	opacity: 1;
+	pointer-events: auto;
+	padding: 3px 20px 6px 16px;
+}
+
+#detailModal {
+	background: #fff;
+	font-size: 14px;
+}
+
+table th, table td {
+	vertical-align: middle;
+	
+}
