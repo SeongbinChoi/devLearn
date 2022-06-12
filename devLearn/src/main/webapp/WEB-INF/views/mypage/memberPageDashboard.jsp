@@ -9,9 +9,8 @@
 	
 	<div class="chart-section">
 		<div class="profile">
-			<p>userId님 프로필</p>
+			<p>${sessionScope.member.memberNickname}님 프로필</p>
 			<div class="content">
-				<p>프로필 내용 출력</p>
 				<p>프로필 내용 출력</p>
 				<p>프로필 내용 출력</p>
 				<p>프로필 내용 출력</p>
@@ -24,7 +23,7 @@
 				<p>프로필 내용 출력</p>
 			</div>
 			<div class="cardEnd">
-				<a href="myPage-profile.jsp">프로필 전체 보기</a>
+				<a href="${pageContext.request.contextPath}/mypage/profile">프로필 전체 보기</a>
 			</div>
 		</div >
 		<div class="recent-lecture">

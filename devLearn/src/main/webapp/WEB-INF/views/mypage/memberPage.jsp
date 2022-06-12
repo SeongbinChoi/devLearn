@@ -21,7 +21,7 @@
 								<a class="nav-link active" aria-current="page" href="myPage-member-dashBoard.jsp">회원</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="myPage-mentor-dashBoard.jsp">멘토</a>
+								<a class="nav-link" href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="myPage-instructor-dashBoard.jsp">강사</a>
@@ -39,12 +39,12 @@
 					<p class="menu-label">HOME</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap is_active" href="myPage-member-dashBoard.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/mypage">
 								<span>대시보드</span>
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="myPage-member-plan.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/planMain">
 								<span>일정 관리</span>
 							</a>
 						</li>
@@ -53,22 +53,22 @@
 					<p class="menu-label">학습관리</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="myPage-member-lectures.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myStudy">
 								<span>내 학습</span>
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="myPage-member-mentor.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/mentor">
 								<span>멘토링</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myWrite">
 								<span>작성한 게시글</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myInquiry">
 								<span>수강전 문의</span>
 							</a>
 						</li>
@@ -76,22 +76,27 @@
 					<p class="menu-label">수강신청 관리</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/cart">
 								<span>수강바구니</span>
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/like">
+								<span>좋아요</span>
+							</a>
+						</li>	
+						<li>
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/coupon">
 								<span>쿠폰함</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/point">
 								<span>포인트</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="#">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/purchased">
 								<span>구매내역</span>
 							</a>
 						</li>
@@ -99,17 +104,17 @@
 					<p class="menu-label">설정</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="myPage-noti.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/noti">
 								<span>알림</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="myPage-profile.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/profile">
 								<span>프로필</span>
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="myPage-setNoti.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/setNoti">
 								<span>알림설정</span>
 							</a>
 						</li>
