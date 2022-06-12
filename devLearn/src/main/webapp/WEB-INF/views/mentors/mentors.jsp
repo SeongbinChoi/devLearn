@@ -6,11 +6,15 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mentors.css" type="text/css">
 <script type="text/javascript">
 
-$(function(){
+/* $(function(){
 	$("#datetimepicker").datetimepicker({
-
+		datapicker:false,
+		allowTimes:[
+			'12:00', '13:00', '15:00'
+		]
 	});
-});
+	
+}); */
 
 $(function(){
 	$(".applyBtn").click(function(){
@@ -20,6 +24,113 @@ $(function(){
 	});
 
 });
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+$(function() {
+	$(".showModal").click(function() {
+		let mentorNum = $(this).attr("data-num");
+		let url = "${pageContext.request.contextPath}/mentors/mentorDetail";
+		let query = "mentorNum=" + mentorNum;
+		
+		const fn = function(data) {
+			printDetailModal(data);
+		};
+			
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+
+$(function() {
+	$("#applyMentoring").click(function() {
+		let mentorNum = $(this).attr("data-num");
+		let url = "${pageContext.request.contextPath}/mentors/mentorApply";
+		let query = "mentorNum=" + mentorNum;
+		
+		const fn = function(data) {
+			printApplyModal(data);
+		};
+		
+		ajaxFun(url, "get", query, "json", fn);
+	})
+});
+
+// 멘토링 소개 모달에 데이터 뿌리는 함수
+function printDetailModal(data) {
+	$(".info_title").html(data.dto.mentorSubject);
+	$(".info_title").next("p").html(data.dto.mentorContent);
+	$(".modal-footer").children("p").html("1회 멘토링 : 1시간 / " + data.dto.mentorPrice + "원 / 1명");
+	$("#applyMentoring").attr("data-num", data.dto.mentorNum);
+	
+	$("#mentorInfoModal").modal("show");
+}
+
+// 멘토링 신청 모달에 데이터 뿌리는 함수
+function printApplyModal(data) {
+	$("#datetimepicker").datetimepicker({
+		datapicker:false,
+		allowTimes:allowTime(data),
+		minDate: 0,
+		disabledWeekDays:disableDay(data)
+	});
+};
+
+// 가능 시간 반환 함수
+function allowTime(data) {
+	let ableTimeArr = [];
+		
+	for(let i = 0; i < data.ableTime.length; i++) {
+		ableTimeArr.push(data.ableTime[i] + ":00");
+	}
+	return ableTimeArr;	
+}
+
+//  요일 비활성 반환 함수
+function disableDay(data) {
+	let disableDayArr = [];
+	let str = data.dto.ableDay;
+	let arr = str.split(",");
+	
+	for(let i = 0; i < 7; i++) {
+		if(arr.indexOf(String(i)) === -1) {
+			disableDayArr.push(i);
+		}
+	}
+	return disableDayArr;
+}
+
+// 카테고리 설정 함수
+function selectFn() {
+	let choiceValue = $("#choiceValue").val();
+	let categoryNum = $("input[name='categoryNum']:checked").val();
+	
+	location.href="${pageContext.request.contextPath}/mentors/mentor?choiceValue="+choiceValue+"&categoryNum="+categoryNum;
+}
+
 
 </script>
 
@@ -33,50 +144,30 @@ $(function(){
 	<div class="container mb-5">
 		<div class="contents">
 			<div class="side col-2.5 px-4">
-				<select class="form-select mb-3" aria-label="Default select example">
-				  <option selected>:: 검색조건 ::</option>
-				  <option value="1">제목</option>
-				  <option value="2">닉네임</option>
+				<select class="form-select mb-3" name="choiceValue" id="choiceValue" aria-label="Default select example">
+				  <option value="0" <c:if test="${choiceValue eq 0}">selected="selected"</c:if> onclick="selectFn();">:: 검색조건 ::</option>
+				  <option value="1" <c:if test="${choiceValue eq 1}">selected="selected"</c:if> onclick="selectFn();">신규 멘토</option>
+				  <option value="2" <c:if test="${choiceValue eq 2}">selected="selected"</c:if> onclick="selectFn();">인기순</option>
 				</select>
-				<div class="">
-					<div class="input-group mb-3 col">
-					  <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
-					  <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
-					</div>
-				</div>
 				<div class="card">
 					<div class="card-header">
-					  분야별
+					 	카테고리
 					</div>
-					<div class="form-check ms-3 mb-2 mt-3">
-					  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-					  <label class="form-check-label" for="flexCheckDefault">
-					    개발
-					  </label>
+					<div class="form-check ms-3 mb-2 mt-3 px-3">
+					  <input class="form-check-input" type="radio" name="categoryNum" value="0" id="flexCheckDefault" <c:if test="${categoryNum eq 0}">checked="checked"</c:if> onclick="selectFn();">
+					  <label class="form-check-label" for="flexCheckDefault">전체</label>
 					</div>
-					<div class="form-check ms-3 mb-2">
-					  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-					  <label class="form-check-label" for="flexCheckChecked">
-					    보안
-					  </label>
-					</div>
-					<div class="form-check ms-3 mb-2">
-					  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-					  <label class="form-check-label" for="flexCheckChecked">
-					    데이터 사이언스
-					  </label>
-					</div>
-					<div class="form-check ms-3 mb-3">
-					  <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-					  <label class="form-check-label" for="flexCheckChecked">
-					    기타
-					  </label>
-					</div>
+					<c:forEach var="vo" items="${categoryList}">
+						<div class="form-check ms-3 mb-2 mt-3 px-3">
+						  <input class="form-check-input" type="radio" name="categoryNum" value="${vo.categoryNum}" id="flexCheckDefault" <c:if test="${categoryNum eq vo.categoryNum}">checked="checked"</c:if> onclick="selectFn();">
+						  <label class="form-check-label" for="flexCheckDefault">${vo.categoryName}</label>
+						</div>
+					</c:forEach>
 				</div>
 			</div>
 			<div class="col">
 				<div class="row row-cols-1 row-cols-md-4 g-3 mb-5">
-					<c:forEach var="i" begin="1" end="20">
+					<c:forEach var="dto" items="${list}">
 					  <div class="col">
 				    	<div class="card h-100">
 							<div class="card-body my-3 mx-2">
@@ -86,18 +177,18 @@ $(function(){
 											<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded img-fluid" alt="">
 										</figure>
 									</div>
-									<button class="mentor_review px-1 py-1" data-bs-toggle="modal" data-bs-target="#mentorModal">
+									<button class="mentor_review px-1 py-1" data-bs-toggle="modal" data-bs-target="#reviewModal">
 										<span><i class="fas fa-star"></i></span>
-										<span>5.0<span>/5 〉</span></span>
+										<span>${dto.reviewAve}<span>/5 〉</span></span>
 									</button>
 								</div>
-								<p class="card-title">기업 패키지, 브랜드 디자이너 취업 관련 멘토링 (코스메틱, 장업계)</p>
-								<p class="card-text">by.멘토닉네임</p>
+								<p class="card-title">${dto.mentorSubject}</p>
+								<p class="card-text">by.${dto.memberNickname}</p>
 							</div>
 							<div class="card-body">
 								<div class="btn-group" role="group" aria-label="Basic outlined example">
 								  <button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mentor_profile.jsp'">프로필</button>
-								  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#mentorInfoModal">내용보기</button>
+								  <button type="button" class="btn btn-outline-primary showModal" data-num="${dto.mentorNum}">내용보기</button>
 								</div>
 							</div>
 					    </div>
@@ -119,17 +210,13 @@ $(function(){
 				      <a class="page-link" href="#">Next</a>
 				    </li>
 				  </ul>
-				</nav>
-				
+				</nav>	
 			</div>
 		</div>
-		
-		
 	</div>
-	
 		
 	<!-- Review Modal -->
-	<div class="modal fade" id="mentorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -164,27 +251,15 @@ $(function(){
 	      <div class="modal-body px-4">
 			<div class="mentor_info mb-5">
 				<div class="info_title bg-light text-dark fw-bold rounded shadow-sm mb-3 px-1 py-1">
-	       	      기업 패키지, 브랜드 디자이너 취업 관련 멘토링 (코스메틱, 장업계)
 	     	    </div>
-				<p>네카라쿠배당토(중에 한 곳) 3년차 서버개발자입니다.<br><br>
-
-					저도 처음 코딩을 시작하고 공부를 하고 취업 준비를 할 때 주변에 개발을 하는 지인이 아무도 없어 막막하고 힘들었던 시절이 있었는데요.
-					<br><br><br>
-					내가 지금 잘하고 있는지 잘 모르겠을 때 <br>
-					개발을 하다가 질문하고 싶은 것이 있을 때<br>
-					공부나 취업 준비를 하면서 고민 상담을 하고 싶을 때<br>
-					포트폴리오/면접준비에 어려움이 있을 때<br>
-					<br><br>
-					혼자 공부하며 어려웠던 때에 꼭 언젠가 어려움을 겪으시는 분들께 도움을 드리고 싶다는 마음에 멘토링을 열게 되었습니다. 편하게 물어보시면 정해진 시간 이외에도 최선을 다해 답변 드리겠습니다.
-					<br>
-					주요 스킬셋은 Java, Kotlin, Spring입니다. 
+				<p>
 				</p>
 			</div>
 	      </div>
 	      
 	      <div class="modal-footer">
-	      	 <p>1회 멘토링 : 30분 / 6,600원 / 1명</p>
-      	 	 <button type="button" class="btn btn-primary" data-bs-target="#applyModalToggle" data-bs-toggle="modal">신청하기</button>
+	      	 <p></p>
+      	 	 <button type="button" class="btn btn-primary" id="applyMentoring" data-bs-target="#applyModalToggle" data-bs-toggle="modal">신청하기</button>
           </div>
 	    </div>
 	  </div>
@@ -203,11 +278,11 @@ $(function(){
 			<div class="mentor_info mb-5">
 				<div class="schedule">
 					<label for="exampleFormControlInput1" class="form-label">날짜 및 시간 선택</label>
-					<p><input type="text" class="form-control" id="datetimepicker" ></p>
+					<p><input type="text" class="form-control" readonly="readonly" id="datetimepicker" ></p>
 				</div>
 				<div class="memberEmail mt-3 mb-3">
 					<label for="exampleFormControlInput1" class="form-label">연락 가능한 이메일</label>
-					<input type="email" class="form-control" id="exampleFormControlInput1"  disabled="disabled" value="abcdefg@gmail.com">
+					<input type="email" class="form-control" id="exampleFormControlInput1" value="${sessionScope.member.memberEmail}">
 				</div>
 
 			</div>
@@ -220,8 +295,7 @@ $(function(){
 	    </div>
 	  </div>
 	</div>
-	
-	
+
 		<!-- contents Modal - apply -->
 	<div class="modal fade" id="completeModalToggle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable">
@@ -239,7 +313,7 @@ $(function(){
 					</tr>
 					<tr>
 						<td>연락 가능한 이메일 : </td>
-						<td> &nbsp;abcdefg@gmail.com</td>
+						<td> &nbsp;${sessionScope.member.memberEmail}</td>
 					</tr>
 				</table>
 
@@ -253,5 +327,5 @@ $(function(){
 	  </div>
 	</div>
 
-<link rel="stylesheet" type="text/css" href="jquery.datetimepicker.css" />
-<script src="jquery.datetimepicker.full.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" />
+<script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.full.min.js"></script>

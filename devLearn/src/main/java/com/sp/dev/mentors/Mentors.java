@@ -2,6 +2,9 @@ package com.sp.dev.mentors;
 
 public class Mentors {
 	private int mentorNum;
+	private String memberEmail;
+	private String memberNickname;
+	private String saveFilename;
 	private int categoryNum;
 	private String categoryName;
 	private String mentorSubject;
@@ -11,20 +14,42 @@ public class Mentors {
 	private String sTime;
 	private String eTime;
 	
-	private int mentorRage;
-	private int mentorReviewContent;
+	private int mentorRate;
+	private int reviewCnt;		// 후기 개수
+	private int reviewSum;	// 후기 별점 합계
+	private double reviewAve; // 후기 별점 평균
+	private int mentorReviewContent; 
+	
+	private int applyCnt;	// 멘토링 신청 개수
 	
 	private int mentoringNum;
 	private int mentoringPrice;
 	private String mentoringDate;
 	private int status;
 	private String approveDate;
-	
 	public int getMentorNum() {
 		return mentorNum;
 	}
 	public void setMentorNum(int mentorNum) {
 		this.mentorNum = mentorNum;
+	}
+	public String getMemberEmail() {
+		return memberEmail;
+	}
+	public void setMemberEmail(String memberEmail) {
+		this.memberEmail = memberEmail;
+	}
+	public String getMemberNickname() {
+		return memberNickname;
+	}
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
+	}
+	public String getSaveFilename() {
+		return saveFilename;
+	}
+	public void setSaveFilename(String saveFilename) {
+		this.saveFilename = saveFilename;
 	}
 	public int getCategoryNum() {
 		return categoryNum;
@@ -74,17 +99,41 @@ public class Mentors {
 	public void seteTime(String eTime) {
 		this.eTime = eTime;
 	}
-	public int getMentorRage() {
-		return mentorRage;
+	public int getMentorRate() {
+		return mentorRate;
 	}
-	public void setMentorRage(int mentorRage) {
-		this.mentorRage = mentorRage;
+	public void setMentorRate(int mentorRate) {
+		this.mentorRate = mentorRate;
+	}
+	public int getReviewCnt() {
+		return reviewCnt;
+	}
+	public void setReviewCnt(int reviewCnt) {
+		this.reviewCnt = reviewCnt;
+	}
+	public int getReviewSum() {
+		return reviewSum;
+	}
+	public void setReviewSum(int reviewSum) {
+		this.reviewSum = reviewSum;
+	}
+	public double getReviewAve() {
+		return reviewAve;
+	}
+	public void setReviewAve(double reviewAve) {
+		this.reviewAve = reviewAve;
 	}
 	public int getMentorReviewContent() {
 		return mentorReviewContent;
 	}
 	public void setMentorReviewContent(int mentorReviewContent) {
 		this.mentorReviewContent = mentorReviewContent;
+	}
+	public int getApplyCnt() {
+		return applyCnt;
+	}
+	public void setApplyCnt(int applyCnt) {
+		this.applyCnt = applyCnt;
 	}
 	public int getMentoringNum() {
 		return mentoringNum;
@@ -116,6 +165,7 @@ public class Mentors {
 	public void setApproveDate(String approveDate) {
 		this.approveDate = approveDate;
 	}
+	
 	
 
 }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mentorPage">
+	<select id="readMentoring" parameterType="String" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentorNum, memberEmail, categoryNum, mentorSubject, 
+			mentorContent, mentorPrice, ableDay, sTime, eTime
+		FROM mentor
+		WHERE memberEmail = #{memberEmail}
+	</select>
+	
+	<update id="insertMentoring" parameterType="com.sp.dev.mentors.Mentors">
+		INSERT INTO mentor(mentorNum, memberEmail, categoryNum, mentorSubject, 
+			mentorContent, mentorPrice, ableDay, sTime, eTime)
+		VALUES(mentor_seq.NEXTVAL, #{memberEmail}, #{categoryNum}, #{mentorSubject},
+			#{mentorContent}, #{mentorPrice}, #{ableDay}, #{sTime}, #{eTime} )
+	</update>
+	
+	<update id="updateMentoring" parameterType="com.sp.dev.mentors.Mentors">
+		UPDATE mentor SET categoryNum= #{categoryNum}, mentorSubject = #{mentorSubject}, 
+			mentorContent = #{mentorContent}, mentorPrice = #{mentorPrice}, ableDay = #{ableDay},
+			sTime = #{sTime}, eTime = #{eTime}
+		WHERE memberEmail = #{memberEmail}
+	</update>
+</mapper>

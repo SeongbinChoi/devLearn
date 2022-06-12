@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mentors">
+	<select id="listCategory" resultType="com.sp.dev.mentors.Mentors">
+		SELECT * FROM MENTORCATEGORY
+	</select>
+
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM mentor
+	</select>
+	
+	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mt.mentorNum,mt.memberEmail, m.memberNickname, mp.saveFilename, mentorSubject, categoryNum,
+			(SELECT NVL(count(*), 1) FROM mentorReview WHERE mentorNum = mentorNum)ReviewCnt,
+            (SELECT NVL(sum(mentorRate), 0) FROM mentorReview WHERE mentorNum = mentorNum) reviewSum,
+            (SELECT NVL(count(*), 0) FROM mentoringApply WHERE mentorNum = mentorNum) applyCnt
+		FROM mentor mt
+		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
+		LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
+		<if test="categoryNum != 0">
+			WHERE categoryNum = #{categoryNum}
+		</if>
+		<choose>
+			<when test="choiceValue = 1">
+				ORDER BY mentorNum DESC
+			</when>
+			<when test="choiceValue = 2">
+				ORDER BY applyCnt DESC
+			</when>
+		</choose>
+	</select>
+	
+	<select id="readMentors" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentorNum, mentorSubject, mentorContent, mentorPrice, ableDay, sTime, eTime
+		FROM mentor
+		WHERE mentorNum = #{mentorNum}
+	</select>
+	
+	<select id="readAbleTime" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentorNum, ableDay, sTime, eTime, mentorPrice
+		FROM mentor
+		WHERE mentorNum = #{mentorNum}
+	</select>
+	
+</mapper>
