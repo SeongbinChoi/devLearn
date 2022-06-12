@@ -15,19 +15,25 @@
 							<span>마이 페이지</span>
 						</a>
 					</div>
+					
 					<div class="banner-nav ">
 						<ul class="nav nav-pills">
 							<li class="nav-item">
-								<a class="nav-link active" aria-current="page" href="myPage-member-dashBoard.jsp">회원</a>
+								<a class="nav-link topNav_member "href="${pageContext.request.contextPath}/mypage/mypage">회원</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
+								<c:if test="${sessionScope.member.memberRole eq '10' || sessionScope.member.memberRole eq '30'}">
+									<a class="nav-link active topNav_mentor" aria-current="page"  href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
+								</c:if>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="myPage-instructor-dashBoard.jsp">강사</a>
+								<c:if test="${sessionScope.member.memberRole eq '20' || sessionScope.member.memberRole eq '30'}">
+									<a class="nav-link topNav_instructor " href="myPage-instructor-dashBoard.jsp">강사</a>
+								</c:if>
 							</li>
 						</ul>
 					</div>
+
 				</div>
 			</div>
 		</div>
