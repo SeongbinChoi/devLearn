@@ -5,7 +5,6 @@ import java.util.Map;
 
 
 
-
 public interface MemberManageService {
 	public int dataCount(Map<String, Object> map);
 	public List<MemberManage> listMember(Map<String, Object> map);

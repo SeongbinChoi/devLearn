@@ -12,4 +12,5 @@ public class ContentManageController {
 		
 		return ".admin.contentManage.main";
 	}
+	
 }

@@ -95,7 +95,6 @@ public class MemberManageServiceImpl implements MemberManageService {
 			throw e;
 		}
 	}
-
 	
 	
 	@Override

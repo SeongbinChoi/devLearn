@@ -1,5 +1,6 @@
 package com.sp.dev.admin.memberManage;
 
+
 public class MemberManage {
 	private String eMail;
 	private String name;

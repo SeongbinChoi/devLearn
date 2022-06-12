@@ -12,4 +12,5 @@ public class communityManageController {
 		
 		return ".admin.communityManage.main";
 	}
+	
 }

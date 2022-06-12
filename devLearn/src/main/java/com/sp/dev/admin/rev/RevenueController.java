@@ -13,5 +13,4 @@ public class RevenueController {
 		return ".admin.revenue.main";
 	}
 	
-	
 }

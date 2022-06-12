@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 		<form name="infoDetailForm" id="infoDetailForm">
 	      	<table class="table td-border my-10" style="border: 1px border-collpase;">
 	      		<tr>

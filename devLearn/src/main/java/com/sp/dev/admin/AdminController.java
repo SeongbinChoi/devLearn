@@ -13,4 +13,5 @@ public class AdminController {
 		
 		return ".admin.main.dashboard";
 	}
+	
 }
