@@ -14,6 +14,7 @@ public class QnaServiceImpl implements QnaService {
 	@Autowired
 	private CommonDAO dao;
 	
+	
 	@Override
 	// 게시글 및 답변, 답변의 답변 추가
 	public void insertQna(Qna dto, String mode) throws Exception {

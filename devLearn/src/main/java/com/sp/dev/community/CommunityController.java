@@ -53,12 +53,6 @@ public class CommunityController {
 		dataCount = service.dataCount(map);
 		total_page = myUtil.pageCount(rows, dataCount);
 		
-		System.out.println("-----------------------");
-		System.out.println(current_page);
-		System.out.println(rows);
-		System.out.println(dataCount);
-		System.out.println(total_page);
-		
 		if(total_page < current_page)
 			current_page = total_page;
 		

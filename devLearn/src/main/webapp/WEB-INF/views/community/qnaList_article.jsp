@@ -88,9 +88,7 @@ function update() {
     f.action = "${pageContext.request.contextPath}/community/qnaList_update";
 	f.submit();
 }
-
 </script>
-
 
 
 <!-- 메인코드 -->

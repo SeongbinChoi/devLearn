@@ -158,5 +158,4 @@
 				CONNECT BY PRIOR qnaNum = parent )
 	</update>
 	
-	
 </mapper>

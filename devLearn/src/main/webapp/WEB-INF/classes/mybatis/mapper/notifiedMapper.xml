@@ -17,4 +17,5 @@
 		0, SYSDATE)
 </insert>
 
+
 </mapper>

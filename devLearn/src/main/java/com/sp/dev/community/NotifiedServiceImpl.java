@@ -26,6 +26,4 @@ public class NotifiedServiceImpl implements NotifiedService {
 		}
 	}
 	
-	
-	
 }

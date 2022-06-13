@@ -29,6 +29,7 @@ a#top_btn {
 </style>
 
 
+
 <script>
 function sendOk() {
 	var f = document.boardForm;

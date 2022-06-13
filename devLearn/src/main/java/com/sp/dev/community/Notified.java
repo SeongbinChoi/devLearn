@@ -11,7 +11,6 @@ public class Notified {
 	private String regDate;				// 신고날짜
 	private int notifyState;			// 처리여부
 	
-	
 	public int getNotifynum() {
 		return notifynum;
 	}
