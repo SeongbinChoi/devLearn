@@ -88,12 +88,14 @@ class MemberController {
 		info.setMemberName(dto.getMemberName());
 		info.setMemberNickname(dto.getMemberNickname());
 		info.setMemberRole(dto.getMemberRole());
+		info.setPhoneNum(dto.getPhoneNum());
 		
 		session.setMaxInactiveInterval(30 * 60);
 		session.setAttribute("member", info);
 		
 		// 로그인 이전 URI 이동
 		String uri = (String) session.getAttribute("preLoginURI");
+
 		session.removeAttribute("preLoginURI");
 		if(uri == null) {
 			uri = "redirect:/";

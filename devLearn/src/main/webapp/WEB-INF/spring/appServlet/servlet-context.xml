@@ -59,16 +59,34 @@
 		<beans:property name="maxUploadSize" value="10485760" />
     </beans:bean>
 	
-	<!-- Interceptor 설정 
+	<!-- Interceptor 설정 --> 
 	<interceptors>
 		<interceptor>
 
+			<!-- 적용 -->
 			<mapping path="/**"/>
+			
+			<!-- 제외 -->
+			<exclude-mapping path="/"/>
+			<exclude-mapping path="/resources/**"/>
+			
+			<exclude-mapping path="/member/login"/>
+			<exclude-mapping path="/member/logout"/>			
+			<exclude-mapping path="/member/signUp"/>
+			
+			<exclude-mapping path="/mentors/mentor"/>
+			<exclude-mapping path="/mentors/mentorDetail"/>
+			
+			<exclude-mapping path="/lectures/lectureDetail"/>
+			
+			<exclude-mapping path="/community/qnaList"/>
+			<exclude-mapping path="/community/studyList"/>
+						
 			
 		<beans:bean class="com.sp.dev.member.LoginCheckInterceptor"/>
 		</interceptor>
 	</interceptors>
-	-->
+
 	
 	<!-- 웹 소켓 설정
 	<websocket:handlers>
