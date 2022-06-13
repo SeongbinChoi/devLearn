@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/qnaList.css" type="text/css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/community_boot_board.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/community_boot_board.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
 
 <!-- css 및 js -->			
@@ -19,14 +19,26 @@ a#top_btn {
 
 .ck.ck-editor {
 	max-width: 97%;
+	overflow-y: scroll;
 }
 
 .ck-editor__editable {
     min-height: 250px;
+    max-height: 250px;
 }
 </style>
 
 <script type="text/javascript">
+$(function(){
+	$("#tab-${group}").addClass("active");
+	
+    $("button[role='tab']").on("click", function(e){
+		const tab = $(this).attr("data-tab");
+		//let url = "${pageContext.request.contextPath}/sbbs/list?group="+tab;	
+		//location.href = url;
+    });
+});
+
 function sendOk() {
 	var f = document.boardForm;
 	var str;
@@ -44,11 +56,19 @@ function sendOk() {
         window.editor.focus();
         return;
     }
-    console.log(str);
     f.content.value = str;
-	
+    
 	f.action = "${pageContext.request.contextPath}/community/qnaList_write";
 	f.submit();
+}
+
+function searchList() {
+	const f = document.searchForm;
+	f.submit();
+}
+
+function login() {
+	$("#qnaModal").modal("show");
 }
 </script>
 
@@ -94,22 +114,35 @@ function sendOk() {
 	
 	<!-- 검색란 -->
 	<div class="input-group mb-3 input-group-lg mb-5">
-		<span class="input-group-text" id="basic-addon1 inputGroup-sizing-lg" style="background: white;"><i class="fas fa-search"></i></span>
-		<input type="text" id="keyword" class="form-control" placeholder="궁금한 질문을 검색해보세요!" aria-label="Username" aria-describedby="basic-addon1">
-		<button class="btn btn-outline-secondary px-5" type="button" id="button-addon2">검색</button>
-		
-		<input type="hidden" name="keyword" value="${keyword}">
+		<form name="searchForm" action="${pageContext.request.contextPath}/community/qnaList" method="post" class="input-group">
+			<span class="input-group-text" id="basic-addon1 inputGroup-sizing-lg" style="background: white;"><i class="fas fa-search"></i></span>
+			<input type="text" name="keyword" value="${keyword}" class="form-control" placeholder="궁금한 질문을 검색해보세요!" aria-label="Username" aria-describedby="basic-addon1">
+			<input type="hidden" name="rows" value="${rows}">
+			<button class="btn btn-outline-secondary px-5" type="button" id="button-addon2" onclick="searchList()">검색</button>
+		</form>
 	</div>
 			
 		<!-- 중간 탭(최신순|답변많은순 ...) -->
 		<div class="contentHeader">
-			<div class="nav-filter nav nav-pills">
-				<a class="nav-link active" aria-current="page" href="#">최신순</a>
-				<a class="nav-link" href="#">답변많은순</a>
-			</div>
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="0" aria-selected="true" data-tab="0" style="color: blue;">최신순</button>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="1" aria-selected="true" data-tab="1" style="color: blue;">답변많은순</button>
+				</li>
+			</ul>
+
 			<div class="btnGroup">
 				<button type="button" class="btn btn-outline-primary" onclick='location.href="${pageContext.request.contextPath}/community/qnaList";'><i class="fas fa-redo-alt"></i>새로고침</button>
-				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qnaModal">글쓰기</button>
+				<c:choose>
+					<c:when test="${sessionScope.member.memberEmail == null}">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">글쓰기</button>
+					</c:when>
+					
+					<c:otherwise>
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qnaModal">글쓰기</button>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 		<hr>
@@ -118,7 +151,16 @@ function sendOk() {
 				<div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="all-tab">
 					<!-- 질문 - 전체 -->
 					<c:forEach var="dto" items="${list}">
-						<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+						<c:choose>
+							<c:when test="${sessionScope.member.memberEmail == null}">
+								<a href="${articleUrl}&qnaNum=${dto.qnaNum}" data-bs-toggle="modal" data-bs-target="#loginModal">
+							</c:when>
+							
+							<c:otherwise>
+								<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+							</c:otherwise>
+						</c:choose>
+							
 							<c:choose>
 								<c:when test="${dto.parent == 0}">
 									<div class="question px-3 py-1">
@@ -184,7 +226,16 @@ function sendOk() {
 					<!-- 질문 - 미해결 -->
 					<c:forEach var="dto" items="${list}">
 						<c:if test="${dto.selected == 0}">
-							<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+							<c:choose>
+								<c:when test="${sessionScope.member.memberEmail == null}">
+									<a href="${articleUrl}&qnaNum=${dto.qnaNum}" data-bs-toggle="modal" data-bs-target="#loginModal">
+								</c:when>
+								
+								<c:otherwise>
+									<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+								</c:otherwise>
+							</c:choose>
+							
 								<c:choose>
 									<c:when test="${dto.parent == 0}">
 										<div class="question px-3 py-1">
@@ -254,7 +305,16 @@ function sendOk() {
 					<!-- 질문 - 해결 -->
 					<c:forEach var="dto" items="${list}">
 						<c:if test="${dto.selected == 1}">
-							<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+							<c:choose>
+								<c:when test="${sessionScope.member.memberEmail == null}">
+									<a href="${articleUrl}&qnaNum=${dto.qnaNum}" data-bs-toggle="modal" data-bs-target="#loginModal">
+								</c:when>
+								
+								<c:otherwise>
+									<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
+								</c:otherwise>
+							</c:choose>
+							
 								<c:choose>
 									<c:when test="${dto.parent == 0}">
 										<div class="question px-3 py-1">

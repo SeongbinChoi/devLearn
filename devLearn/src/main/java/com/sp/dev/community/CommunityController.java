@@ -26,6 +26,9 @@ public class CommunityController {
 	private QnaService service;
 	
 	@Autowired
+	private NotifiedService service2;
+	
+	@Autowired
 	private MyUtil myUtil;
 
 	// QnA 리스트 가져오기
@@ -35,8 +38,7 @@ public class CommunityController {
 			@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(value = "rows", defaultValue = "10") int rows,
 			HttpServletRequest req,
-			Model model
-			) throws Exception {
+			Model model) throws Exception {
 		
 		int total_page;
 		int dataCount;
@@ -46,10 +48,16 @@ public class CommunityController {
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("keyeword", keyword);
+		map.put("keyword", keyword);
 		
 		dataCount = service.dataCount(map);
 		total_page = myUtil.pageCount(rows, dataCount);
+		
+		System.out.println("-----------------------");
+		System.out.println(current_page);
+		System.out.println(rows);
+		System.out.println(dataCount);
+		System.out.println(total_page);
 		
 		if(total_page < current_page)
 			current_page = total_page;
@@ -87,24 +95,8 @@ public class CommunityController {
 		return ".community.qnaList";
 	}
 	
-
-	// 게시글 등록하기
-	@RequestMapping(value = "qnaList_write")
-	public String qnaList_write(Qna dto, HttpSession session) throws Exception {
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
-		try {
-			dto.setMemberEmail(info.getMemberEmail());
-			service.insertQna(dto, "write");
-		} catch (Exception e) {
-		}
-		
-		
-		return "redirect:/community/qnaList";
-	}
-
 	
-	// QnA 게시글 보기
+	// QnA 게시글 상세보기
 	@RequestMapping(value = "qnaList_article")
 	public String qnaList_article(
 			@RequestParam int qnaNum,
@@ -144,8 +136,63 @@ public class CommunityController {
 		return ".community.qnaList_article";
 	}
 	
+
+	// 메인 게시글 등록하기
+	@RequestMapping(value = "qnaList_write")
+	public String qnaList_write(Qna dto, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service.insertQna(dto, "write");
+		} catch (Exception e) {
+		}
+		
+		
+		return "redirect:/community/qnaList";
+	}
+
 	
-	// Qna게시글의 답변
+	// 메인 게시글 수정
+	@RequestMapping(value = "qnaList_update")
+	public String qnaList_update(
+			Qna dto,
+			@RequestParam int rows,
+			@RequestParam String page,
+			@RequestParam String content,
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service.updateQna(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/qnaList?page="+page+"&rows="+rows;
+	}
+	
+	
+	// 메인 게시글 해결됨으로 수정 함수
+	@RequestMapping(value = "qnaList_updateSelected")
+	public String qnaList_updateSelected(
+			@RequestParam int qnaNum,
+			@RequestParam String page,
+			@RequestParam int rows) {
+		String query = "page="+page+"&rows="+rows;
+		
+		try {
+			service.updateSelected(qnaNum);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/qnaList?" + query;
+	}
+	
+	
+	// 답변 게시글
+	// 답변 게시글 등록하기(GET) - 폼으로 들어갈때
 	@RequestMapping(value = "qnaList_reply", method = RequestMethod.GET)
 	public String replyForm(
 			@RequestParam int qnaNum,
@@ -169,7 +216,7 @@ public class CommunityController {
 	}
 	
 	
-	// Qna게시글의 답변
+	// 답변 게시글 등록하기(POST) - 저장
 	@RequestMapping(value = "qnaList_reply", method = RequestMethod.POST)
 	public String replySubmit(
 			Qna dto,
@@ -189,10 +236,53 @@ public class CommunityController {
 	}
 	
 		
+	// 답변 게시글 수정(GET)
+	@RequestMapping(value = "qnaList_replyUpdate", method = RequestMethod.GET)
+	public String replyUpdateForm(
+			@RequestParam int qnaNum,
+			@RequestParam String page,
+			@RequestParam int rows,
+			Model model) throws Exception {
+		
+		Qna dto = service.readQna(qnaNum);
+		if (dto == null) {
+			return "redirect:/community/qnaList?page=" + page + "&rows=" + rows;
+		}
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("page", page);
+		model.addAttribute("rows", rows);
+		model.addAttribute("mode", "replyUpdate");
+		
+		return ".community.qnaList_replyWrite";
+	}
+	
+	
+	// 답변 게시글 수정(POST)
+	@RequestMapping(value = "qnaList_replyUpdate", method = RequestMethod.POST)
+	public String replyUpdateSubmit(
+			Qna dto,
+			@RequestParam int rows,
+			@RequestParam String page,
+			HttpSession session) {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service.updateQna(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/qnaList?page="+page+"&rows="+rows;
+	}
+	
+	
 	// 게시글 삭제
 	@RequestMapping(value = "qnaList_delete")
 	public String qnaList_delete(
 			@RequestParam int qnaNum,
+			@RequestParam int groupNum,
 			@RequestParam String page,
 			@RequestParam int rows,
 			@RequestParam (defaultValue="") String keyword,
@@ -205,62 +295,46 @@ public class CommunityController {
 		}
 		
 		try {
-			service.deleteQna(qnaNum, info.getMemberEmail(), Integer.parseInt(info.getMemberRole()));
+			service.deleteQna(qnaNum, groupNum, info.getMemberEmail(), Integer.parseInt(info.getMemberRole()));
 		} catch (Exception e) {
 		}
 		
 		return "redirect:/community/qnaList?" + query;
 	}
+
 	
-	
-	// 게시글 해결됨으로 수정 함수 
-	@RequestMapping(value = "qnaList_updateSelected")
-	public String qnaList_updateSelected(
-			@RequestParam int qnaNum,
+	// 게시글 신고
+	@RequestMapping(value = "qna_singo")
+	public String qna_singo(
+			Notified dto,
+			@RequestParam(value="NqnaNum") int qnaNum,
+			@RequestParam(value="NmemberEmail") String memberEmail,
 			@RequestParam String page,
-			@RequestParam int rows) {
-		String query = "page="+page+"&rows="+rows;
-		
-		try {
-			service.updateSelected(qnaNum);
-		} catch (Exception e) {
-		}
-		
-		return "redirect:/community/qnaList?" + query;
-	}
-	
-	
-	// 올린 게시글 수정 (아직 해결안됨)
-	@RequestMapping(value = "qnaList_update")
-	public String qnaList_update(
-			Qna dto,
 			@RequestParam int rows,
-			@RequestParam String page,
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
-		System.out.println("------------------------내용====================");
-		System.out.println(dto.getQnaNum());
-		System.out.println(dto.getContent());
-		System.out.println(dto.getSubject());
+		dto.setQnaNum(qnaNum);
+		dto.setMemberEmail(memberEmail);
+		dto.setSingoNickName(info.getMemberNickname());
+		
+		
+//		System.out.println("----------" + memberEmail);
+//		System.out.println("----------" + qnaNum);
+//		System.out.println("----------" + page);
+//		System.out.println("----------" + rows);
+//		System.out.println("----------" + dto.getNotifyReason());
+//		System.out.println("----------" + dto.getSubject());
 		
 		try {
-			dto.setMemberEmail(info.getMemberEmail());
-			service.updateQna(dto);
+			service2.insertNotified(dto);
 		} catch (Exception e) {
 		}
 		
-		return "redirect:/community/qnaList?page="+page+"&rows="+rows;
+		return "redirect:/community/qnaList";
 	}
 	
-	
-	// 답변 게시글 수정
-	@RequestMapping(value = "qnaList_replyUpdate", method = RequestMethod.GET)
-	public String qnaList_replyUpdate() throws Exception {
-		
-		return "";
-	}
 	
 	
 	////////////////////////////////////////////////////////////////////////////////

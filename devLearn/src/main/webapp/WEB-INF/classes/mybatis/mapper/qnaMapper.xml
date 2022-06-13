@@ -17,16 +17,20 @@
 	
 	<!-- 검색시 조건 sql -->
 	<sql id="where-list">
-		<if test="keyword != '' ">
-			( INSTR(subject, #{keyword} &gt; 0
-				OR INSTR(DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
-		</if>
+		( INSTR(subject, #{keyword}) &gt; 0
+			OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
 	</sql>
 	
 	
 	<!-- 리스트의 갯수 세기 -->
 	<select id="dataCount" parameterType="Map" resultType="Integer">
-		SELECT NVL(COUNT(*), 0) FROM communityQna
+		SELECT NVL(COUNT(*), 0) 
+		FROM communityQna
+		<where>
+			<if test="keyword != null and keyword != '' ">
+				<include refid="where-list"/>
+			</if>
+		</where>
 	</select>
 	
 	
@@ -129,9 +133,14 @@
 	</select>
 	
 	
-	<!-- 게시글의 답변갯수 업데이트 -->
+	<!-- 게시글의 답변갯수 더하기 -->
 	<update id="updateReplyCount" parameterType="Integer">
-		UPDATE communityQna SET replyNum = replyNum+1 WHERE qnaNum = #{original_replyNum}
+		UPDATE communityQna SET replyNum = replyNum+1 WHERE qnaNum = #{qnaNum}
+	</update>
+	
+	<!-- 게시글의 답변갯수 빼기 -->
+	<update id="updateReplyCountDelete" parameterType="Integer">
+		UPDATE communityQna SET replyNum = replyNum-1 WHERE qnaNum = #{qnaNum}
 	</update>
 	
 	
