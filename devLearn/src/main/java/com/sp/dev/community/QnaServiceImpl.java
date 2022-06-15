@@ -14,6 +14,7 @@ public class QnaServiceImpl implements QnaService {
 	@Autowired
 	private CommonDAO dao;
 	
+	
 	@Override
 	// 게시글 및 답변, 답변의 답변 추가
 	public void insertQna(Qna dto, String mode) throws Exception {
@@ -41,16 +42,7 @@ public class QnaServiceImpl implements QnaService {
 				dto.setDepth(dto.getDepth()+1);
 				dto.setOrderNo(dto.getOrderNo()+1);
 				
-				Qna original_dto = readQna(dto.getGroupNum());
-				
-				int original_replyNum = original_dto.getReplyNum();
-				System.out.println("이전이전이전 : " + original_dto.getReplyNum());
-				System.out.println(original_replyNum);
-				
-				original_replyNum= original_replyNum + 1;
 				dao.updateData("qna.updateReplyCount", dto.getGroupNum());
-				
-				System.out.println("이후이후이후 : " + original_dto.getReplyNum());
 			}
 			
 			dao.insertData("qna.insertQna", dto);
@@ -167,24 +159,19 @@ public class QnaServiceImpl implements QnaService {
 	}
 
 	
-	// 도대체 뭐가 문제니 너는...
 	@Override
 	public void updateQna(Qna dto) throws Exception {
-		// System.out.println("---------------나 들어왔어-------------------");
-		// System.out.println(dto.getContent());
 		try {
 			dao.updateData("qna.updateQna", dto);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
-		//System.out.println("---------------나 들어왔어2-------------------");
 	}
 	
 	
 	@Override
-	public void deleteQna(int qnaNum, String memberEmail, int memberRole) throws Exception {
+	public void deleteQna(int qnaNum, int groupNum, String memberEmail, int memberRole) throws Exception {
 		try {
 			Qna dto = readQna(qnaNum);
 			if(dto == null || (memberRole < 99 && ! dto.getMemberEmail().equals(memberEmail))) {
@@ -192,6 +179,8 @@ public class QnaServiceImpl implements QnaService {
 			}
 			
 			dao.deleteData("qna.deleteQna", qnaNum);
+			dao.updateData("qna.updateReplyCountDelete", groupNum);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

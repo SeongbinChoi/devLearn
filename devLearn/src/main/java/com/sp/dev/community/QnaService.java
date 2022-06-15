@@ -17,5 +17,6 @@ public interface QnaService {
 	public void updateSelected(int qnaNum) throws Exception;			// qna질문 해결로 변경 
 	public int replyCount(Map<String, Object> map) throws Exception;	// 게시글에 대한 답변개수
 	public void updateQna(Qna dto) throws Exception;
-	public void deleteQna(int qnaNum, String memberEmail, int memberRole) throws Exception;
+	public void deleteQna(int qnaNum, int groupNum, String memberEmail, int memberRole) throws Exception;
+	//public void insertNotify(Map<String, Object> map) throws Exception;
 }

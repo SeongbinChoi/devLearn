@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="notified">
+
+<!-- 신고 시퀀스 번호 가져오기 -->
+<select id="seq" resultType="Integer">
+	SELECT notified_seq.NEXTVAL FROM dual
+</select>
+
+
+<!-- 신고 테이블 생성 -->
+<insert id="insertNotified" parameterType="com.sp.dev.community.Notified">
+	INSERT INTO notified(notifyNum, qnaNum, memberEmail, notifyReason, 
+		notifyState, regDate)
+		VALUES(#{notifynum}, #{qnaNum}, #{memberEmail}, #{notifyReason},
+		0, SYSDATE)
+</insert>
+
+
+</mapper>

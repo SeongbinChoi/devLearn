@@ -15,7 +15,7 @@ public class Qna {
 	private int parent;				// parent가 0이면 게시글, 아니면 답변이든 답변의 답변이든 자기보다 바로 위의 qnaNum을 가리킴
 	private int replyNum;			// 답변갯수
 	private int selected;			// 해결여부체크
-	// private long gap;			// 시간으로 new표시 -> 여유되면 할 예정
+	
 	
 	public int getQnaNum() {
 		return qnaNum;

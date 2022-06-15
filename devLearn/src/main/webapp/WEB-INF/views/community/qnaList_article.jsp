@@ -18,18 +18,21 @@ a#top_btn {
 
 .ck.ck-editor {
 	max-width: 97%;
+	overflow-y: scroll;
 }
 
 .ck-editor__editable {
     min-height: 250px;
+    max-height: 250px;
 }
+
 </style>
 
-<script>
+<script type="text/javascript">
 function deleteBoard() {
 	<c:if test="${sessionScope.member.memberEmail == dto.memberEmail || sessionScope.member.memberRole == 99}">
 	if(confirm("게시글을 삭제하시겠습니까?")) {
-		let query = "qnaNum=${dto.qnaNum}&${query}";
+		let query = "qnaNum=${dto.qnaNum}&groupNum=${dto.groupNum}&${query}";
 		let url = "${pageContext.request.contextPath}/community/qnaList_delete?" + query;
 		location.href = url;
 	}
@@ -46,14 +49,23 @@ function chatak() {
 	</c:if>
 }
 
-function singo() {
-	if(confirm("게시글을 신고하시겠습니까?")) {
-		location.href="#";
-	}
+function singoSubmit() {
+	var f = document.singo;
+	var str;
+	
+	str = f.notifyReason.value.trim();
+	if(! str) {
+        alert("신고사유을 입력하세요. ");
+        f.content.focus();
+        return false;
+    }
+	
+	f.action = "${pageContext.request.contextPath}/community/qna_singo";
+	f.submit();
 }
 
 function update() {
-	var f = document.boardForm;
+	var f = document.qnaList_update;
 	var str;
 	
 	str = f.subject.value.trim();
@@ -62,6 +74,7 @@ function update() {
 		f.subject.focus();
 		return false;
 	}
+	alert(str);
 	
 	str = window.editor.getData().trim();
     if(! str) {
@@ -70,13 +83,12 @@ function update() {
         return;
     }
     f.content.value = str;
-	
-    location.href = "${pageContext.request.contextPath}/community/qnaList_update?qnaNum=${dto.qnaNum}&page=${page}&rows=${rows}";
+    alert(str);
+    
+    f.action = "${pageContext.request.contextPath}/community/qnaList_update";
 	f.submit();
 }
-
 </script>
-
 
 
 <!-- 메인코드 -->
@@ -84,7 +96,7 @@ function update() {
 	
 		<div class="sideMenu col-2">
 			<div class="cmmu-menu list-group px-1">
-				<button type="button" class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/community/qnaList'"><i class="fa-solid fa-arrow-left-long"></i></button>
+				<button type="button" class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/community/qnaList?${query}'"><i class="fa-solid fa-arrow-left-long"></i></button>
 			</div>
 		</div>
 			
@@ -97,8 +109,8 @@ function update() {
 				<div class="title d-flex" id="qna_artice_subject">
 					<div class="p-2 w-100"><i class="fa-solid fa-q qMark"></i>${dto.subject}</div>
 					<c:choose>
-					<c:when test="${sessionScope.member.memberEmail != null}">
-						<div class="p-2 flex-shrink-0"><button type="button" class="btn btn-danger" onclick="singo();">신고</button></div>
+					<c:when test="${(sessionScope.member.memberEmail != dto.memberEmail)}">
+						<button type="button" class="p-2 flex-shrink-0 btn btn-danger" data-bs-toggle="modal" data-bs-target="#singoModal">신고</button>
 					</c:when>
 					<c:otherwise>
 						<div class="p-2 flex-shrink-0"><button type="button" class="btn btn-danger" style="display : none;">신고</button></div>
@@ -148,13 +160,13 @@ function update() {
 					</c:choose>
 					
 					<c:choose>
-						<c:when test="${sessionScope.member.memberEmail == dto.memberEmail && dto.parent == 0}">
+						<c:when test="${(sessionScope.member.memberEmail == dto.memberEmail && dto.parent == 0) && dto.selected == 0}">
 							<!-- 게시글의 경우 -> 모달로 변경 -->
 							<button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#qnaUpdateModal">수정</button>
 						</c:when>
-						<c:when test="${sessionScope.member.memberEmail == dto.memberEmail && dto.parent != 0}">
+						<c:when test="${(sessionScope.member.memberEmail == dto.memberEmail && dto.parent != 0) && dto.selected == 0}">
 							<!-- 답변의 경우 -> article로 수정 -->
-							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/qnaList_update'">수정</button>
+							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/qnaList_replyUpdate?qnaNum=${dto.qnaNum}&page=${page}&rows=${rows}'">수정</button>
 						</c:when>
 						<c:otherwise>
 							<button type="button" class="btn btn-light" disabled="disabled">수정</button>
@@ -171,7 +183,7 @@ function update() {
 			    	</c:choose>
 			    	
 			    	<c:choose>
-			    		<c:when test="${(sessionScope.member.memberEmail == dto.memberEmail) && (dto.parent == 0 && dto.selected == 0) && dto.depth >= 1}">
+			    		<c:when test="${(sessionScope.member.memberEmail == dto.memberEmail) && (dto.parent == 0 && dto.selected == 0) && dto.replyNum >= 1}">
 							<button type="button" class="btn btn-light" onclick="chatak();" style="float:right;">해결</button>
 						</c:when>
 						<c:otherwise>
@@ -184,7 +196,7 @@ function update() {
 	</div>
 	
 <!-- Modal -->
-<form name="boardForm" method="post">
+<form name="qnaList_update" method="post">
 	<div class="modal fade" id="qnaUpdateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable modal-lg">
 	    <div class="modal-content">
@@ -214,7 +226,10 @@ function update() {
 			<div class="mb-3">
 				<input type="hidden" name="content2">
 				<button class="btn btn-primary" type="button" data-bs-dismiss="modal">취소</button>
-				<button class="btn btn-primary" type="button" onclick="update()">수정</button>
+				<button class="btn btn-primary" type="button" onclick="update();">수정</button>
+				<input type="hidden" name="qnaNum" value="${dto.qnaNum}">
+				<input type="hidden" name="rows" value="${rows}">
+				<input type="hidden" name="page" value="${page}">
 			</div>
 	      </div>
 	    </div>
@@ -222,6 +237,47 @@ function update() {
 	</div>
 ​</form>
 
+
+<!-- 신고 Modal -->
+<form name="singo" method="post">
+	<div class="modal fade" id="singoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">커뮤니티</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="mb-3">
+				<ul class="nav nav-pills mb-3" id="pills_button" role="tablist">
+					<li class="nav-item" role="presentation">
+				    	<button class="nav-link active" id="pills-qna-tab" data-bs-toggle="pill" data-bs-target="#qna_content" type="button" role="tab" aria-controls="pills-qna" aria-selected="true" disabled="disabled">신고</button>
+				  	</li>
+				</ul>
+			</div>
+	      	<div class="mb-3">
+			  <label for="exampleFormControlInput1" class="form-label">신고자</label>
+			  <input type="text" class="form-control" id="notified_nickName" name="singoNickName" value="${sessionScope.member.memberNickname}" readonly>
+			</div>
+	      	<div class="mb-3">
+			  <label for="exampleFormControlInput1" class="form-label">신고사유</label>
+			  <textarea class="form-control" id="notified_subject" placeholder="신고사유를 입력해주세요." name="notifyReason" style="height: 200px; max-height: 200px;"></textarea>
+			</div>
+			<div class="mb-3">
+				<input type="hidden" name="content2">
+				<button class="btn btn-primary" type="button" data-bs-dismiss="modal">취소</button>
+				<button class="btn btn-primary" type="button" onclick="singoSubmit();">신고하기</button>
+				<input type="hidden" name="NqnaNum" value="${dto.qnaNum}">
+				<input type="hidden" name="NmemberEmail" value="${dto.memberEmail}">
+				<input type="hidden" name="rows" value="${rows}">
+				<input type="hidden" name="page" value="${page}">
+				<input type="hidden" name="subject" value="${dto.subject}">
+			</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+​</form>
 
 	
 <script>
