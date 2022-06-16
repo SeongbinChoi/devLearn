@@ -1,4 +1,4 @@
-package com.sp.dev.mypage;
+package com.sp.dev.mypage.calendar;
 
 
 public class Calendar {

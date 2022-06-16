@@ -50,7 +50,7 @@
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/planMain">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myPlan/planMain">
 								<span>일정 관리</span>
 							</a>
 						</li>
@@ -69,7 +69,7 @@
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myWrite">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myWrite/myWrite">
 								<span>작성한 게시글</span>
 							</a>
 						</li>

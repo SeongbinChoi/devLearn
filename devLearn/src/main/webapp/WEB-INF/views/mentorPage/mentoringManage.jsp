@@ -95,7 +95,7 @@ $(function() {
 				<td style="width:35%;">
 					<select name="categoryNum" class="form-select">
 						<c:forEach var="vo" items="${categoryList}">
-							<option value="${vo.categoryNum}" <c:if test="${vo.categoryNum eq dto.categoryNum}">
+							<option value="${vo.categoryCode}" <c:if test="${vo.categoryCode eq dto.categoryCode}">
 								selected="selected"</c:if>
 							>${vo.categoryName}</option>
 						</c:forEach>

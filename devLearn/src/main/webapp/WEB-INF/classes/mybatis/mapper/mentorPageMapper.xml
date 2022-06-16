@@ -22,4 +22,38 @@
 			sTime = #{sTime}, eTime = #{eTime}
 		WHERE memberEmail = #{memberEmail}
 	</update>
+	
+	<select id="listMentoringApply" parameterType="String" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentoringNum, ma.mentorNum, mentoringPrice, mentoringDate, 
+    		mentorSubject, status, approveDate, applyDate
+		FROM mentoringApply ma
+		LEFT OUTER JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
+		WHERE m.memberEmail = #{memberEmail} 
+		<choose>
+			<when test="status == '-1' ">
+				
+			</when>
+			
+			<when test="status == '3' ">
+				AND status &lt;= #{status}
+			</when>
+			<otherwise>
+				AND status = #{status}
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="readMentoringApply" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentoringNum, memberName, ma.memberEmail, mentoringPrice, mentoringDate, status, approveDate, phoneNum, applyMessage, applyDate
+		FROM mentoringApply ma
+		LEFT OUTER JOIN member m ON ma.memberEmail = m.memberEmail
+		WHERE mentoringNum = #{mentoringNum}
+	</select>
+	
+	<update id="updateMentoringApply" parameterType="map">
+		UPDATE mentoringApply SET status = #{status}, approveDate = SYSDATE
+		WHERE mentoringNum = #{mentoringNum}
+	</update>
+	
 </mapper>

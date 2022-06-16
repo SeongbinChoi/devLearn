@@ -3,7 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="mentors">
 	<select id="listCategory" resultType="com.sp.dev.mentors.Mentors">
-		SELECT * FROM MENTORCATEGORY
+		SELECT * FROM category
+		WHERE maincategory IS NULL
 	</select>
 
 	<select id="dataCount" parameterType="map" resultType="Integer">
@@ -23,25 +24,33 @@
 			WHERE categoryNum = #{categoryNum}
 		</if>
 		<choose>
-			<when test="choiceValue = 1">
+			<when test="choiceValue == 1">
 				ORDER BY mentorNum DESC
 			</when>
-			<when test="choiceValue = 2">
+			<when test="choiceValue == 2">
 				ORDER BY applyCnt DESC
 			</when>
 		</choose>
 	</select>
 	
 	<select id="readMentors" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
-		SELECT mentorNum, mentorSubject, mentorContent, mentorPrice, ableDay, sTime, eTime
-		FROM mentor
+		SELECT mentorNum, m.memberNickname, mentorSubject, mentorContent, mentorPrice, ableDay, sTime, eTime
+		FROM mentor mt
+		JOIN member m ON mt.memberEmail =  m.memberEmail
 		WHERE mentorNum = #{mentorNum}
 	</select>
 	
 	<select id="readAbleTime" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
-		SELECT mentorNum, ableDay, sTime, eTime, mentorPrice
+		SELECT mentorNum, mentorSubject, ableDay, sTime, eTime, mentorPrice
 		FROM mentor
 		WHERE mentorNum = #{mentorNum}
 	</select>
+	
+	<insert id="insertMentoringApply" parameterType="map">
+		INSERT INTO mentoringApply (mentoringNum, mentorNum, memberEmail, mentoringPrice,
+			 mentoringDate, status, phoneNum, applyMessage, applyDate)
+		VALUES ( MENTORINGAPPLY_SEQ.NEXTVAL, #{dto.mentorNum}, #{dto.memberEmail}, #{dto.mentorPrice},
+			'${dto.mentoringDate}', 0, #{dto.phoneNum}, #{dto.applyMessage}, SYSDATE )
+	</insert>
 	
 </mapper>

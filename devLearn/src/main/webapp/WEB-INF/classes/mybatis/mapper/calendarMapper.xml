@@ -2,30 +2,49 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cal">
-	<insert id="insertCalendar" parameterType="com.sp.dev.mypage.Calendar">
+	<insert id="insertCalendar" parameterType="com.sp.dev.mypage.calendar.Calendar">
 		INSERT INTO planManagement (planNum, memberEmail, subject, planColor, 
 				sDate, eDate, repeatCheck, repeatCycle, memo, regDate)
-		VALUES (planManagement_seq.NEXTVAL, #{memberEmail}, #{subject}, #{planColor}, 
-				TO_DATE(#{sDate},'YYYY/MM/DD'), TO_DATE(#{eDate},'YYYY/MM/DD'), 
+		VALUES (planManagement_seq.NEXTVAL, #{memberEmail}, #{subject}, #{planColor}, #{sDate}, #{eDate}, 
 				#{repeatCheck}, #{repeatCycle}, #{memo}, SYSDATE)
 	</insert>
 
-	<select id="listCalendar" parameterType="map" resultType="com.sp.dev.mypage.Calendar">
-		SELECT planNum, m.memberEmail, subject, planColor, 
-				sDate, eDate, repeatCheck, repeatCycle, memo, p.regDate
-		FROM planManagement p
-		JOIN member m ON m.memberEmail = p.memberEmail
-		WHERE m.memberEmail = #{memberEmail}
+	<select id="listCalendar" parameterType="map" resultType="com.sp.dev.mypage.calendar.Calendar">
+		SELECT planNum, memberEmail, subject, planColor, 
+				sDate, eDate, repeatCheck, repeatCycle, memo, regDate
+		FROM planManagement
+		<where>
+			memberEmail = #{memberEmail}
+			AND
+			( 
+				( 
+					 ( TO_DATE(sDate, 'YYYY-MM-DD') &gt;= TO_DATE(#{sDate}, 'YYYY-MM-DD')
+						AND TO_DATE(sDate, 'YYYY-MM-DD') &lt;= TO_DATE(#{eDate}, 'YYYY-MM-DD')
+					 )
+				) 
+				OR  (
+						repeatCheck=1 AND repeatCycle!=0
+							AND ADD_MONTHS(TO_DATE(sDate, 'YYYY-MM-DD'), 12 * repeatCycle*TRUNC(((SUBSTR(#{sDate},1,4)-SUBSTR(sDate,1,4))/repeatCycle))) &gt;= TO_DATE(#{sDate}, 'YYYY-MM-DD')
+							AND ADD_MONTHS(TO_DATE(sDate, 'YYYY-MM-DD'), 12 * repeatCycle*TRUNC(((SUBSTR(#{sDate},1,4)-SUBSTR(sDate,1,4))/repeatCycle))) &lt;= TO_DATE(#{eDate}, 'YYYY-MM-DD')
+					)
+			)
+		</where>
+	</select>
+	
+	<select id="readCalendar" parameterType="Integer" resultType="com.sp.dev.mypage.calendar.Calendar">
+		SELECT memberEmail, subject, planColor, sDate, eDate, repeatCheck, repeatCycle, memo, regDate
+		FROM planManagement
+		WHERE planNum = #{planNum}
 	</select>
 	
 	<delete id="deleteCalendar" parameterType="map">
 		DELETE FROM planManagement WHERE memberEmail = #{memberEmail} AND planNum = #{planNum}
 	</delete>
 	
-	<update id="updateCalendar" parameterType="com.sp.dev.mypage.Calendar">
+	<update id="updateCalendar" parameterType="com.sp.dev.mypage.calendar.Calendar">
 		UPDATE planManagement SET subject=#{subject}, planColor=#{planColor}, 
 					sDate=#{sDate}, eDate=#{eDate}, repeatCheck=#{repeatCheck}, 
-					repeatCycle=#{repeatCycle}, memo=#{memo}, regDate=#{regDate}
+					repeatCycle=#{repeatCycle}, memo=#{memo}, regDate=SYSDATE
 		WHERE planNum=#{planNum} AND memberEmail=#{memberEmail}
 	</update>
 </mapper>
