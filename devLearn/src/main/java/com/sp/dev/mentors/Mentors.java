@@ -4,8 +4,9 @@ public class Mentors {
 	private int mentorNum;
 	private String memberEmail;
 	private String memberNickname;
+	private String memberName;
 	private String saveFilename;
-	private int categoryNum;
+	private int categoryCode;
 	private String categoryName;
 	private String mentorSubject;
 	private String mentorContent;
@@ -27,6 +28,10 @@ public class Mentors {
 	private String mentoringDate;
 	private int status;
 	private String approveDate;
+	private String phoneNum;
+	private String applyMessage;
+	private String applyDate;
+	
 	public int getMentorNum() {
 		return mentorNum;
 	}
@@ -45,17 +50,23 @@ public class Mentors {
 	public void setMemberNickname(String memberNickname) {
 		this.memberNickname = memberNickname;
 	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
 	public String getSaveFilename() {
 		return saveFilename;
 	}
 	public void setSaveFilename(String saveFilename) {
 		this.saveFilename = saveFilename;
 	}
-	public int getCategoryNum() {
-		return categoryNum;
+	public int getCategoryCode() {
+		return categoryCode;
 	}
-	public void setCategoryNum(int categoryNum) {
-		this.categoryNum = categoryNum;
+	public void setCategoryCode(int categoryCode) {
+		this.categoryCode = categoryCode;
 	}
 	public String getCategoryName() {
 		return categoryName;
@@ -165,7 +176,23 @@ public class Mentors {
 	public void setApproveDate(String approveDate) {
 		this.approveDate = approveDate;
 	}
+	public String getPhoneNum() {
+		return phoneNum;
+	}
+	public void setPhoneNum(String phoneNum) {
+		this.phoneNum = phoneNum;
+	}
+	public String getApplyMessage() {
+		return applyMessage;
+	}
+	public void setApplyMessage(String applyMessage) {
+		this.applyMessage = applyMessage;
+	}
+	public String getApplyDate() {
+		return applyDate;
+	}
+	public void setApplyDate(String applyDate) {
+		this.applyDate = applyDate;
+	}
 	
-	
-
 }

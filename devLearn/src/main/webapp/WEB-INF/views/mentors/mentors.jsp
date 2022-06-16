@@ -25,6 +25,10 @@ $(function(){
 
 });
 
+function applyMentoring() {
+	
+}
+
 function login() {
 	$("#loginModal").modal("show");
 }
@@ -55,6 +59,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 	});
 }
 
+// 멘토링 상세 페이지 모달에 값 뿌리는 ajax
 $(function() {
 	$(".showModal").click(function() {
 		let mentorNum = $(this).attr("data-num");
@@ -69,6 +74,7 @@ $(function() {
 	});
 });
 
+// 멘토링 신청 페이지 모달에 값 뿌리는 ajax
 $(function() {
 	$("#applyMentoring").click(function() {
 		let mentorNum = $(this).attr("data-num");
@@ -83,25 +89,61 @@ $(function() {
 	})
 });
 
+// 멘토링 신청 정보 확인 모달에 값 뿌리는 ajax
+$(function() {
+	$("#applyMentoring2").click(function() {
+		let mentorNum = $(this).attr("data-num");
+		let url = "${pageContext.request.contextPath}/mentors/ApplyInfoCheck";
+		let mentoringDate = $("#datetimepicker").val().trim();
+		let phoneNum = $("#memberPhone").val().trim();
+		let applyMessage = $("#applyMentoringMsg").val().trim();
+		let query = "mentorNum=" + mentorNum + "&mentoringDate=" + mentoringDate + "&phoneNum=" + phoneNum + "&applyMessage=" + applyMessage;
+		
+		const fn = function(data) {
+			printApplyInfoModal(data);
+		};
+		
+		ajaxFun(url, "get", query, "json", fn);
+	})
+});
+
 // 멘토링 소개 모달에 데이터 뿌리는 함수
 function printDetailModal(data) {
 	$(".info_title").html(data.dto.mentorSubject);
 	$(".info_title").next("p").html(data.dto.mentorContent);
 	$(".modal-footer").children("p").html("1회 멘토링 : 1시간 / " + data.dto.mentorPrice + "원 / 1명");
 	$("#applyMentoring").attr("data-num", data.dto.mentorNum);
+	$("#applyMentoring2").attr("data-num", data.dto.mentorNum);
 	
 	$("#mentorInfoModal").modal("show");
 }
 
 // 멘토링 신청 모달에 데이터 뿌리는 함수
 function printApplyModal(data) {
-	$("#datetimepicker").datetimepicker({
+	$("#datetimepicker").datetimepicker("destroy");
+	$("#datetimepicker").val("");
+	$("#datetimepicker").datetimepicker({ 
 		datapicker:false,
 		allowTimes:allowTime(data),
 		minDate: 0,
 		disabledWeekDays:disableDay(data)
 	});
 };
+
+// 멘토링 신청 확인 모달에 데이터 뿌리는 함수
+function printApplyInfoModal(data) {
+	$("#mentoringSubject").html(data.dto.mentorSubject);
+	$("#mentorName").html(data.dto.memberNickname);
+	$("#applyDate").html(data.mentoringDate);
+	$("#menteePhoneNum").html(data.phoneNum);
+	$("#applyMsg").html(data.applyMessage);
+	$(".priceInfo").html(data.dto.mentorPrice);
+	$("input[name=mentorNum]").val(data.dto.mentorNum);
+	$("input[name=mentorPrice]").val(data.dto.mentorPrice);
+	$("input[name=mentoringDate]").val(data.mentoringDate);
+	$("input[name=phoneNum]").val(data.phoneNum);
+	$("input[name=applyMessage]").val(data.applyMessage);
+}
 
 // 가능 시간 반환 함수
 function allowTime(data) {
@@ -163,7 +205,7 @@ function selectFn() {
 					</div>
 					<c:forEach var="vo" items="${categoryList}">
 						<div class="form-check ms-3 mb-2 mt-3 px-3">
-						  <input class="form-check-input" type="radio" name="categoryNum" value="${vo.categoryNum}" id="flexCheckDefault" <c:if test="${categoryNum eq vo.categoryNum}">checked="checked"</c:if> onclick="selectFn();">
+						  <input class="form-check-input" type="radio" name="categoryNum" value="${vo.categoryCode}" id="flexCheckDefault" <c:if test="${categoryNum eq vo.categoryCode}">checked="checked"</c:if> onclick="selectFn();">
 						  <label class="form-check-label" for="flexCheckDefault">${vo.categoryName}</label>
 						</div>
 					</c:forEach>
@@ -244,12 +286,12 @@ function selectFn() {
 	</div>
 	
 	
-	<!-- contents Modal - info -->
-	<div class="modal" id="mentorInfoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<!-- 멘토링 소개 모달 -->
+	<div class="modal" id="mentorInfoModal" tabindex="-1" aria-labelledby="mentorInfoLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">멘토링 소개</h5>
+	        <h5 class="modal-title" id="mentorInfoLabel">멘토링 소개</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body px-4">
@@ -263,73 +305,114 @@ function selectFn() {
 	      
 	      <div class="modal-footer">
 	      	 <p></p>
-      	 	 <button type="button" class="btn btn-primary" id="applyMentoring" data-bs-target="#applyModalToggle" data-bs-toggle="modal">신청하기</button>
+      	 	 <button type="button" class="btn btn-primary" id="applyMentoring" data-bs-target="#applyMentoringModal" data-bs-toggle="modal">신청하기</button>
           </div>
 	    </div>
 	  </div>
 	</div>
 	
 	
-	<!-- contents Modal - apply -->
-	<div class="modal" id="applyModalToggle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<!-- 멘토링 신청 정보 작성 모달  -->
+	<div class="modal" id="applyMentoringModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="applyMentoringLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">신청하기</h5>
+	        <h5 class="modal-title" id="applyMentoringLabel">신청하기</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body px-4">
 			<div class="mentor_info mb-5">
 				<div class="schedule">
-					<label for="exampleFormControlInput1" class="form-label">날짜 및 시간 선택</label>
-					<p><input type="text" class="form-control" readonly="readonly" id="datetimepicker" ></p>
+					<label for="datetimepicker" class="form-label">스케줄 설정</label>
+					<p><input type="text" class="form-control" name="mentoringDate" readonly="readonly" placeholder="날짜 및 시간 선택" id="datetimepicker" ></p>
 				</div>
 				<div class="memberEmail mt-3 mb-3">
-					<label for="exampleFormControlInput1" class="form-label">연락 가능한 이메일</label>
-					<input type="email" class="form-control" id="exampleFormControlInput1" value="${sessionScope.member.memberEmail}">
+					<label for="connectEmail" class="form-label">연락 가능한 이메일</label>
+					<input type="email" class="form-control" id="connectEmail" name="memberEmail" readonly="readonly" value="${sessionScope.member.memberEmail}">
 				</div>
-
+				<div class="memberPhone mt-3 mb-3">
+					<label for="memberPhone" class="form-label">연락처</label>
+					<input type="text" class="form-control" id="memberPhone" name="phoneNum" placeholder="000-0000-0000" value="${sessionScope.member.phoneNum}">
+				</div>
+				<div class="message mt-3 mb-3">
+					<label for="applyMentoringMsg" class="form-label">멘토에게 남길 메시지</label>
+					<textarea id="applyMentoringMsg" class="ac-input apply-mentoring__input" name="applyMessage"
+						placeholder="멘토링 받고 싶은 내용을 상세하게 남겨주시면 더욱 의미있는 시간을 가질 수 있어요!" style="width: 100%; height: 250px;"></textarea>
+				</div>
 			</div>
 	      </div>
-	      
 	      <div class="modal-footer">
 	      	 <a class="btn btn-outline-primary" data-bs-toggle="modal" href="#mentorInfoModal" role="button">이전으로</a>
-      	 	 <button type="button" class="btn btn-primary applyBtn" data-bs-target="#completeModalToggle" data-bs-toggle="modal">신청하기</button>
+      	 	 <button type="button" class="btn btn-primary applyBtn" id="applyMentoring2" data-bs-target="#applyCheckModal" data-bs-toggle="modal">신청하기</button>
           </div>
 	    </div>
 	  </div>
 	</div>
 
-		<!-- contents Modal - apply -->
-	<div class="modal fade" id="completeModalToggle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-scrollable">
+		<!-- 멘토링 신청 정보 확인 모달 -->
+	<form name="applyForm" method="post" action="${pageContext.request.contextPath}/mentors/mentoringApply">
+	<div class="modal" id="applyCheckModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">신청완료</h5>
+	        <h5 class="modal-title" id="exampleModalLabel">신청 정보 확인</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body check px-4">
-			<div class="mentor_info">
-				<table>
+			<div class="applyInfo">
+				<table class="applyInfo">
 					<tr>
-						<td>신청 날짜 및 시간 : </td>
-						<td id="applyDate"> 2022-06-06 / 09:00 - 10:00</td>
+						<td>멘토링 명</td>
+						<td id="mentoringSubject"></td>
 					</tr>
 					<tr>
-						<td>연락 가능한 이메일 : </td>
-						<td> &nbsp;${sessionScope.member.memberEmail}</td>
+						<td>멘토</td>
+						<td id="mentorName"></td>
+					</tr>
+					<tr>
+						<td>멘티</td>
+						<td>${sessionScope.member.memberNickname}</td>
+					</tr>
+					<tr>
+						<td>일정 </td>
+						<td id="applyDate"></td>
+					</tr>
+					<tr>
+						<td>연락처</td>
+						<td id="menteePhoneNum"></td>
+					</tr>
+					<tr>
+						<td>이메일</td>
+						<td id="menteeEmail">${sessionScope.member.memberEmail}</td>
+					</tr>
+					<tr>
+						<td>메시지</td>
+						<td id="applyMsg"></td>
 					</tr>
 				</table>
-
 			</div>
 	      </div>
-	      
-	      <div class="modal-footer check-footer">
-      	 	 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+	      <div class="modal-body check px-4">
+			<div class="applyInfo">
+				결제 금액
+			</div>
+			<div class="priceInfo">
+				원
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	      		<a class="btn btn-outline-primary" data-bs-toggle="modal" href="#applyMentoringModal" role="button">이전으로</a>
+      	 	 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
           </div>
 	    </div>
 	  </div>
 	</div>
+	<input type="hidden" name="mentorNum" value="">
+	<input type="hidden" name="mentorPrice" value="">
+	<input type="hidden" name="mentoringDate" value="">
+	<input type="hidden" name="phoneNum" value="">
+	<input type="hidden" name="applyMessage" value="">
+	</form>
 
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" />
 <script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.full.min.js"></script>

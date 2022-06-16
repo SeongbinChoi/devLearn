@@ -82,8 +82,18 @@ public class MentorsServiceImpl implements MentorsService {
 		
 		return dto;
 	}
-	
-	
+
+	@Override
+	public void insertMentoringApply(Map<String, Object> map) throws Exception {
+		
+		try {
+			dao.insertData("mentors.insertMentoringApply", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
 	
 
 }

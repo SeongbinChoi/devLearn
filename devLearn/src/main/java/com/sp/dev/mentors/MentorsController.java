@@ -5,15 +5,18 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtilBootstrap;
+import com.sp.dev.member.SessionInfo;
 
 @Controller("mentors.mentorsController")
 @RequestMapping("/mentors/*")
@@ -96,7 +99,9 @@ public class MentorsController {
 	// ajax - json 테스트 - 시간만 가져오기
 	@RequestMapping(value = "mentorApply")
 	@ResponseBody
-	public Map<String, Object> mentorApply(@RequestParam(value="mentorNum") int mentorNum) throws Exception {
+	public Map<String, Object> mentorApply(
+			@RequestParam(value="mentorNum") int mentorNum
+			) throws Exception {
 		
 		Map<String, Object> model = new HashMap<String, Object>();
 		
@@ -108,7 +113,6 @@ public class MentorsController {
 		for(int i = sTime; i < eTime; i++) {
 			 size += 1;
 		}
-		System.out.println(size);
 		
 		int ableTime[] = new int[size];
 		int index = 0;
@@ -123,5 +127,50 @@ public class MentorsController {
 		model.put("ableTime", ableTime); // 멘토링 가능 시간
 		
 		return model;
+	}
+	
+	// ajax-json
+	@RequestMapping(value = "ApplyInfoCheck")
+	@ResponseBody
+	public Map<String, Object> ApplyInfoCheck(
+			@RequestParam(value="mentorNum") int mentorNum,
+			@RequestParam(value="mentoringDate") String mentoringDate,
+			@RequestParam(value="phoneNum") String phoneNum,
+			@RequestParam(value="applyMessage") String applyMessage
+			) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		Mentors dto = service.readMentors(mentorNum);
+	
+		
+		model.put("dto", dto); // 멘토링 상세 정보(멘토링 번호, 시작, 종료시간, 멘토링 회당 가격)
+		model.put("mentorNum", mentorNum);
+		model.put("mentoringDate", mentoringDate);
+		model.put("phoneNum", phoneNum);
+		model.put("applyMessage", applyMessage);
+		
+		return model;
+	}
+	
+	// 멘토링 신청 폼 (결제는 체크 안함, 결제 api 반환 형식 후 수정 예정)
+	// mentoringPrice가 결제 금액이지만 결제 연결이 안되어 있으므로, 멘토링 가격인 mentorPrice로 값 전송했음. 나중에 수정할 것
+	@PostMapping(value = "mentoringApply")
+	public String mentoringApplySubmit(Mentors dto, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 2022/07/15 14:00
+		// String mentoringDate = dto.getMentoringDate().replace("/", "-").concat(":00");
+		// dto.setMentoringDate(mentoringDate);
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			map.put("dto", dto);
+			
+			service.insertMentoringApply(map);
+			
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/mentors/mentor";
 	}
 }

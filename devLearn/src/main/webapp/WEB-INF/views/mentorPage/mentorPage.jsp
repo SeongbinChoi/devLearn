@@ -19,7 +19,7 @@
 								<a class="nav-link topNav_member "href="${pageContext.request.contextPath}/mypage/mypage">회원</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link active topNav_mentor" aria-current="page"  href="myPage-mentor-dashBoard.jsp">멘토</a>
+								<a class="nav-link active topNav_mentor" aria-current="page"  href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
 							</li>
 							<li class="nav-item">
 							<c:if test="${sessionScope.member.memberRole eq '30'}">
