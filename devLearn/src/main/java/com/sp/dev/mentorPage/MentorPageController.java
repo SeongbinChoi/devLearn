@@ -53,7 +53,7 @@ public class MentorPageController {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
 		dto.setMemberEmail(info.getMemberEmail());
-				
+		
 		try {
 			if(service.readMentoring(info.getMemberEmail()) == null) {
 				service.insertMentoring(dto);

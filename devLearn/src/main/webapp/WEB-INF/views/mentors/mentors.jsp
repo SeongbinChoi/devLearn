@@ -200,7 +200,7 @@ function selectFn() {
 					 	카테고리
 					</div>
 					<div class="form-check ms-3 mb-2 mt-3 px-3">
-					  <input class="form-check-input" type="radio" name="categoryNum" value="0" id="flexCheckDefault" <c:if test="${categoryNum eq 0}">checked="checked"</c:if> onclick="selectFn();">
+					  <input class="form-check-input" type="radio" name="categoryNum" value="00" id="flexCheckDefault" <c:if test="${categoryNum eq '00'}">checked="checked"</c:if> onclick="selectFn();">
 					  <label class="form-check-label" for="flexCheckDefault">전체</label>
 					</div>
 					<c:forEach var="vo" items="${categoryList}">
@@ -243,19 +243,9 @@ function selectFn() {
 				</div>
 				
 				<nav aria-label="...">
-				  <ul class="pagination justify-content-center">
-				    <li class="page-item disabled">
-				      <span class="page-link">Previous</span>
-				    </li>
-				    <li class="page-item"><a class="page-link" href="#">1</a></li>
-				    <li class="page-item active" aria-current="page">
-				      <span class="page-link">2</span>
-				    </li>
-				    <li class="page-item"><a class="page-link" href="#">3</a></li>
-				    <li class="page-item">
-				      <a class="page-link" href="#">Next</a>
-				    </li>
-				  </ul>
+				  <div class="pagination justify-content-center page-box">
+						${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				  </div>
 				</nav>	
 			</div>
 		</div>

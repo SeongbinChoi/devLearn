@@ -12,12 +12,12 @@
 	<update id="insertMentoring" parameterType="com.sp.dev.mentors.Mentors">
 		INSERT INTO mentor(mentorNum, memberEmail, categoryNum, mentorSubject, 
 			mentorContent, mentorPrice, ableDay, sTime, eTime)
-		VALUES(mentor_seq.NEXTVAL, #{memberEmail}, #{categoryNum}, #{mentorSubject},
+		VALUES(mentor_seq.NEXTVAL, #{memberEmail}, #{categoryCode}, #{mentorSubject},
 			#{mentorContent}, #{mentorPrice}, #{ableDay}, #{sTime}, #{eTime} )
 	</update>
 	
 	<update id="updateMentoring" parameterType="com.sp.dev.mentors.Mentors">
-		UPDATE mentor SET categoryNum= #{categoryNum}, mentorSubject = #{mentorSubject}, 
+		UPDATE mentor SET categoryNum= #{categoryCode}, mentorSubject = #{mentorSubject}, 
 			mentorContent = #{mentorContent}, mentorPrice = #{mentorPrice}, ableDay = #{ableDay},
 			sTime = #{sTime}, eTime = #{eTime}
 		WHERE memberEmail = #{memberEmail}
