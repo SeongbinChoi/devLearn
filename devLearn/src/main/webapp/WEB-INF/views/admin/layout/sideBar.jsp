@@ -45,15 +45,16 @@
 		</li>
 		<li>
 			<div class="icon-link">
-				<a href="${pageContext.request.contextPath}/admin/communityManage/main"><i class="fas fa-chalkboard"></i>
-					<span class="link-name">커뮤니티</span>
+				<a href="${pageContext.request.contextPath}/admin/noticeManage/main"><i class="fas fa-chalkboard"></i>
+					<span class="link-name">공지사항</span>
 				</a>
 				<i class="fas fa-angle-down"></i>
 			</div>
 			<ul class="sub-menu">
-				<li><a class="#" href="#">커뮤니티</a></li>
-				<li><a href="#">신고 관리</a></li>
-				<li><a href="#">1:1 답변</a></li>
+				<li><a class="#" href="#">공지사항</a></li>
+				<li><a href="#">이벤트</a></li>
+				<li><a href="#">FAQ</a></li>
+				<li><a href="#">1:1문의</a></li>
 			</ul>
 		</li>
 		<li>

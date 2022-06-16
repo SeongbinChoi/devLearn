@@ -144,10 +144,49 @@
 
 #detailModal {
 	background: #fff;
-	font-size: 14px;
 }
 
 table th, table td {
+	font-size: 14px;
 	vertical-align: middle;
 	text-align: center;
 }
+
+
+/* paginate */
+.page-box { clear: both; padding: 20px 0; text-align: center; }
+
+.paginate {
+	text-align: center;
+	white-space: nowrap;
+	font-size: 14px;	
+}
+
+.paginate a {
+	border: 1px solid #ccc;
+	color: #000;
+	font-weight: 600;
+	text-decoration: none;
+	padding: 3px 7px;
+	margin-left: 3px;
+	vertical-align: middle;
+}
+
+.paginate a:hover, .paginate a:active {
+	color: #6771ff;
+}
+
+.paginate span {
+	border: 1px solid #e28d8d;
+	color: #cb3536;
+	font-weight: 600;
+	padding: 3px 7px;
+	margin-left: 3px;
+	vertical-align: middle;
+}
+
+.paginate :first-child {
+	margin-left: 0;
+}
+
+</style>
