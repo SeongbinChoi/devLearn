@@ -1,4 +1,4 @@
-package com.sp.dev.mypage;
+package com.sp.dev.mypage.calendar;
 
 import java.util.List;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.sp.dev.common.dao.CommonDAO;
 
-@Service("mypage.calendarService")
+@Service("mypage.calendar.calendarService")
 public class CalendarServiceImpl implements CalendarService {
 	
 	@Autowired
@@ -43,7 +43,28 @@ public class CalendarServiceImpl implements CalendarService {
 			e.printStackTrace();
 			throw e;
 		}
-		
+	}
+
+	@Override
+	public void updateCalendar(Calendar cal) throws Exception {
+		try {
+			dao.updateData("cal.updateCalendar", cal);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public Calendar readCalendar(int planNum) throws Exception {
+		Calendar cal = null;
+		try {
+			cal = dao.selectOne("cal.readCalendar", planNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return cal;
 	}
 	
 	
