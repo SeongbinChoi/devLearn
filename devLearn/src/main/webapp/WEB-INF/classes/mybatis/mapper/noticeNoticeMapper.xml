@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="noticeManage">
+	<!-- 글 작성  -->
+	<insert id="insertNotice" parameterType="com.sp.dev.admin.noticeManage.Notice">
+		INSERT INTO notice (noticeNum, memberEmail, subject, content, regDate) 
+			VALUES (notice_seq.NEXTVAL, #{eMail}, #{subject}, #{content}, SYSDATE)
+	</insert>
+	
+	<sql id="where-list">
+		<choose>
+			<when test="condition == 'all'">
+				AND  ( INSTR(subject, #{keyword}) &gt; 0
+					OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+			</when>
+			<when test="condition == 'content'">
+				AND DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 
+			</when>
+			<otherwise>
+				AND INSTR(${condition}, #{keyword}) &gt; 0
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="listNotice" parameterType="java.util.Map" resultType="com.sp.dev.admin.noticeManage.Notice">
+		SELECT * FROM(
+		    SELECT ROWNUM rnum, tb.* FROM(
+		        SELECT n.noticeNum noticeNum, n.memberEmail eMail, subject, TO_CHAR(n.regDate, 'YYYY-MM-DD' ) regDate, memberNickname nickName
+		        FROM notice n
+		        JOIN member m ON m.memberEmail = n.memberEmail
+		        <where>
+		        	<if test="keyword != null and keyword != ''">
+		        		<include refid="where-list"/>
+		        	</if>
+		        </where>
+		    )tb WHERE ROWNUM &lt;= #{end} 
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="countNotice" parameterType="java.util.Map" resultType="com.sp.dev.admin.noticeManage.Notice">
+		SELECT COUNT(*) FROM notice
+		<where>
+	       	<if test="keyword != null and keyword != ''">
+	       		<include refid="where-list"/>
+	       	</if>
+		</where> 
+	</select>
+	
+	
+	<select id="readNotice" parameterType="Integer" resultType="com.sp.dev.admin.noticeManage.Notice">
+		SELECT  n.noticeNum noticeNum, n.memberEmail eMail, subject, TO_CHAR(n.regDate, 'YYYY-MM-DD' ) regDate, memberNickname nickName, content
+		FROM notice n
+		JOIN member m ON m.memberEmail = n.memberEmail
+		WHERE noticeNum = #{noticeNum}
+	</select>
+	
+	<select id="listSubject" resultType="com.sp.dev.admin.noticeManage.Notice">
+		SELECT noticeNum, subject FROM (
+			SELECT ROWNUM rnum, noticeNum, subject
+			FROM notice
+			ORDER BY regDate desc
+		) WHERE rnum &lt;= 7
+	</select>
+	
+</mapper>
