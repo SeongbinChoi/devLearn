@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="lecturePage">
+	<select id="readLecture" parameterType="String" resultType="com.sp.dev.lectures.Lectures">
+		SELECT lectureNum, memberEmail, categoryNum, lectureSubject, 
+			lectureContent, lecturePrice, 
+		FROM lecture
+		WHERE memberEmail = #{memberEmail}
+	</select>
+	
+	<update id="insertLecture" parameterType="com.sp.dev.lectures.Lectures">
+		INSERT INTO lecture(lectureNum, lectureEmail, categoryNum, lectureSubject, 
+			lectureContent, lecturePrice)
+		VALUES(lecture_seq.NEXTVAL, #{memberEmail}, #{categoryNum}, #{lectureSubject},
+			#{lectureContent}, #{lecturePrice} )
+	</update>
+	
+	<update id="updateLecture" parameterType="com.sp.dev.lectures.Lectures">
+		UPDATE lecture SET categoryNum= #{categoryNum}, lectureSubject = #{lectureSubject}, 
+			content = #{content}, price = #{price}
+		WHERE memberEmail = #{memberEmail}
+	</update>
+</mapper>
