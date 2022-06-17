@@ -1,6 +1,7 @@
 package com.sp.dev.mypage.myWrite;
 
 public class MyWrite {
+	private int listNum;
 	private int qnaNum;
 	private String memberEmail;
 	private String subject;
@@ -13,6 +14,13 @@ public class MyWrite {
 	private int selected;
 	private String content;
 	private int replyNum;
+	
+	public int getListNum() {
+		return listNum;
+	}
+	public void setListNum(int listNum) {
+		this.listNum = listNum;
+	}
 	public int getQnaNum() {
 		return qnaNum;
 	}

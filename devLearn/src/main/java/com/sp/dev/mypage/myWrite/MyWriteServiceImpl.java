@@ -19,7 +19,7 @@ public class MyWriteServiceImpl implements MyWriteService {
 		int result = 0;
 		
 		try {
-			result = dao.selectOne("myWrite.qnaDataCount", map);
+			result = dao.selectOne("my.qnaDataCount", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -29,8 +29,13 @@ public class MyWriteServiceImpl implements MyWriteService {
 
 	@Override
 	public List<MyWrite> qnaList(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<MyWrite> list = null;
+		try {
+			list = dao.selectList("my.qnaList", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }
