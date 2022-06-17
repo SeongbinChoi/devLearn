@@ -35,7 +35,7 @@ public class LecNewsController {
 	@Autowired
 	private FileManager fileManager;
 	
-	@RequestMapping(value = "list")
+	@RequestMapping(value = "article", method = RequestMethod.GET)
 	public String list(@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "all") String condition,
 			@RequestParam(defaultValue = "") String keyword,
@@ -113,7 +113,7 @@ public class LecNewsController {
 		model.addAttribute("condition", condition);
 		model.addAttribute("keyword", keyword);		
 		
-		return ".lecturenews.list";
+		return ".lecturenews.article";
 	}
 	
 	@RequestMapping(value = "write", method = RequestMethod.POST)
@@ -123,7 +123,7 @@ public class LecNewsController {
 		
 		// 강사 아니면 컷하는거
 		if(info.getMemberRole() != "20" && info.getMemberRole() != "30") {
-			return "redirect:/lecturenews/list";
+			return "redirect:/lecturenews/article";
 		}
 		
 		try {
@@ -135,7 +135,7 @@ public class LecNewsController {
 		} catch (Exception e) {
 		}
 		
-		return "redirect:/lecturenews/list";
+		return "redirect:/lecturenews/article";
 	}
 	
 	@RequestMapping(value = "article")

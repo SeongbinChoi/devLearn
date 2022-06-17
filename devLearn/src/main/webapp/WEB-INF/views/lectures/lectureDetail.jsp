@@ -41,7 +41,10 @@
 					<a class="nav-link" href="#scrollspyHeading3">수강평</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">수강 전 문의</a>
+					<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lectureInquiry/inquiry';">수강 전 문의</a>
+					<!--  
+					<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lectureInquiry/inquiry?lecturnNum=${dto.lectureNum}';">수강 전 문의</a>
+					-->
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#">커뮤니티</a>

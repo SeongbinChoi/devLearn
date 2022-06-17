@@ -6,6 +6,19 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/boot-board.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
 
+<style type="text/css">
+
+.ck.ck-editor {
+   max-width: 97%;
+   overflow-y: scroll;
+}
+
+.ck-editor__editable {
+    min-height: 250px;
+    max-height: 250px;
+}
+</style>
+
 <script type="text/javascript">
 function sendOk() {
 	var f = document.lectureNewsForm;

@@ -11,24 +11,24 @@
 		values(#{newsNum}, #{lectureNum}, #{subject}, SYSDATE, #{content})
 	</insert>
 	
-	<!-- 검색 -->
-	<sql id="">
-		
-	</sql>
+	
 	
 	<!-- 개수 -->
+	<!--  
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		select NVL(count(*), 0)
 		from lectureNews ln
 		join member m on ln.memberEmail=m.memberEmail
 		<where>
 			<if test="keyword != null and keyword != '' ">
-				<include refid="where-list"></include>			
+				<include refid="where-list"/>			
 			</if>
 		</where>
 	</select>
+	-->
 	
 	<!-- 리스트 -->
+	<!--  
 	<select id="listNews" parameterType="map" resultType="com.sp.dev.lecturenews.LecNews">
 		select * from (
 			select rownum rnum, tb.* from (
@@ -48,6 +48,7 @@
 			) tb where rownum &lt;= #{end}
 		) where rnum &gt;= #{start}
 	</select>
+	-->
 	
 	<!-- 글보기 -->
 	<select id="readNews" parameterType="Integer" resultType="com.sp.dev.lecturenews.LecNews">
