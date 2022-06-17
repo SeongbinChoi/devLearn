@@ -60,7 +60,11 @@ public class MemberManageServiceImpl implements MemberManageService {
 
 	@Override
 	public void updateFailureCountReset(String eMail) throws Exception {
-		
+		try {
+			dao.updateData("memberManage.updateFailureCountReset", eMail);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
 
 	@Override
@@ -129,5 +133,99 @@ public class MemberManageServiceImpl implements MemberManageService {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public List<MemberManage> listApplyMember(Map<String, Object> map) {
+		List<MemberManage> list = null;
+		try {
+			list = dao.selectList("memberManage.listApplyMember", map);					
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int countApplyMember(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("memberManage.countApplyMember",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public ApplyManage readApplyDetail(String eMail) {
+		ApplyManage dto = null;
+		try {
+			dto = dao.selectOne("memberManage.readApplyDetail", eMail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+	
+
+	@Override
+	public void updateApplyStatus(String eMail) throws Exception {
+		try {
+			dao.updateData("memberManage.updateApplyStatus", eMail);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+	
+	@Override
+	public List<NotifyManage> listNotifiedMember(Map<String, Object> map) {
+		List<NotifyManage> list = null;
+		
+		try {
+			list = dao.selectList("memberManage.notifiyList", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int countNotified(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = dao.selectOne("memberManage.countNotify", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public NotifyManage readNotifiedDetail(int notifyNum) {
+		NotifyManage dto = null;
+		
+		try {
+			dto = dao.selectOne("memberManage.readNotify", notifyNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return dto;
+	}
+
+	@Override
+	public void updateNotifiedState(int notifyNum) throws Exception{
+		
+	}
+
+	
+	
 	
 }

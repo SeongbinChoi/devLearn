@@ -36,9 +36,9 @@ function sendOk() {
 		return;
 	}
 	
-	if(! f.categoryNum.value) {
+	if(! f.categoryCode.value) {
 		alert("카테고리를 선택하세요.");
-		f.categoryNum.focus();
+		f.categoryCode.focus();
 		return;
 	}
 	
@@ -93,7 +93,7 @@ $(function() {
 			<tr>
 				<td>카테고리</td>
 				<td style="width:35%;">
-					<select name="categoryNum" class="form-select">
+					<select name="categoryCode" class="form-select">
 						<c:forEach var="vo" items="${categoryList}">
 							<option value="${vo.categoryCode}" <c:if test="${vo.categoryCode eq dto.categoryCode}">
 								selected="selected"</c:if>

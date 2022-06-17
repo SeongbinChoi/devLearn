@@ -16,8 +16,8 @@ public class MentorsServiceImpl implements MentorsService {
 	public int dataCount(Map<String, Object> map) {
 		int result = 0;
 		try {
-			
-		} catch (Exception e) {
+			result = dao.selectOne("mentors.dataCount", map);
+			} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

@@ -50,8 +50,8 @@
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">신규 유입 회원(month)</h5>
 			                <h3 class="mt-3 mb-3">36,254</h3>
 			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
+				                <span class ="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
+				                <span class ="text-nowrap">Since last month</span>  
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
@@ -68,13 +68,13 @@
 				<div class="col">
 					<ul class="nav nav-tabs" id="myTab" role="tablist">
 						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="memberList-tab" data-bs-toggle="tab" data-bs-target="#memberList" type="button" role="tab" aria-controls="memberList" aria-selected="true" onclick="aaaa();">전체 회원</button>
+							<button class="nav-link active" id="memberList-tab" data-bs-toggle="tab" data-bs-target="#memberList" type="button" role="tab" aria-controls="memberList" aria-selected="true">전체 회원</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="applyRole-tab" data-bs-toggle="tab" data-bs-target="#applyRole" type="button" role="tab" aria-controls="applyRole" aria-selected="false">권한 신청</button>
+							<button class="nav-link" id="applyRole-tab" data-bs-toggle="tab" data-bs-target="#applyRole" type="button" role="tab" aria-controls="applyRole" aria-selected="false" onclick="showApplyList();">권한 신청</button>
 						</li>
 						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="notify-tab" data-bs-toggle="tab" data-bs-target="#notify" type="button" role="tab" aria-controls="notify" aria-selected="false">회원 신고</button>
+							<button class="nav-link" id="notify-tab" data-bs-toggle="tab" data-bs-target="#notify" type="button" role="tab" aria-controls="notify" aria-selected="false" onclick="showNotifyList();">회원 신고</button>
 						</li>
 					</ul>
 					<div class="tab-content" id="myTabContent">
@@ -82,19 +82,39 @@
 						<!-- 회원 관리 -->
 						<div class="tab-pane fade show active" id="memberList" role="tabpanel" aria-labelledby="memberList-tab">
 							<div class="tableTop my-2 ml-2 d-flex">
-								<span>${memberCount}개 (1/1)</span>
+								<span>&nbsp;&nbsp;&nbsp;${memberCount}명의 회원 ${page}/${totalPage}페이지</span>
+								<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/memberManage/main';">새로고침</button>
 								<form name="memberListForm"  class="ms-auto" style="display: block">
+									<select name="condition">
+										<option value="all" ${condition == 'all' ? "selected='selected'" : "" }>::검색조건::</option>
+										<option value="memberEmail" ${condition == 'memberEmail' ? "selected='selected'" : "" }>아이디</option>
+										<option value="memberName" ${condition == 'memberName' ? "selected='selected'" : "" }>이름</option>
+										<option value="memberNickName" ${condition == 'memberNickName' ? "selected='selected'" : "" }>별명</option>
+										<option value="regDate" ${condition == 'regDate' ? "selected='selected'" : "" }>등록일</option>
+									</select>
+									<input type="text" name="keyword" value="${keyword}">
+									<select name= "mRole" id="mRole" onchange="changemRole();">
+										<option value="">::회원등급::</option>
+										<option value="10" ${mRole == 10 ? "selected='selected'" : "" }>멘토</option>
+										<option value="20" ${mRole == 20 ? "selected='selected'" : "" }>강사</option>
+										<option value="30" ${mRole == 30 ? "selected='selected'" : "" }>강사 &amp; 멘토</option>
+									</select>
 									<select name="enabled" id="enabled" onchange="changeEnabled();">
-										<option value="" >전체</option>
+										<option value="" >::활성여부::</option>
 										<option value="1" ${enabled == 1 ? "selected='selected'" : "" }>활성 계정</option>
 										<option value="99" ${enabled == 99 ? "selected='selected'" : "" }>비활성 계정</option>
 									</select>
+									<input type="hidden" name="page" value="1">
+									<button type="button" onclick="searchMember();">검색</button>
 								</form>
 							</div>
 							<div class="table-responsive" style="overflow-y: scroll; height: 700px;">
 								<table class="table table-centered table-nowrap table-hover mb-0">
 									<thead>
 										<tr class="mb-3">
+											<td>
+												<h5 class="font-14 my-1 fw-normal">#</h5>
+											</td>
 											<td>
 												<h5 class="font-14 my-1 fw-normal">메일</h5>
 											</td>
@@ -113,8 +133,11 @@
 										</tr>
 									</thead>
 									<tbody>
-										<c:forEach var="vo" items="${list}">
+										<c:forEach var="vo" items="${list}" varStatus="status">
 											<tr onclick="memberDetail('${vo.eMail}');" >
+												<td>
+													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">${memberCount - (page-1) * rows - status.index}</h5>
+												</td>
 												<td>
 													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">${vo.eMail}</h5>
 												</td>
@@ -162,139 +185,23 @@
 									</tbody>
 								</table>
 							</div> <!-- end table-responsive-->
+							<div class="page-box">
+								${paging}
+							</div>
+						
 						</div>
+						
+						
+						
 						<!-- 권한 신청-->
-						<div class="tab-pane fade" id="applyRole" role="tabpanel" aria-labelledby="applyRole-tab">
-							<div class="tableTop my-2 ml-2 d-flex">
-								<span>4개 (1/4)</span>
-								<form name="applyRoleForm"  class="ms-auto" style="display: block">
-									<select >
-										<option value="">전체</option>
-										<option value="">처리중</option>
-										<option value="">처리완료</option>
-									</select>
-								</form>
-							</div>							
-							<div class="table-responsive">
-								<table class="table table-centered table-nowrap table-hover mb-0">
-									<thead>
-										<tr>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">#</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">회원 메일</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">이름</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">전화번호</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">신청한 등급</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">상태</h5>
-											</td>
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach begin="1" end="10" step="1" var="i">
-											<tr  onclick="href.location=''" data-bs-toggle="modal" data-bs-target="#applyRoleModal"> 
-												<td>
-													<span class="font-14 my-1 fw-normal" style="font-size:14px;"><b>${i}</b></span>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">ASOS@gmail.com</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">김자바</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">010-1234-1234</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">멘토</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">처리중</h5>
-												</td>
-												<td>
-													<button type="button" class="btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#applyInfoModal">자세히</button>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div> <!-- end table 권한-->
+						<div class="applyDetailModal" id="applyDetailModal"></div>
+						<div class="tab-pane fade applyRoleDiv" id="applyRole" role="tabpanel" aria-labelledby="applyRole-tab">
+							
 						</div>
 						<!-- 신고 당한 회원-->
-						<div class="tab-pane fade" id="notify" role="tabpanel" aria-labelledby="contact-tab">
-							<div class="tableTop my-2 ml-2 d-flex">
-								<span>4개 (1/4)</span>
-								<form name="notifyForm"  class="ms-auto" style="display: block">
-									<select >
-										<option value="">전체</option>
-										<option value="">처리중</option>
-										<option value="">처리완료</option>
-									</select>
-								</form>
-							</div>		
-							<div class="table-responsive">
-								<table class="table table-centered table-nowrap table-hover mb-0">
-									<thead>
-										<tr class="mb-3">
-											<td>
-												<h5 class="font-14 my-1 fw-normal">#</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">신고한 회원</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">신고 사유</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">신고글 제목</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">작성자</h5>
-											</td>
-											<td>
-												<h5 class="font-14 my-1 fw-normal">처리상태</h5>
-											</td>
-											
-										</tr>
-									</thead>
-									<tbody>
-										<c:forEach begin="1" end="30" step="1" var="i">
-											<tr onclick="href.location=''" data-bs-toggle="modal" data-bs-target="#notifyModal">
-												<td>
-													<span class="font-14 my-1 fw-normal" style="font-size:14px;"><b>${i}</b></span>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">김자바</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">욕설 사용</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">쉬바~~~~~어쩌구~~~</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">김욕설</h5>
-												</td>
-												<td>
-													<h5 class="font-14 my-1 fw-normal" style="font-size:14px;">처리중</h5>
-												</td>
-												<td>
-													<button type="button" class="btn-sm btn-primary" onclick="href.location='#'">자세히</button>
-												</td>
-											</tr>
-										</c:forEach>
-									</tbody>
-								</table>
-							</div> <!-- end table 신고-->
+						<div class="notifyDetailModal" id="notifyDetailModal"></div>
+						<div class="tab-pane fade notifyDiv" id="notify" role="tabpanel" aria-labelledby="notify-tab">
+
 						</div>
 						
 					</div>
@@ -303,209 +210,258 @@
 	 	</div>
 	</div>
 
-<!-- 회원 상세 Modal -->
-<div class="modal fade" id="memberInfo" tabindex="-1" aria-labelledby="memberInfoLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-	<form name="memberDetailForm" method="post" >
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="memberInfoLabel">회원 상세 정보</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	      	<table class="table td-border my-10" style="border: 1px border-collpase;">
-	      		<tr>
-	      			<td style="width:15%;">E-mail</td>
-	      			<td style="width:35%;">javaKim@naver.com</td>
-	      			<td style="width:15%;">이름</td>
-	      			<td style="width:35%;">김자바</td>
-	      		</tr>
-	      		<tr>
-	      			<td style="width:15%;">비지니스 메일</td>
-	      			<td style="width:35%;">javaKim@kakao.com</td>
-	      			<td style="width:15%;">전화번호</td>
-	      			<td style="width:35%;">010-1234-5544</td>
-	      		</tr>
-				<tr>
-	      			<td style="width:15%;">가입일</td>
-	      			<td style="width:35%;">2022-05-05 12:10:06</td>
-	      			<td style="width:15%;">마지막 로그인</td>
-	      			<td style="width:35%;">2022-05-25 22:30:06</td>
-				</tr>
-				<tr>
-	      			<td style="width:15%;">마지막 로그인</td>
-	      			<td style="width:35%;">2022-05-25 22:30:06</td>
-	      			<td style="width:15%;">광고 수신 여부</td>
-	      			<td style="width:35%;">동의 / 미동의</td>
-				</tr>
-	      		<tr>
-	      			<td style="width:15%;">회원 등급</td>
-	      			<td >
-	      				<select style="width: 100%;">
-	      					<option>회원</option>
-	      					<option>멘토</option>
-	      					<option>강사</option>
-	      					<option>관리자</option>
-	      				</select>
-	      			</td>
-	      			<td>로그인 가능 여부</td>
-	      			<td>
-	      				<select>
-	      					<option value="0">가능</option>
-	      					<option value="1">불가능</option>
-	      				</select>
-	      			</td>
-      			</tr>
-      		</table>
-   			<table class="table td-border my-10" style="border: 1px border-collpase;">
-      			<tr>
-	      			<td style="width: 15%;">상태</td>
-	      			<td >
-	      				<select name="stateCode" style="width: 100%;" >
-	      					<option value=""> :: 상태 :: </option>
-	      					<option value="1">불법적인 방법으로 로그인</option>
-	      					<option value="2">불건전 게시물 등록</option>
-	      					<option value="3">다른 유저 비방</option>
-	      					<option value="4">타 계정 도용</option>
-	      					<option value="5">기타 약관 위반</option>
-	      					<option value="6">1년 이상 로그인 하지 않음</option>
-	      					<option value="9">패스워드 6회 이상 실패</option>
-	      					<option value="0">해제</option>
-	      					<option value="10">퇴사</option>      					
-	      				</select>
-	      			</td>
-	      			<td style="width: 20%">
-		      			<button type="button" class="btn btn-primary" style="width: 100%;">자세히</button>
-	      			</td>
-	      		</tr>
-				<tr>
-					<td>메모</td>
-					<td colspan="2">
-						<input type="text" name="stateMemo" style="width: 100%;">						
-					</td>
-				</tr>	      			
-	      	</table>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-primary" onclick="href.location='changeMemberState();'">저장하기</button>
-	      </div>
-	    </div>
-    </form>
-  </div>
-</div>
+<script type="text/javascript" >
+function searchMember() {
+	const f = document.memberListForm;
+	
+	f.action = "${pageContext.request.contextPath}/admin/memberManage/main";
+	f.submit();
+}
 
-<!-- 등급신청 Modal -->
-<div class="modal fade" id="applyInfoModal" tabindex="-1" aria-labelledby="applyInfoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="applyInfoModalLabel">회원 상세 정보</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-      	<table class="table td-border my-10" style="border: 1px border-collpase;">
-      		<tr>
-      			<td style="width:15%;">이름</td>
-      			<td style="width:35%;">김자바</td>
-      			<td style="width:15%;">비지니스 메일</td>
-      			<td style="width:35%;">javaKim@gmail.com</td>
-      		</tr>
-      		<tr>
-      			<td>신청 등급</td>
-      			<td>멘토</td>
-      			<td>카테고리</td>
-      			<td>백엔드 프론트엔드 풀스택</td>
-      		</tr>
-      		<tr>
-      			<td style="width:15%;">가입일</td>
-      			<td style="width:35%;">2022-05-05 12:10:06</td>
-      			<td style="width:15%;">마지막 로그인</td>
-      			<td style="width:35%;">2022-05-25 22:30:06</td>
-      		</tr>
-      		<tr>
-      			<td style="width:15%;">상태</td>
-      			<td style="width:35%;">비활성화</td>
-      			<td style="width:15%;">광고 수신 여부</td>
-      			<td style="width:35%;">2022-05-25 22:30:06 동의 / 미동의</td>
-      		</tr>
-      		<tr>
-      			<td style="width:15%;">상태 메모</td>
-      			<td style="width:35%;" colspan="2">패스워드 5회 오류로 인한 정지</td>
-      			<td><button type="button" class="btn btn-sm btn-primary" onclick="showDetail();">상세보기</button></td>
-      		</tr>
-      	</table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div><!-- 멘토신청 modal end -->
 
-<!-- 멘토신청 Modal -->
-<div class="modal fade" id="nofifyModal" tabindex="-1" aria-labelledby="nofifyModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-xl">
-		<form>+-+-
-			<div class="modal-content">
-				<div class="modal-header">
-				<h5 class="modal-title" id="nofifyModalLabel">회원 상세 정보</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<table class="table td-border my-10" style="border: 1px border-collpase;">
-						<tr>
-							<td style="width:15%;">회원번호</td>
-							<td style="width:35%;">123123</td>
-							<td style="width:15%;">Email</td>
-							<td style="width:35%;">javaKim@naver.com</td>
-						</tr>
-						<tr>
-							<td style="width:15%;">이름</td>
-							<td style="width:35%;">김자바</td>
-							<td style="width:15%;">회원 등급</td>
-							<td style="width:35%;">회원/멘토/강사</td>
-						</tr>
-						<tr>
-							<td style="width:15%;">가입일</td>
-							<td style="width:35%;">2022-05-05 12:10:06</td>
-							<td style="width:15%;">마지막 로그인</td>
-							<td style="width:35%;">2022-05-25 22:30:06</td>
-						</tr>
-						<tr>
-							<td style="width:15%;">상태</td>
-							<td style="width:35%;">비활성화</td>
-							<td style="width:15%;">메일 수신 여부</td>
-							<td style="width:35%;">동의 / 미동의</td>
-						</tr>
-						<tr>
-							<td style="width:15%;">상태</td>
-						<td>
-							<select>
-								<option>:: 상태 ::</option>
-								<option value="1">욕설 사용</option>
-								<option value="2">스팸 계정</option>
-								<option value="2">불법적인 방법으로 로그인</option>
-								<option value="5">타 계정 도용</option>
-								<option value="6">기타 규정 위반</option>
-								<option value="0">정지 해제</option>
-							</select>
-						</td>
-							<td style="width:35%;" colspan="2">패스워드 5회 오류로 인한 정지</td>
-							<td><button type="button" class="btn btn-sm btn-primary" onclick="showDetail();">상세보기</button></td>
-						</tr>
-					</table>
-				</div>
-			<div class="modal-footer">
-			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			<button type="button" class="btn btn-primary">Save changes</button>
-			</div>
-			</div>
-		</form>
-	</div>
-</div><!-- 신고 modal -->
+function memberDetail(eMail) { //리스트에서 tr 클릭해서 상세정보 보기
+	
+	let dlg = $("#detailModal").dialog({
+		  autoOpen: false,
+		  modal: true,
+		  height: 550,
+		  width: 830,
+		  buttons: {
+		       " 닫기 " : function() {
+				$(this).dialog("close");
+				searchMember();
+		    	$(this).css("border", "1px solid red");	
+		       }
+		  },
+		  title: "회원상세정보",
+		  close: function(event, ui) {
+		  }
+	});
+	let url = "${pageContext.request.contextPath}/admin/memberManage/detail";
+	let query = "eMail="+eMail;
+	
+	const fn = function(data) {
+		$("#detailModal").html(data);
+		dlg.dialog("open");		
+		//console.log(query);
+		//console.log(data);
+		$(".ui-dialog-titlebar-close").css("display", "none");
+	};
+	ajaxFun(url, "post", query, "html", fn);
+}
 
+function changemRole() {
+	searchMember();
+}
+
+function changeEnabled() {  //전체/활성화/비활성화 셀렉트 박스 움직였을 때
+	searchMember();
+}
+
+
+function stateDetail() {
+	$("#stateDetail").dialog({
+		  modal: true,
+		  minHeight: 100,
+		  maxHeight: 450,
+		  width: 750,
+		  title: '계정상태 상세',
+		  close: function(event, ui) {
+			   $(this).dialog("destroy"); 
+		  }
+	});
+	console.log();
+}
+
+function updateRole() {
+	const f = document.infoDetailForm;
+	
+	let url = "${pageContext.request.contextPath}/admin/memberManage/updateRole";
+	let query = $("#infoDetailForm").serialize();
+
+	const fn = function(data) {
+		//console.log(data);
+		//console.log(data.eMail);
+		memberDetail(data.eMail);
+	}
+		
+	ajaxFun(url, "post", query, "json", fn);
+}
+
+
+function stateUpdate(){
+	const f = document.stateForm;
+	
+	let enabled = f.enabled.value;
+	let stateCode = f.stateCode.value;
+	
+	//console.log(enabled);
+	//console.log(stateCode);
+	//console.log(typeof(stateCode));
+	
+	if (! stateCode ) {
+		f.stateCode.focus();
+	} else if (enabled === '1' && stateCode !== '11') {
+		alert("계정을 활성화 하는경우에는 <해제>를 선택해주세요.");
+		f.stateCode.focus();
+	} else if (enabled === '99' && stateCode === '11') {
+		alert("계정을 비활성화 하는 경우에는 <해제>이외의 사유를 선택해주세요.");
+		f.stateCode.focus();
+	}
+	
+	
+	let url = "${pageContext.request.contextPath}/admin/memberManage/updateEnabled";
+	let query = $("#stateForm").serialize();
+	const fn = function(data) {
+ 		location.reload();
+	}
+	ajaxFun(url, "post", query, "json", fn);		
+}
+
+function showApplyList() { //권한신청 탭 클릭시 리스트 받아오기
+	const f = document.applyRoleForm;
+	let url = "${pageContext.request.contextPath}/admin/memberManage/applyList";
+	let query = $("form[name=applyRoleForm]").serialize();
+	
+	const fn = function(data) {
+		$(".applyRoleDiv").html(data);
+	}
+	ajaxFun(url, "post", query, "html", fn);		
+}
+
+
+function applyDetail(eMail) {
+	let dlg = $("#applyDetailModal").dialog({
+		  autoOpen: false,
+		  modal: true,
+		  height: 550,
+		  width: 830,
+		  buttons: {
+			  " 변경하기 " : function() {
+				  updateApply();
+			  },
+		       " 닫기 " : function() {
+				$(this).dialog("close");
+				showApplyList();
+		       }
+		  },
+		  title: "지식공유자 신청 현황",
+		  close: function(event, ui) {
+		  }
+	});
+	
+	let url = "${pageContext.request.contextPath}/admin/memberManage/applyDetail";
+	let query = "eMail="+eMail;
+	const fn = function(data) {
+		$("#applyDetailModal").html(data);
+		const f = document.applyDetailForm;
+		let mRole = f.mRole.value;
+		let applyRole = f.applyRole.value;
+		let currRole = "";
+		let aftRole = "";
+
+		switch (mRole) {
+			case "1" : currRole = "회원"; break;
+			case "10" : currRole = "멘토"; break;
+			case "20" : currRole = "강사"; break;
+		}
+		switch(applyRole) {
+			case "10" : aftRole = "멘토"; break;
+			case "20" : aftRole = "강사"; break;
+			case "30" : aftRole = "강사 & 멘토"; break;
+		}
+		
+		$("#applyDetailSelect option").remove();
+		$("#applyDetailSelect").append("<option value='"+mRole+"' selected = 'selected'>"+currRole+"</option>");
+		$("#applyDetailSelect").append("<option value='"+applyRole+"'>"+aftRole+"</option>");
+		dlg.dialog("open");		
+		$(".ui-dialog-titlebar-close").css("display", "none");
+		
+	};
+	ajaxFun(url, "post", query, "html", fn);
+}
+
+function updateApply() {
+	const f = document.applyDetailForm;
+	let mRole = f.mRole.value;
+	let applyRole = f.applyRole.value;
+	
+	if (mRole === applyRole) {
+		alert("등급을 바꿔주세요");
+	}
+	
+	let url = "${pageContext.request.contextPath}/admin/memberManage/updateApply";
+	let query = $("#applyDetailForm").serialize();
+	
+	//alert(query);
+	
+	const fn = function(data) {
+		showApplyList();
+	}
+		
+	ajaxFun(url, "post", query, "json", fn);	
+}
+
+function applyRollChange() {
+	showApplyList();
+}
+
+function applyStatusChange() {
+	showApplyList();
+}
+
+function showNotifyList() {
+	let url = "${pageContext.request.contextPath}/admin/memberManage/notifyList";
+	let query = $("form[name=notifyForm]").serialize();
+	
+	const fn = function(data) {
+		console.log(query);
+		$(".notifyDiv").html(data);
+	}
+	
+	ajaxFun(url, "post", query, "html", fn);
+}
+
+function notifyStateChange() {
+	showNotifyList();
+}
+
+function notifyDetail(notifyNum) {
+	let dlg = $("#notifyDetailModal").dialog({
+		  autoOpen: false,
+		  modal: true,
+		  height: 600,
+		  width: 830,
+		  buttons: {
+			" 글 보기 " : function() {
+				let qnaUrl ="${pageContext.request.contextPath}/community/qnaList_article";
+				let qnaNum = document.notifyDetailForm.qnaNum.value;
+				let qnaQuery = "rows=1&page=1&qnaNum="+qnaNum;
+				let fQuery = qnaUrl+"?"+qnaQuery;
+				window.open(fQuery);
+			},
+		       " 닫기 " : function() {
+				$(this).dialog("close");
+				showNotifyList();
+			}
+		  },
+		  title: "신고된 내용 상세보기",
+		  close: function(event, ui) {
+		  }
+	});
+	
+	let url = "${pageContext.request.contextPath}/admin/memberManage/notifyDetail";
+	let query = "notifyNum="+notifyNum;
+	const fn = function(data) {
+		console.log(data);
+		$("#notifyDetailModal").html(data);
+		dlg.dialog("open");		
+		$(".ui-dialog-titlebar-close").css("display", "none");
+		
+	};
+	ajaxFun(url, "post", query, "html", fn);
+}
+</script>
 
 
 
@@ -514,7 +470,7 @@
 		<div class="modal-dialog modal-dialog-scrollable modal-lg">
 			<div class="modal-content">
 				<div class="modal-header">
-				<h5 class="modal-title" id="jisikModalLabel">감사합니다, abc1234님 지식공유자가 되려면 아래정보를 입력해주세요</h5>
+				<h5 class="modal-title" id="jisikModalLabel">감사합니다, ${sessionScope.member.memberEmail}님 지식공유자가 되려면 아래정보를 입력해주세요</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
@@ -523,8 +479,8 @@
 						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="인프런 계정을 입력해주세요">
 					</div>
 					<div class="mb-3">
-						<label for="exampleFormControlInput1" class="form-label">연락받을 이메일</label>
-						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="자주 사용하는 이메일을 입력해주세요">
+						<label for="exampleFormControlInput1" class="form-label">비지니스 이메일</label>
+						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="메일 주소를 입력해주세요">
 					</div>
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">이름 (실명)</label>
@@ -532,7 +488,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">연락처</label>
-						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="000-0000-0000">
+						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="***-****-**** 형식으로 입력해주세요">
 					</div>
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">희망 역할</label>
@@ -540,19 +496,19 @@
 						<br>
 						<div class="radio">
 							<div class="form-check mr-2">
-								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleBoth">
+								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleBoth" value="35">
 								<label class="form-check-label" for="chooseRoleInstructor">
 									강사 &amp; 멘토
 								</label>
 							</div>
 							<div class="form-check mr-2">
-								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleInstructor">
+								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleInstructor" value="25">
 								<label class="form-check-label" for="chooseRoleInstructor">
 									강사
 								</label>
 							</div>
 							<div class="form-check">
-								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleMentor">
+								<input class="form-check-input" type="radio" name="chooseRole" id="chooseRoleMentor" value="15">
 								<label class="form-check-label" for="chooseRoleMentor">
 									멘토
 								</label>
@@ -561,7 +517,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="exampleFormControlInput1" class="form-label">희망분야</label>
-						<label for="exampleFormControlInput1" class="form-label" style="font-size: 12px;">아직 계획중인 강의가 없으시다면 지식공유자의 직무와 연관된 분야를 골라주세요</label>
+						<label for="exampleFormControlInput1" class="form-label" style="font-size: 12px;">아직 계획중인 강의가 없으시다면 직무와 연관된 분야를 골라주세요</label>
 						<br>
 						<input class="btn btn-primary" type="button" value="개발 · 프로그래밍">
 						<input class="btn btn-primary" type="button" value="보안 · 네트워크">
@@ -574,7 +530,7 @@
 						<textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="" style="height: 250px;"></textarea>
 					</div>
 					<div class="mb-3">
-						<input class="btn btn-primary" type="submit" value="제출">
+						<input class="btn btn-primary" type="button" value="제출">
 					</div>
 				</div>
 			</div>

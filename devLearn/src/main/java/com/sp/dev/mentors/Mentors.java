@@ -6,7 +6,7 @@ public class Mentors {
 	private String memberNickname;
 	private String memberName;
 	private String saveFilename;
-	private int categoryCode;
+	private String categoryCode;
 	private String categoryName;
 	private String mentorSubject;
 	private String mentorContent;
@@ -62,10 +62,10 @@ public class Mentors {
 	public void setSaveFilename(String saveFilename) {
 		this.saveFilename = saveFilename;
 	}
-	public int getCategoryCode() {
+	public String getCategoryCode() {
 		return categoryCode;
 	}
-	public void setCategoryCode(int categoryCode) {
+	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
 	}
 	public String getCategoryName() {

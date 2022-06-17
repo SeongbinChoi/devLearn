@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.sp.dev.common.MyUtilBootstrap;
+import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
 
 @Controller("mentors.mentorsController")
@@ -25,7 +25,7 @@ public class MentorsController {
 	private MentorsService service;
 	
 	@Autowired
-	private MyUtilBootstrap myUtil;
+	private MyUtil myUtil;
 	
 	@RequestMapping(value = "mentor")
 	public String mentor(
@@ -70,10 +70,12 @@ public class MentorsController {
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 				
+		
 		model.addAttribute("list", list);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("current_page", current_page);
 		model.addAttribute("total_page", total_page);
+		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("paging", paging);
 		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("choiceValue", choiceValue);

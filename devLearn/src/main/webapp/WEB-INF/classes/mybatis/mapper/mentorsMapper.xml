@@ -9,7 +9,11 @@
 
 	<select id="dataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0)
-		FROM mentor
+		FROM mentor 	
+		<if test="categoryNum != 00">
+			WHERE categoryNum = #{categoryNum}
+		</if>
+			
 	</select>
 	
 	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
@@ -20,7 +24,7 @@
 		FROM mentor mt
 		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
 		LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
-		<if test="categoryNum != 0">
+		<if test="categoryNum != 00">
 			WHERE categoryNum = #{categoryNum}
 		</if>
 		<choose>

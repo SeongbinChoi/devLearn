@@ -12,32 +12,13 @@ public class MemberManage {
 	private String bMail;
 	private int enabled;
 	private int emailCheck;
-	
+		
 	private int pwdFail;
 	private int stateCode;
 	private String stateDate;
 	private String adminId;
 	private String memo;
-	
-	private int notifyNum;
-	private int qnaNum;
-	private String notifyReason;
-	private String notifyState;
-	
-	
-	
-	public int getPwdFail() {
-		return pwdFail;
-	}
-	public void setPwdFail(int pwdFail) {
-		this.pwdFail = pwdFail;
-	}
-	public String getMemo() {
-		return memo;
-	}
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
+
 	public String geteMail() {
 		return eMail;
 	}
@@ -61,6 +42,18 @@ public class MemberManage {
 	}
 	public void setReg_date(String reg_date) {
 		this.reg_date = reg_date;
+	}
+	public String getLastLogin() {
+		return lastLogin;
+	}
+	public void setLastLogin(String lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	public String getInfoUpdate() {
+		return infoUpdate;
+	}
+	public void setInfoUpdate(String infoUpdate) {
+		this.infoUpdate = infoUpdate;
 	}
 	public String getPhoneNum() {
 		return phoneNum;
@@ -86,23 +79,17 @@ public class MemberManage {
 	public void setEmailCheck(int emailCheck) {
 		this.emailCheck = emailCheck;
 	}
+	public int getPwdFail() {
+		return pwdFail;
+	}
+	public void setPwdFail(int pwdFail) {
+		this.pwdFail = pwdFail;
+	}
 	public int getStateCode() {
 		return stateCode;
 	}
 	public void setStateCode(int stateCode) {
 		this.stateCode = stateCode;
-	}
-	public String getLastLogin() {
-		return lastLogin;
-	}
-	public void setLastLogin(String lastLogin) {
-		this.lastLogin = lastLogin;
-	}
-	public String getInfoUpdate() {
-		return infoUpdate;
-	}
-	public void setInfoUpdate(String infoUpdate) {
-		this.infoUpdate = infoUpdate;
 	}
 	public String getStateDate() {
 		return stateDate;
@@ -116,28 +103,12 @@ public class MemberManage {
 	public void setAdminId(String adminId) {
 		this.adminId = adminId;
 	}
-	public int getNotifyNum() {
-		return notifyNum;
+	public String getMemo() {
+		return memo;
 	}
-	public void setNotifyNum(int notifyNum) {
-		this.notifyNum = notifyNum;
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
-	public int getQnaNum() {
-		return qnaNum;
-	}
-	public void setQnaNum(int qnaNum) {
-		this.qnaNum = qnaNum;
-	}
-	public String getNotifyReason() {
-		return notifyReason;
-	}
-	public void setNotifyReason(String notifyReason) {
-		this.notifyReason = notifyReason;
-	}
-	public String getNotifyState() {
-		return notifyState;
-	}
-	public void setNotifyState(String notifyState) {
-		this.notifyState = notifyState;
-	}
+	
+	
 }

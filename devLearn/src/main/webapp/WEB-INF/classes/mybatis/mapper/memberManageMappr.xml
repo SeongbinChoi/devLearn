@@ -2,26 +2,60 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="memberManage">
+	<sql id="roleAndEnabled">
+		<choose>
+			<when test="mRole != '' and enabled != '' ">
+				AND memberRole = #{mRole} AND enabled = #{enabled}
+			</when>
+			<when test="mRole != '' and enabled == '' ">
+				AND memberRole = #{mRole} 
+			</when>
+			<when test="mRole == '' and enabled != '' ">
+				AND enabled = #{enabled}
+			</when>
+		</choose>
+	</sql>
+	
+	<sql id="conditionAndKeyword">
+		<choose>
+			<when test="condition == 'all'">
+				AND INSTR(memberName, #{keyword}) &gt;= 1 OR INSTR(memberNickName, #{keyword}) &gt;= 1 OR INSTR(m.membereMail, #{keyword}) &gt;= 1  OR INSTR( m.regDate , #{keyword}) &gt;= 1 
+			</when>
+			<when test="condition == 'memberEmail'">
+				AND INSTR(m.membereMail, #{keyword}) &gt;= 1
+			</when>
+			<otherwise>
+				AND INSTR(${condition}, #{keyword}) &gt;= 1
+			</otherwise>
+		</choose>
+	</sql>
+	
+	
 	<select id="listMember" parameterType="java.util.Map" resultType="com.sp.dev.admin.memberManage.MemberManage">
-		SELECT DISTINCT m.membereMail eMail, memberName name, memberRole mRole, enabled,
-		    phoneNum
-		FROM member m
-		LEFT OUTER JOIN memberProfile p ON p.membereMail = m.membereMail
-		LEFT OUTER JOIN memberState s ON s.membereMail = m.membereMail
-		<where>
-			<if test="enabled!=''">
-				enabled = #{enabled}
-			</if>
-		</where>
+		SELECT * FROM (    
+		    SELECT ROWNUM rNum, tb.* FROM (
+		        SELECT m.membereMail eMail, memberName name, memberRole mRole, enabled,
+		            phoneNum, businessEmail bMail
+		        FROM member m 
+		        LEFT OUTER JOIN memberProfile p ON p.membereMail = m.membereMail 
+		        <where>
+					<if test="keyword!=null and keyword!=''">
+			        	<include refid="conditionAndKeyword"/>
+					</if>
+					<include refid="roleAndEnabled"/>
+		        </where>
+		    ) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rNum &gt;= #{start}
 	</select>
 	
 	<select id="countMember" parameterType="java.util.Map" resultType="Integer">
-		SELECT NVL(COUNT(membereMail), 0) FROM member
+		SELECT NVL(COUNT(membereMail), 0) FROM member m 
 		<where>
-			<if test="enabled!=''">
-				enabled = #{enabled}
+			<if test="keyword!=null and keyword!=''">
+	        	<include refid="conditionAndKeyword"/>
 			</if>
-		</where>
+			<include refid="roleAndEnabled"/>
+        </where>
 	</select>		
 		
 	<select id="readMember" resultType="com.sp.dev.admin.memberManage.MemberManage">
@@ -42,10 +76,14 @@
 	</select>
 	
 	<select id="listMemberState" parameterType="String" resultType="com.sp.dev.admin.memberManage.MemberManage">
-		SELECT memberEmail, stateCode, memo, regDate stateDate, adminId
-	    FROM memberState
-	    WHERE memberEmail = #{eMail}
-	    ORDER BY stateNum DESC
+		SELECT * FROM (    
+		    SELECT ROWNUM rNum, tb.* FROM (
+				SELECT memberEmail, stateCode, memo, regDate stateDate, adminId
+			    FROM memberState
+			    WHERE memberEmail = #{eMail}
+			    ORDER BY stateNum DESC
+		    ) tb WHERE ROWNUM &lt;= 5
+		) WHERE rNum &gt;= 1
 	</select>
 	
 	
@@ -55,10 +93,116 @@
 	</insert>
 	
 	<update id="updateMemberEnable" parameterType="java.util.Map">
-		UPDATE MEMBER SET enabled = #{enabled} where memberEmail = #{eMail}
+		UPDATE member SET enabled = #{enabled} where memberEmail = #{eMail}
+	</update>
+	
+	<update id="updateFailureCountReset" parameterType="java.util.Map">
+		UPDATE member SET pwdFail = 0 WHERE memberEmail = #{eMail}
 	</update>
 	
 	<update id="updateMemberRole" parameterType="java.util.Map">
 		UPDATE member SET memberRole = #{mRole} WHERE memberEmail = #{eMail}
+	</update>
+	
+	<sql id="applyWhere">
+		<choose>
+			<when test="status != ''">
+				AND k.status = #{status}
+			</when>
+		</choose>
+	</sql>
+	
+	<sql id="roleAndStatus">
+		<choose>
+			<when test="applyRole != '' and status != '' ">
+				AND applyRole = #{applyRole} AND k.status = #{status}
+			</when>
+			<when test="applyRole != '' and status == '' ">
+				AND applyRole = #{applyRole} 
+			</when>
+			<when test="applyRole == '' and status != '' ">
+				AND k.status = #{status}
+			</when>
+		</choose>
+	</sql>	
+	
+	
+	<select id="listApplyMember" parameterType="java.util.Map" resultType="com.sp.dev.admin.memberManage.ApplyManage">
+		SELECT m.membereMail eMail, memberName name, memberRole mRole, phoneNum, applyRole, k.status status 
+		FROM knowledgeApply k
+		LEFT OUTER JOIN member m ON m.memberEmail = k.memberEmail
+		LEFT OUTER JOIN memberProfile p ON p.memberEmail = k.memberEmail
+		<where>
+			<include refid="roleAndStatus"/>
+		</where>
+		ORDER BY status ASC		
+	</select>
+	
+	
+	<select id="countApplyMember" parameterType="java.util.Map" resultType="Integer">
+		SELECT NVL(COUNT(membereMail), 0) FROM knowledgeApply k
+		<where>
+			<include refid="roleAndStatus"/>
+		</where>
+	</select>		
+	
+	<select id="readApplyDetail" parameterType="String" resultType="com.sp.dev.admin.memberManage.ApplyManage">
+		SELECT m.membereMail eMail, memberName name, memberRole mRole, phoneNum, applyRole, k.status status, p.intro intro
+		FROM knowledgeApply k
+		LEFT OUTER JOIN member m ON m.memberEmail = k.memberEmail
+		LEFT OUTER JOIN memberProfile p ON p.memberEmail = k.memberEmail
+		WHERE k.memberEmail = #{eMail}
+	</select>
+	
+	<update id="updateApplyStatus" parameterType="String">
+		UPDATE knowledgeApply SET status = 1, updateDate = SYSDATE  WHERE memberEmail = #{eMail}
+	</update>
+
+	<sql id="notifyWhere">
+		<choose>
+			<when test="state != ''">
+				notifyState = #{state}
+			</when>
+		</choose>
+	</sql>
+	
+	<select id="notifiyList" parameterType="java.util.Map" resultType="com.sp.dev.admin.memberManage.NotifyManage">
+		SELECT * FROM (        
+		    SELECT ROWNUM rnum, tb.* FROM (
+		        SELECT n.notifyNum notifyNum , n.qnaNum qnaNum, memberName notifierName, 
+		       	notifiedName ,notifyReason,q.memberEmail notifiedEmail, notifyState state, n.regDate regDate, subject
+		        FROM notified n
+		        JOIN communityQna q ON n.qnaNum = q.qnaNum 
+		        JOIN member m ON n.memberEmail = m.memberEmail
+		        JOIN (SELECT n.notifyNum, memberName notifiedName FROM communityQna q JOIN member m ON q.memberEmail = m.memberEmail JOIN notified n ON n.qnaNum = q.qnaNum
+		        )stb ON n.notiFyNum = stb.notifyNum
+		        <where>
+					<include refid="notifyWhere"/>
+				</where>
+		    )tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="countNotify" parameterType="java.util.Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM notified
+		<where>
+			<include refid="notifyWhere"/>
+		</where>
+	</select>
+	
+	<select id="readNotify" parameterType="Integer" resultType="com.sp.dev.admin.memberManage.NotifyManage">
+		SELECT  n.notifyNum notifyNum, n.qnaNum qnaNum, memberName notifierName, notifyReason, n.memberEmail notifierEmail,  
+        notifiedName , q.memberEmail notifiedEmail, notifyState state , n.regDate regDate, subject, updateDate
+		FROM notified n
+		JOIN communityQna q ON n.qnaNum = q.qnaNum 
+		JOIN member m ON n.memberEmail = m.memberEmail
+		JOIN (SELECT n.notifyNum, memberName notifiedName FROM communityQna q JOIN member m ON q.memberEmail = m.memberEmail JOIN notified n ON n.qnaNum = q.qnaNum
+		)stb ON n.notiFyNum = stb.notifyNum
+		WHERE n.notifyNum = #{notifyNum} 
+	</select>
+           
+	<update id="updateNotifiedState" parameterType="Integer">
+			
 	</update>
 </mapper>

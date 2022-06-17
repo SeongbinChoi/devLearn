@@ -134,7 +134,10 @@
 							</c:when>
 							<c:when test="${vo.stateCode == 10}">
 								퇴사
-						</c:when>
+							</c:when>
+							<c:when test="${vo.stateCode == 11}">
+								해제
+							</c:when>
 						</c:choose>
 					(${vo.stateCode})
 					<td>${vo.memo}</td>
@@ -144,5 +147,6 @@
 			</c:forEach>
 		</tbody>
 	</table>
+	<p style="text-align: right; font-size: 12px;">최근 5건의 변경만 조회 됩니다.</p>
 </div>
 	
