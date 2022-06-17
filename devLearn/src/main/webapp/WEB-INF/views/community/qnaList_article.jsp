@@ -18,7 +18,6 @@ a#top_btn {
 
 .ck.ck-editor {
 	max-width: 97%;
-	overflow-y: scroll;
 }
 
 .ck-editor__editable {
@@ -107,7 +106,16 @@ function update() {
 			
 			<div class="article_top" id="nav-tabContent">
 				<div class="title d-flex" id="qna_artice_subject">
-					<div class="p-2 w-100"><i class="fa-solid fa-q qMark"></i>${dto.subject}</div>
+					<c:choose>
+						<c:when test="${dto.selected == 0}">
+							<div class="mark_unsolved" style="margin-top: 13px;">미해결</div> 
+						</c:when>
+						
+						<c:otherwise>
+							<div class="mark_solved" style="margin-top: 13px;">해결</div> 
+						</c:otherwise>
+					</c:choose>
+					<div class="p-2 w-100">${dto.subject}</div>
 					<c:choose>
 					<c:when test="${(sessionScope.member.memberEmail != dto.memberEmail)}">
 						<button type="button" class="p-2 flex-shrink-0 btn btn-danger" data-bs-toggle="modal" data-bs-target="#singoModal">신고</button>

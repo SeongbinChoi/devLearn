@@ -19,7 +19,6 @@ a#top_btn {
 
 .ck.ck-editor {
 	max-width: 97%;
-	overflow-y: scroll;
 }
 
 .ck-editor__editable {
@@ -85,7 +84,7 @@ function sendOk() {
 					<tr>
 						<td class="table-light col-sm-2" scope="row">제 목</td>
 						<td>
-							<input type="text" name="subject" class="form-control" value="${dto.subject}">
+							<input type="text" name="subject" class="form-control" value="${dto.subject}" readonly>
 						</td>
 					</tr>
         

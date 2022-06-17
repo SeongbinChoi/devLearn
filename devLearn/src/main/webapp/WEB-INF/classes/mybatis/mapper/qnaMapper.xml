@@ -27,8 +27,12 @@
 		SELECT NVL(COUNT(*), 0) 
 		FROM communityQna
 		<where>
+			<if test="categoryNum != 2 ">
+				( selected = #{categoryNum} )
+			</if>
+			
 			<if test="keyword != null and keyword != '' ">
-				<include refid="where-list"/>
+				AND <include refid="where-list"/>
 			</if>
 		</where>
 	</select>
@@ -44,8 +48,12 @@
 				FROM communityQna cq
 				JOIN member m ON cq.memberEmail = m.memberEmail
 				<where>
+					<if test="categoryNum != 2 ">
+						( selected = #{categoryNum} )
+					</if>
+					
 					<if test="keyword != null and keyword != '' ">
-						<include refid="where-list"/>
+						AND <include refid="where-list"/>
 					</if>
 				</where>
 				ORDER BY groupNum DESC, orderNo ASC

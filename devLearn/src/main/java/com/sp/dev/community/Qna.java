@@ -10,7 +10,7 @@ public class Qna {
 	private String regDate;
 	private int hitCount;
 	private int groupNum;			// 게시글의 순서
-	private int OrderNo;			// orderNo와 depth 같은거 아님??
+	private int OrderNo;			
 	private int depth;				
 	private int parent;				// parent가 0이면 게시글, 아니면 답변이든 답변의 답변이든 자기보다 바로 위의 qnaNum을 가리킴
 	private int replyNum;			// 답변갯수

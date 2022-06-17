@@ -134,18 +134,18 @@
 }
 
 
-.question .question_title {
+.study .study_title {
 	font-size: 22px;
 	font-weight: bold;
 }
 
-.question .question_body {
+.study .study_body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.question .body_content {
+.study .body_content {
 	height: 44px;
 	display: -webkit-box;
 	-webkit-line-clamp: 2; /* 원하는 줄 수 표시 */
@@ -153,12 +153,12 @@
 	overflow: hidden;
 }
 
-.question .question_footer {
+.study .study_footer {
 	font-weight: bold;
 	color: #BDBDBD;
 }
 
-.question .question_footer p {
+.study .study_footer p {
 	margin-bottom: 0;
 }
 

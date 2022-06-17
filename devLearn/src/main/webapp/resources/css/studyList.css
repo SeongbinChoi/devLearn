@@ -30,7 +30,6 @@
 }
 
 
-
 .sideMenu {
 	font-weight: bold;
 	color: gray;
@@ -40,9 +39,42 @@
 	color: gray;
 }
 
+.sideMenu .btn {
+	width: 30%;
+	display: inline-block;
+	float: right;
+}
+
+.title {
+	font-size: 24px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.subTitle {
+	display: flex;
+	flex-direction: row;
+	height: 20px;
+}
+
+.subTitle .userName {
+	height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.subTitle .enrollDate {
+	height: 20px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.43;
+    color: #adb5bd;
+}
+
 .cmmu-menu {
 	font-weight: bold;
 }
+
 
 .contentHeader {
 	display: flex;
@@ -55,48 +87,81 @@
 	color: gray;
 }
 
+.content_sub {
+	margin-bottom: 42px;
+}
 
-.question .question_title {
+
+.contentHeader .nav-filter {
+	display: flex;
+	justify-content: space-between;
+	font-size: 18px;
+	font-weight: bold;
+	margin-bottom: 0;
+	margin-left: 5px;
+}
+
+
+.sub_info {
+	display: flex;
+    align-items: center;
+    width: 100%;
+    height: 90px;
+    margin-top: 24px;
+    padding-right: 24px;
+    border: 1px solid #e9ebee;
+    border-radius: 8px;
+}
+
+.sub_info_container {
+	flex: 1;
+	display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.sub_info_title {
+	flex: 1;
+	font-size: 14px;
+	padding: 0 24px;
+    color: #3e4042;
+    word-break: break-all;
+    font-weight: 400;
+    letter-spacing: -.3px;
+}
+
+.study .study_title {
 	font-size: 22px;
 	font-weight: bold;
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	overflow: hidden;
-	
 }
 
-.question .question_title .subject {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	
-}
-
-.question .question_title p {
+.study .study_title p {
 	margin-bottom: 0;
 }
 
-.question .question_body {
+.study .study_body {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 }
 
-.question .body_content {
-	height: 44px;
+.study .body_content {
 	display: -webkit-box;
 	-webkit-line-clamp: 2; /* 원하는 줄 수 표시 */
 	-webkit-box-orient: vertical;
 	overflow: hidden;
 }
 
-.question .question_footer {
+.study .study_footer {
 	font-weight: bold;
 	color: #BDBDBD;
 }
 
-.question .question_footer p {
+.study .study_footer p {
 	margin-bottom: 0;
 }
 
@@ -116,6 +181,22 @@
 	text-align: center;
 }
 
+.qMark {
+	width: 26px;
+	height: 26px;
+}
+
+.answer_info .answer_info_title {
+	height: 42px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.profile_image {
+	padding: 24px 36px;
+    border-bottom: none;
+	
+}
 
 .mark_ing {
 	width: 47px;
@@ -129,7 +210,7 @@
 	line-height: 25px;
 }
 
-.mark_finsh {
+.mark_finish {
 	width: 57px;
 	height: 25px;
 	background: lightgray;

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.bouncycastle.asn1.x509.qualified.TypeOfBiometricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
+
+import aj.org.objectweb.asm.Type;
 
 @Controller("community.communityController")
 @RequestMapping("/community/*")
@@ -29,6 +32,9 @@ public class CommunityController {
 	private NotifiedService service2;
 	
 	@Autowired
+	private StudyService service3;
+	
+	@Autowired
 	private MyUtil myUtil;
 
 	// QnA 리스트 가져오기
@@ -36,6 +42,8 @@ public class CommunityController {
 	public String qnaList(
 			@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "") String keyword,
+			@RequestParam(defaultValue = "2") String categoryNum,
+			@RequestParam(defaultValue = "2") String detailNum,
 			@RequestParam(value = "rows", defaultValue = "10") int rows,
 			HttpServletRequest req,
 			Model model) throws Exception {
@@ -49,8 +57,11 @@ public class CommunityController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("keyword", keyword);
+		map.put("categoryNum", Integer.parseInt(categoryNum));
+		map.put("detailNum", Integer.parseInt(detailNum));
 		
 		dataCount = service.dataCount(map);
+		
 		total_page = myUtil.pageCount(rows, dataCount);
 		
 		if(total_page < current_page)
@@ -85,6 +96,8 @@ public class CommunityController {
 		
 		model.addAttribute("rows", rows);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("detailNum", detailNum);
 		
 		return ".community.qnaList";
 	}
@@ -199,7 +212,8 @@ public class CommunityController {
 			return "redirect:/community/qnaList?page=" + page + "&rows=" + rows;
 		}
 
-		dto.setContent("[" + dto.getSubject() + "] 에 대한 답변입니다.\n");
+		dto.setContent("[" + dto.getSubject() + "] 에 대한 답변입니다.<br>");
+		dto.setSubject("[re] "+ dto.getSubject());
 
 		model.addAttribute("dto", dto);
 		model.addAttribute("page", page);
@@ -310,16 +324,8 @@ public class CommunityController {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		dto.setQnaNum(qnaNum);
-		dto.setMemberEmail(memberEmail);
+		dto.setMemberEmail(info.getMemberEmail());
 		dto.setSingoNickName(info.getMemberNickname());
-		
-		
-//		System.out.println("----------" + memberEmail);
-//		System.out.println("----------" + qnaNum);
-//		System.out.println("----------" + page);
-//		System.out.println("----------" + rows);
-//		System.out.println("----------" + dto.getNotifyReason());
-//		System.out.println("----------" + dto.getSubject());
 		
 		try {
 			service2.insertNotified(dto);
@@ -335,17 +341,172 @@ public class CommunityController {
 	////////////////////////////////////////////////////////////////////////////////
 	// 스터디
 	
-	@RequestMapping(value = "studyList_aritcle", method = RequestMethod.GET)
-	public String studyList_article() throws Exception {
+	// 스터디 리스트 가져오기 
+	@RequestMapping(value = "studyList")
+	public String studyList(
+			@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "") String keyword,
+			@RequestParam(defaultValue = "2") String categoryNum,
+			@RequestParam(defaultValue = "2") String detailNum,
+			@RequestParam(value = "rows", defaultValue = "10") int rows,
+			HttpServletRequest req,
+			Model model) throws Exception {
+	
+		int total_page;
+		int dataCount;
+		
+		if(req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "utf-8");
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("keyword", keyword);
+		map.put("categoryNum", categoryNum);
+		map.put("detailNum", Integer.parseInt(detailNum));
+		
+		System.out.println("==============" + Integer.parseInt(categoryNum));
+		
+		dataCount = service3.dataCount(map);
+		
+		
+		total_page = myUtil.pageCount(rows, dataCount);
+		
+		if(total_page < current_page)
+			current_page = total_page;
+		
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<Study> list = service3.listStudy(map);
+		
+		String cp = req.getContextPath();
+		String query = "rows=" + rows;
+		String listUrl = cp + "/community/studyList";
+		String articleUrl = cp + "/community/studyList_article?page=" + current_page;
+		
+		if(keyword.length() != 0) {
+			query += "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		}
+		listUrl += "?" + query;
+		articleUrl += "&" + query;
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("page", current_page);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("paging", paging);
+		
+		model.addAttribute("rows", rows);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("categoryNum", categoryNum);
+		model.addAttribute("detailNum", detailNum);
+		
+		return ".community.studyList";
+	}
+
+	
+	// 메인 게시글 등록하기
+	@RequestMapping(value = "study_write")
+	public String study_write(Study dto, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service3.insertStudy(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/studyList";
+	}
+	
+	
+	// 스터디 게시글 상세보기
+	@RequestMapping(value = "studyList_article")
+	public String studyList_article(
+			@RequestParam int studyNum,
+			@RequestParam(defaultValue = "") String keyword,
+			@RequestParam String page,
+			@RequestParam int rows,
+			Model model) throws Exception {
+		
+		keyword = URLDecoder.decode(keyword, "utf-8");
+		
+		String query = "page="+page+"&rows="+rows;
+		if(keyword.length() != 0)
+			query += "&keyword=" + URLEncoder.encode(keyword, "utf-8");
+		
+		service3.updateHitCount(studyNum);
+		Study dto = service3.readStudy(studyNum);
+		if(dto == null)
+			return "redirect:/community/studyList?" + query;
+		
+		// 이전글, 다음글
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("keyword", keyword);
+		map.put("studyNum", dto.getStudyNum());
+		Study preReadStudy = service3.preReadStudy(map);
+		Study nextReadStudy = service3.nextReadStudy(map);
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("preReadStudy", preReadStudy);
+		model.addAttribute("nextReadStudy", nextReadStudy);
+		model.addAttribute("query", query);
+		model.addAttribute("page", page);
+		model.addAttribute("rows", rows);
 		
 		return ".community.studyList_article";
 	}
 	
-	// 게시글 
-	@RequestMapping(value = "studyList", method = RequestMethod.GET)
-	public String studyList() throws Exception {
+	
+	// 메인 게시글 수정
+	@RequestMapping(value = "study_update")
+	public String studyList_update(
+			Study dto,
+			@RequestParam int rows,
+			@RequestParam String page,
+			@RequestParam String content,
+			HttpSession session) throws Exception {
 		
-		return ".community.studyList";
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service3.updateStudy(dto);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/studyList?page="+page+"&rows="+rows;
 	}
+	
+	
+	// 메인 게시글 삭제
+	@RequestMapping("stduy_delete")
+	public String stduy_delete(
+			@RequestParam int studyNum,
+			@RequestParam String page,
+			@RequestParam int rows,
+			@RequestParam (defaultValue="") String keyword,
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		
+		String query = "page="+page+"&rows="+rows;
+		if(keyword.length() != 0) {
+			query += "&keyword="+URLEncoder.encode(keyword, "utf-8");
+		}
+		
+		try {
+			service3.deleteStudy(studyNum);
+		} catch (Exception e) {
+		}
+		
+		
+		return "redirect:/community/studyList?" + query;
+	}
+	
 }
-

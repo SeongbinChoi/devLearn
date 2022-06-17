@@ -19,7 +19,6 @@ a#top_btn {
 
 .ck.ck-editor {
 	max-width: 97%;
-	overflow-y: scroll;
 }
 
 .ck-editor__editable {
@@ -29,6 +28,75 @@ a#top_btn {
 </style>
 
 <script type="text/javascript">
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패했습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+
+function list_category() {
+	const $tab = $("button[role='tab'].active");
+	let categoryNum = $tab.attr("data-categoryNum"); 
+
+	let url = "${pageContext.request.contextPath}/community/qnaList";
+	let query = "categoryNum="+categoryNum;
+	let search = $("form[name=searchForm]").serialize();
+	query = query + "&" + search;
+	
+	let selector = "#nav-all";
+	
+	const fn = function(data) {
+		//console.log(data);
+		//const add = data.find("#nav-all");
+		$(selector).html( ($(data).find("#nav-all")) );
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+
+function list_detail() {
+	const $tab = $("button[role='tab1'].active");
+	let detailNum = $tab.attr("data-detailNum");
+	
+	let url = "${pageContext.request.contextPath}/community/qnaList";
+	let query = "detailNum="+detailNum;
+	let search = $("form[name=searchForm]").serialize();
+	query = query + "&" + search;
+	
+	let selector = "#nav-all";
+	
+	const fn = function(data) {
+		
+		$(selector).html( ($(data).find("#nav-all")) );
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+
+// 이 부분이 답변많은순임
 $(function(){
 	$("#tab-${group}").addClass("active");
 	
@@ -64,12 +132,10 @@ function sendOk() {
 
 function searchList() {
 	const f = document.searchForm;
-	f.submit();
+	
+	list_category();
 }
 
-function login() {
-	$("#qnaModal").modal("show");
-}
 </script>
 
 
@@ -101,14 +167,14 @@ function login() {
 		<a id="top_btn" href="#"><i class="fa-solid fa-circle-chevron-up fa-2x"></i></a>
 		
 		<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-			<li class="nav-item" role="presentation">
-				<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="all" aria-selected="true">전체</button>
+			<li class="nav-item" role="presentation" data-num="0">
+				<button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="all" aria-selected=${categoryNum == 2 ? "true" : "false"} data-categoryNum="2" onclick="list_category();">전체</button>
 			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="unsolved-tab" data-bs-toggle="tab" data-bs-target="#nav-unsolved" type="button" role="tab" aria-controls="unsolved" aria-selected="false">미해결</button>
+			<li class="nav-item" role="presentation" data-num="1">
+				<button class="nav-link" id="unsolved-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="unsolved" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">미해결</button>
 			</li>
-			<li class="nav-item" role="presentation">
-				<button class="nav-link" id="solved-tab" data-bs-toggle="tab" data-bs-target="#nav-solved" type="button" role="tab" aria-controls="solved" aria-selected="false">해결</button>
+			<li class="nav-item" role="presentation" data-num="2">
+				<button class="nav-link" id="solved-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="solved" aria-selected=${categoryNum == 1 ? "true" : "false"} data-categoryNum="1" onclick="list_category();">해결</button>
 			</li>
 		</ul>
 	
@@ -124,11 +190,11 @@ function login() {
 			
 		<!-- 중간 탭(최신순|답변많은순 ...) -->
 		<div class="contentHeader">
-			<ul class="nav nav-tabs" id="myTab" role="tablist">
+			<ul class="nav nav-pills" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="0" aria-selected="true" data-tab="0" style="color: blue;">최신순</button>
+					<button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="0" aria-selected=${detailNum == 0 ? "true" : "false"} data-detailNum="0" onclick="list_detail();">최신순</button>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-content" type="button" role="tab" aria-controls="1" aria-selected="true" data-tab="1" style="color: blue;">답변많은순</button>
+					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="1" aria-selected=${detailNum == 1 ? "true" : "false"} data-detailNum="1" onclick="list_detail();">답변많은순</button>
 				</li>
 			</ul>
 
@@ -146,8 +212,8 @@ function login() {
 			</div>
 		</div>
 		<hr>
-			
-			<div class="tab-content" id="nav-tabContent">
+		
+		<div class="tab-content" id="nav-tabContent">	
 				<div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="all-tab">
 					<!-- 질문 - 전체 -->
 					<c:forEach var="dto" items="${list}">
@@ -217,164 +283,7 @@ function login() {
 			</c:forEach>
 				
 				<div class="question px-3 py-1">
-					${dataCount == 0 ? "등록된 게시글이 없습니다." : paging }			
-				</div>
-			</div>
-			
-			
-				<div class="tab-pane fade" id="nav-unsolved" role="tabpanel" aria-labelledby="unsolved-tab">
-					<!-- 질문 - 미해결 -->
-					<c:forEach var="dto" items="${list}">
-						<c:if test="${dto.selected == 0}">
-							<c:choose>
-								<c:when test="${sessionScope.member.memberEmail == null}">
-									<a href="${articleUrl}&qnaNum=${dto.qnaNum}" data-bs-toggle="modal" data-bs-target="#loginModal">
-								</c:when>
-								
-								<c:otherwise>
-									<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
-								</c:otherwise>
-							</c:choose>
-							
-								<c:choose>
-									<c:when test="${dto.parent == 0}">
-										<div class="question px-3 py-1">
-											<div class="question_info">
-												<div class="question_title col-12">
-													<c:choose>
-														<c:when test="${dto.selected == 0}">
-															<div class="mark_unsolved st">미해결</div>
-														</c:when>
-														<c:otherwise>
-															<div class="mark_solved st">해결</div>
-														</c:otherwise>	
-													</c:choose>
-													
-												<div class="subject col-9">
-													<p>
-														${dto.subject}
-													</p>
-												</div>
-											</div>
-												
-											<div class="question_body col-12"> 
-												<div class="body_content col-10">
-													${dto.content}
-												</div>
-												<div class="answerNum mx-4">
-													<div class="num_center">
-														<span>${dto.depth}<br>답변</span>
-													</div>
-												</div>
-											</div>
-											
-											<div class="question_footer">
-												<p>${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
-											</div>
-										</div>
-									</div>
-								</c:when>
-								
-								<c:otherwise>
-									<div class="question px-3 py-1">
-										<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;&nbsp;</c:forEach>
-											<c:if test="${dto.depth != 0}">└&nbsp;</c:if>
-												<span style="font-size: 18px; font-weight: bold;">${dto.subject}</span>
-													<div class="question_footer" style="font-size: 18px; margin-top: 5px;">
-														<c:forEach var="n" begin="0" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-															${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}
-													</div>
-									</div>
-								</c:otherwise>
-							</c:choose>
-						</a>
-					<hr>
-					</c:if>
-					<c:if test="${dto.selected == 1}">
-					</c:if>
-			</c:forEach>
-				
-				<div class="question px-3 py-1">
-					${dataCount == 0 ? "등록된 게시글이 없습니다." : paging }			
-				</div>
-			</div>
-			
-		
-			
-				<div class="tab-pane fade" id="nav-solved" role="tabpanel" aria-labelledby="solved-tab">
-					<!-- 질문 - 해결 -->
-					<c:forEach var="dto" items="${list}">
-						<c:if test="${dto.selected == 1}">
-							<c:choose>
-								<c:when test="${sessionScope.member.memberEmail == null}">
-									<a href="${articleUrl}&qnaNum=${dto.qnaNum}" data-bs-toggle="modal" data-bs-target="#loginModal">
-								</c:when>
-								
-								<c:otherwise>
-									<a href="${articleUrl}&qnaNum=${dto.qnaNum}">
-								</c:otherwise>
-							</c:choose>
-							
-								<c:choose>
-									<c:when test="${dto.parent == 0}">
-										<div class="question px-3 py-1">
-											<div class="question_info">
-												<div class="question_title col-12">
-													<c:choose>
-														<c:when test="${dto.selected == 0}">
-															<div class="mark_unsolved st">미해결</div>
-														</c:when>
-														<c:otherwise>
-															<div class="mark_solved st">해결</div>
-														</c:otherwise>	
-													</c:choose>
-													
-												<div class="subject col-9">
-													<p>
-														${dto.subject}
-													</p>
-												</div>
-											</div>
-												
-											<div class="question_body col-12"> 
-												<div class="body_content col-10">
-													${dto.content}
-												</div>
-												<div class="answerNum mx-4">
-													<div class="num_center">
-														<span>${dto.depth}<br>답변</span>
-													</div>
-												</div>
-											</div>
-											
-											<div class="question_footer">
-												<p>${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
-											</div>
-										</div>
-									</div>
-								</c:when>
-								
-								<c:otherwise>
-									<div class="question px-3 py-1">
-										<c:forEach var="n" begin="1" end="${dto.depth}">&nbsp;&nbsp;&nbsp;</c:forEach>
-											<c:if test="${dto.depth != 0}">└&nbsp;</c:if>
-												<span style="font-size: 18px; font-weight: bold;">${dto.subject}</span>
-													<div class="question_footer" style="font-size: 18px; margin-top: 5px;">
-														<c:forEach var="n" begin="0" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-															${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}
-													</div>
-									</div>
-								</c:otherwise>
-							</c:choose>
-						</a>
-					<hr>
-					</c:if>
-					<c:if test="${dto.selected == 0}">
-					</c:if>
-			</c:forEach>
-				
-				<div class="question px-3 py-1">
-					${dataCount == 0 ? "등록된 게시글이 없습니다." : paging }			
+					${dataCount == 0 ? "등록된 게시글이 없습니다." : paging}
 				</div>
 			</div>
 			

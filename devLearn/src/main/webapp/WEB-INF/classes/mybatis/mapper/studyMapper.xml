@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="study">
+
+	<!-- 시퀀스 번호 가져오기 -->
+	<select id="seq" resultType="Integer">
+		SELECT study_seq.NEXTVAL FROM dual
+	</select>
+	
+	
+	<!-- sql으로 검색시 추가 -->
+	<sql id="where-list">
+		( INSTR(subject, #{keyword}) &gt; 0
+			OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+	</sql>
+
+	
+	<!-- 스터디 게시글 입력 -->
+	<insert id="insertStudy" parameterType="com.sp.dev.community.Study">
+	INSERT INTO study(studyNum, memberEmail, regionNum, subject, content,
+		hitCount, regDate, limit, status, applied)
+		VALUES(#{studyNum}, #{memberEmail}, #{regionNum}, #{subject}, #{content},
+		0, SYSDATE, #{limit}, 0, 0)
+	</insert>
+	
+	
+	<!-- 게시글 갯수 세기 -->
+	<select id="dataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM study
+		<where>
+			<if test="categoryNum != 2 ">
+				( status = #{categoryNum} )
+			</if>
+		
+			<if test="keyword != null and keyword != '' ">
+				AND <include refid="where-list"/>
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 게시글 조회수 업데이트 -->
+	<select id="updateHitCount" parameterType="Integer">
+		UPDATE study SET hitCount = hitCount + 1 WHERE studyNum = #{studyNum}
+	</select>
+	
+	
+	<!-- 게시글 리스트 가져오기 -->
+	<select id="listStudy" parameterType="map" resultType="com.sp.dev.community.Study">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT studyNum, memberNickName, subject, 
+				REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>) content,
+				hitCount, st.regDate, status, limit, applied,
+				st.regionNum, region
+				FROM study st
+				JOIN member m ON st.memberEmail = m.memberEmail
+				JOIN StudyRegion sr ON st.regionNum = sr.regionNum
+				<where>
+					<if test="categoryNum != 2 ">
+						( status = #{categoryNum} )
+					</if>
+					
+					<if test="keyword != null and keyword != '' ">
+						AND <include refid="where-list"/>
+					</if>
+				</where>
+				ORDER BY studyNum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	
+	<!-- studyNum을 통해 게시글 가져오기 -->
+	<select id="readStudy" parameterType="Integer" resultType="com.sp.dev.community.Study">
+		SELECT studyNum, st.memberEmail, memberName, st.regionNum, region, memberNickName, subject, content,
+			st.regDate, hitCount, limit, status, applied
+		FROM study st
+		JOIN member m ON st.memberEmail = m.memberEmail
+		JOIN StudyRegion sr ON st.regionNum = sr.regionNum
+		WHERE studyNum = #{studyNum}
+	</select>
+	
+	 
+	<!-- 이전글 -->
+	<select id="preReadStudy" parameterType="map" resultType="com.sp.dev.community.Study">
+		SELECT * FROM (
+			SELECT studyNum, subject
+			FROM study st
+			JOIN member m ON st.memberEmail = m.memberEmail
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND (studyNum &gt; #{studyNum})
+			</where>
+			ORDER BY studyNum ASC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	
+	<!-- 다음글 -->
+	<select id="nextReadStudy" parameterType="map" resultType="com.sp.dev.community.Study">
+		SELECT * FROM (
+			SELECT studyNum, subject
+			FROM study st
+			JOIN member m ON st.memberEmail = m.memberEmail
+			<where>
+				<if test="keyword != null and keyword != '' ">
+					<include refid="where-list"/>
+				</if>
+				AND (studyNum &lt; #{studyNum})
+			</where>
+			ORDER BY studyNum DESC
+		) WHERE ROWNUM = 1
+	</select>
+	
+	
+	<!-- 게시글 수정(stduy테이블) -->
+	<update id="updateStudy" parameterType="com.sp.dev.community.Study">
+		UPDATE study SET subject = #{subject}, content = #{content}, regionNum = #{regionNum}, limit = #{limit}
+		WHERE studyNum = #{studyNum}
+	</update>
+
+
+	<!-- 게시글 삭제 -->
+	<delete id="deleteStudy" parameterType="Integer">
+		DELETE FROM study WHERE studyNum = #{studyNum}
+	</delete>
+
+
+	<!-- 게시글의 답글 삭제 -->
+	<delete id="deleteStduyReply" parameterType="Integer">
+		DELETE FROM studyReply WHERE studyNum = #{studyNum}
+	</delete>
+
+</mapper>
