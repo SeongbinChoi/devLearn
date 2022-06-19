@@ -2,23 +2,28 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="lecturePage">
-	<select id="readLecture" parameterType="String" resultType="com.sp.dev.lectures.Lectures">
-		SELECT lectureNum, memberEmail, categoryNum, lectureSubject, 
-			lectureContent, lecturePrice, 
-		FROM lecture
-		WHERE memberEmail = #{memberEmail}
-	</select>
 	
 	<update id="insertLecture" parameterType="com.sp.dev.lectures.Lectures">
-		INSERT INTO lecture(lectureNum, lectureEmail, categoryNum, lectureSubject, 
-			lectureContent, lecturePrice)
-		VALUES(lecture_seq.NEXTVAL, #{memberEmail}, #{categoryNum}, #{lectureSubject},
-			#{lectureContent}, #{lecturePrice} )
+		INSERT INTO lecture(lectureNum, lectureEmail, categoryCode, lectureSubject, 
+			lectureContent, lecturePrice, reg_date, , dcPercent, 
+			lectureDuration)
+		VALUES(lecture_seq.NEXTVAL, #{memberEmail}, #{categoryCode}, #{lectureSubject},
+			#{lectureContent}, #{lecturePrice}, SYSDATE, #{dcPercent}, 
+			#{lectureDuration})
 	</update>
 	
 	<update id="updateLecture" parameterType="com.sp.dev.lectures.Lectures">
-		UPDATE lecture SET categoryNum= #{categoryNum}, lectureSubject = #{lectureSubject}, 
-			content = #{content}, price = #{price}
+		UPDATE lecture SET categoryCode= #{categoryCode}, lectureSubject = #{lectureSubject}, 
+			lectureContent = #{lectureContent}, lecturePrice = #{lecturePrice},
+			dcPercent = #{dcPercent}, lectureDuration = #{lectureDuration}
 		WHERE memberEmail = #{memberEmail}
 	</update>
+	
+	<select id="readLecture" parameterType="String" resultType="com.sp.dev.lectures.Lectures">
+		SELECT lectureNum, lectureEmail, categoryCode, lectureSubject, 
+			lectureContent, lecturePrice, reg_date, , dcPercent, lectureState,
+			lectureDuration 
+		FROM lecture
+		WHERE memberEmail = #{memberEmail}
+	</select>
 </mapper>

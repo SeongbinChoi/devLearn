@@ -2,7 +2,7 @@ package com.sp.dev.lectures;
 
 public class Lectures {
 	private int lectureNum;
-	private int CategoryCode;
+	private int categoryCode;
 	private String lectureSubject;
 	private String lectureContent;
 	private int price;
@@ -62,11 +62,11 @@ public class Lectures {
 	public void setLectureNum(int lectureNum) {
 		this.lectureNum = lectureNum;
 	}
-	public int getCategoryCode() {
-		return CategoryCode;
+	public int getcategoryCode() {
+		return categoryCode;
 	}
-	public void setCategoryCode(int categoryCode) {
-		CategoryCode = categoryCode;
+	public void setcategoryCode(int categoryCode) {
+		this.categoryCode = categoryCode;
 	}
 	public String getLectureSubject() {
 		return lectureSubject;

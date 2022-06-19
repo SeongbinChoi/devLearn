@@ -357,6 +357,14 @@ $(function(){
      	</div>
      	
      	<div class="wrapper">
+	    	<label for="lecture_sum" class="label input_label">
+	        	<span>강의 할인율</span>
+	        </label>
+	        
+	        <input type="text" class="form-control" id="lecturePrice" placeholder="" value="${dto.dcPercent}" style="margin-top: 10px; width: 30%;">
+     	</div>
+     	
+     	<div class="wrapper">
 	     	<label for="lecture_sum" class="label input_label">
 	        	<span>수강 기한</span>
 	        </label>
