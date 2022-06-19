@@ -23,7 +23,7 @@
 							</li>
 							<li class="nav-item">
 							<c:if test="${sessionScope.member.memberRole eq '30'}">
-								<a class="nav-link topNav_instructor " href="myPage-instructor-dashBoard.jsp">강사</a>
+								<a class="nav-link topNav_instructor " href="${pageContext.request.contextPath}/instructorPage/instructorPageDashBoard">강사</a>
 							</c:if>
 							</li>
 						</ul>

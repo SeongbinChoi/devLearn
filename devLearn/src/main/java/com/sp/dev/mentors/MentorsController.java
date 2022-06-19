@@ -29,7 +29,7 @@ public class MentorsController {
 	
 	@RequestMapping(value = "mentor")
 	public String mentor(
-			@RequestParam(value = "current_page", defaultValue = "1") int current_page,
+			@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "0") int choiceValue,
 			@RequestParam(defaultValue = "0") int categoryNum,
 			HttpServletRequest req,
@@ -73,7 +73,7 @@ public class MentorsController {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("categoryList", categoryList);
-		model.addAttribute("current_page", current_page);
+		model.addAttribute("page", current_page);
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("dataCount", dataCount);
 		model.addAttribute("paging", paging);

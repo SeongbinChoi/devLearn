@@ -117,10 +117,13 @@ public class MentorPageController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("mentoringNum", mentoringNum);
-		map.put("status", status);
-		
-		service.updateMentoringApply(map);
+		try {
+			map.put("mentoringNum", mentoringNum);
+			map.put("status", status);
+			
+			service.updateMentoringApply(map);	
+		} catch (Exception e) {
+		}
 		
 		return "redirect:/mentorPage/applyManage";
 	}
@@ -128,7 +131,55 @@ public class MentorPageController {
 	@RequestMapping(value = "planManage")
 	public String mentorPlan() throws Exception {
 		
+		
 		return ".mentorPage.mentorPlanManage";
+	}
+	
+	@RequestMapping(value = "listMentoring")
+	@ResponseBody
+	public Map<String, Object> mentorPlan(
+			@RequestParam(defaultValue = "2022-05-29") String sDate,
+			@RequestParam(defaultValue = "2022-07-10") String eDate,
+			HttpSession session			
+			) throws Exception {			
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		String memberEmail = info.getMemberEmail();
+		
+		sDate = sDate.replaceAll("-", "/");
+		eDate = eDate.replaceAll("-", "/");
+		
+		map.put("memberEmail", memberEmail);
+		map.put("sDate", sDate);
+		map.put("eDate", eDate);
+		
+		List<Mentors> list = service.listMentoring(map);
+		
+		model.put("list", list);
+		
+		return model;
+	}
+	
+	@RequestMapping(value = "listMentoringPlan", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> listMentoringPlan(
+			String mentoringDate, 
+			HttpSession session) throws Exception {
+		
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mentoringDate", mentoringDate);
+		map.put("memberEmail", info.getMemberEmail());
+		
+		List<Mentors> list = service.listMentoringPlan(map);
+		
+		model.put("list", list);
+		
+		return model;
 	}
 	
 	@RequestMapping(value = "revenueManage")

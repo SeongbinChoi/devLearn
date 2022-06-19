@@ -102,4 +102,29 @@ public class MentorPageServiceImpl implements MentorPageService {
 		}
 		
 	}
+
+	@Override
+	public List<Mentors> listMentoringPlan(Map<String, Object> map) {
+		List<Mentors> list = null;
+		try {
+			list = dao.selectList("mentorPage.listMentoringPlan", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
+	@Override
+	public List<Mentors> listMentoring(Map<String, Object> map) {
+		List<Mentors> list = null;
+		
+		try {
+			list = dao.selectList("mentorPage.listMentoring", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 }

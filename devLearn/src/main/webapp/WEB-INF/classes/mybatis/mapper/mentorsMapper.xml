@@ -17,24 +17,28 @@
 	</select>
 	
 	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
-		SELECT mt.mentorNum,mt.memberEmail, m.memberNickname, mp.saveFilename, mentorSubject, categoryNum,
-			(SELECT NVL(count(*), 1) FROM mentorReview WHERE mentorNum = mentorNum)ReviewCnt,
-            (SELECT NVL(sum(mentorRate), 0) FROM mentorReview WHERE mentorNum = mentorNum) reviewSum,
-            (SELECT NVL(count(*), 0) FROM mentoringApply WHERE mentorNum = mentorNum) applyCnt
-		FROM mentor mt
-		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
-		LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
-		<if test="categoryNum != 00">
-			WHERE categoryNum = #{categoryNum}
-		</if>
-		<choose>
-			<when test="choiceValue == 1">
-				ORDER BY mentorNum DESC
-			</when>
-			<when test="choiceValue == 2">
-				ORDER BY applyCnt DESC
-			</when>
-		</choose>
+	SELECT * FROM (
+		SELECT ROWNUM rnum, tb.* FROM (
+			SELECT mt.mentorNum,mt.memberEmail, m.memberNickname, mp.saveFilename, mentorSubject, categoryNum,
+				(SELECT NVL(count(*), 1) FROM mentorReview WHERE mentorNum = mentorNum)ReviewCnt,
+	            (SELECT NVL(sum(mentorRate), 0) FROM mentorReview WHERE mentorNum = mentorNum) reviewSum,
+	            (SELECT NVL(count(*), 0) FROM mentoringApply WHERE mentorNum = mentorNum) applyCnt
+			FROM mentor mt
+			LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
+			LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
+			<if test="categoryNum != 00">
+				WHERE categoryNum = #{categoryNum}
+			</if>
+			<choose>
+				<when test="choiceValue == 1">
+					ORDER BY mentorNum DESC
+				</when>
+				<when test="choiceValue == 2">
+					ORDER BY applyCnt DESC
+				</when>
+			</choose>
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
 	</select>
 	
 	<select id="readMentors" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">

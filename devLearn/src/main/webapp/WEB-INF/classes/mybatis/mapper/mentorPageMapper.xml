@@ -56,4 +56,25 @@
 		WHERE mentoringNum = #{mentoringNum}
 	</update>
 	
+	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
+		SELECT TO_DATE(SUBSTR(mentoringDate, 0, 10), 'YYYY-MM-DD')mentoringDate FROM mentoringApply ma
+		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+		JOIN member m ON m.memberEmail = mt.memberEmail
+		<where>
+			m.memberEmail = #{memberEmail}
+			AND status = 1
+			AND TO_DATE(SUBSTR(mentoringDate, 0, 10),'YYYY-MM-DD') &gt;= TO_DATE(#{sDate}, 'YYYY-MM-DD')
+			AND TO_DATE(SUBSTR(mentoringDate, 0, 10),'YYYY-MM-DD') &lt;= TO_DATE(#{eDate}, 'YYYY-MM-DD')
+		</where>
+	</select>
+	
+	<select id="listMentoringPlan" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
+		SELECT  ma.memberEmail, mentoringNum, mentoringDate, ma.phoneNum, applyMessage
+		FROM mentoringApply ma
+		LEFT OUTER JOIN mentor mt ON ma.mentorNum = mt.mentorNum
+		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
+		WHERE ma.mentoringDate LIKE '${mentoringDate}%'
+		AND m.memberEmail = #{memberEmail}
+	</select>
+	
 </mapper>

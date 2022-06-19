@@ -13,4 +13,6 @@ public interface MentorPageService {
 	public List<Mentors> listMentoringApply(Map<String, Object> map);
 	public Mentors readMentoringApply(int mentoringNum); 
 	public void updateMentoringApply(Map<String, Object> map) throws Exception;
+	public List<Mentors> listMentoring(Map<String, Object> map);
+	public List<Mentors> listMentoringPlan(Map<String, Object> map);
 }
