@@ -19,9 +19,9 @@
 	<!-- 스터디 게시글 입력 -->
 	<insert id="insertStudy" parameterType="com.sp.dev.community.Study">
 	INSERT INTO study(studyNum, memberEmail, regionNum, subject, content,
-		hitCount, regDate, limit, status, applied)
+		hitCount, regDate, limit, status, applied, replyCount)
 		VALUES(#{studyNum}, #{memberEmail}, #{regionNum}, #{subject}, #{content},
-		0, SYSDATE, #{limit}, 0, 0)
+		0, SYSDATE, #{limit}, 0, 0, 0)
 	</insert>
 	
 	
@@ -37,6 +37,20 @@
 			<if test="keyword != null and keyword != '' ">
 				AND <include refid="where-list"/>
 			</if>
+			
+			<choose>
+				<when test="jRegionNum == 1">
+					AND ( regionNum = 1 )
+				</when>
+				
+				<when test="jRegionNum == 2">
+					AND ( regionNum = 2 )
+				</when>
+				
+				<when test="jRegionNum == 3">
+					AND ( regionNum = 3 )
+				</when>
+			</choose>
 		</where>
 	</select>
 	
@@ -51,7 +65,7 @@
 	<select id="listStudy" parameterType="map" resultType="com.sp.dev.community.Study">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT studyNum, memberNickName, subject, 
+				SELECT studyNum, memberNickname, subject, 
 				REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>) content,
 				hitCount, st.regDate, status, limit, applied,
 				st.regionNum, region
@@ -66,6 +80,20 @@
 					<if test="keyword != null and keyword != '' ">
 						AND <include refid="where-list"/>
 					</if>
+					
+					<choose>
+						<when test="jRegionNum == 1">
+							AND ( region = '서울' )
+						</when>
+						
+						<when test="jRegionNum == 2">
+							AND ( region = '경기' )
+						</when>
+						
+						<when test="jRegionNum == 3">
+							AND ( region = '인천' )
+						</when>
+					</choose>
 				</where>
 				ORDER BY studyNum DESC
 			) tb WHERE ROWNUM &lt;= #{end}
@@ -75,7 +103,7 @@
 	
 	<!-- studyNum을 통해 게시글 가져오기 -->
 	<select id="readStudy" parameterType="Integer" resultType="com.sp.dev.community.Study">
-		SELECT studyNum, st.memberEmail, memberName, st.regionNum, region, memberNickName, subject, content,
+		SELECT studyNum, st.memberEmail, memberName, st.regionNum, region, memberNickname, subject, content,
 			st.regDate, hitCount, limit, status, applied
 		FROM study st
 		JOIN member m ON st.memberEmail = m.memberEmail
@@ -121,7 +149,7 @@
 	<!-- 게시글 수정(stduy테이블) -->
 	<update id="updateStudy" parameterType="com.sp.dev.community.Study">
 		UPDATE study SET subject = #{subject}, content = #{content}, regionNum = #{regionNum}, limit = #{limit}
-		WHERE studyNum = #{studyNum}
+		WHERE studyNum = #{studyNum} AND memberEmail = #{memberEmail}
 	</update>
 
 
@@ -135,5 +163,65 @@
 	<delete id="deleteStduyReply" parameterType="Integer">
 		DELETE FROM studyReply WHERE studyNum = #{studyNum}
 	</delete>
-
+	
+	
+	<!-- ================================================================== -->
+	<!-- ================================================================== -->
+	<!-- 댓글 입력 -->
+	<insert id="insertReply" parameterType="com.sp.dev.community.StudyReply">
+		INSERT INTO studyReply(replyNum, studyNum, memberEmail, content, regDate, parent)
+    		VALUES(studyReply_seq.NEXTVAL, #{studyNum}, #{memberEmail}, #{content}, SYSDATE, #{parent})
+	</insert>
+	
+	
+	<!-- 댓글 갯수세기 -->
+	<select id="replyCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM studyReply
+			WHERE studyNum = #{studyNum} AND parent = 0
+	</select>
+	
+	
+	<!-- 댓글 리스트 가져오기 -->
+	<select id="listReply" parameterType="map" resultType="com.sp.dev.community.StudyReply">
+		SELECT sr.replyNum, sr.memberEmail, memberNickname, sr.studyNum, 
+			NVL(answerCount, 0) answerCount,
+			sr.content, sr.regDate
+		FROM studyReply sr
+		JOIN member m ON sr.memberEmail = m.memberEmail
+		JOIN study s ON sr.studyNum = s.studyNum
+		LEFT OUTER JOIN (
+			SELECT parent, COUNT(*) answerCount
+			FROM studyReply WHERE parent != 0 GROUP BY parent
+		) a ON sr.replyNum = a.parent
+		WHERE sr.studyNum = #{studyNum} AND sr.parent = 0
+		ORDER BY sr.replyNum DESC
+	</select>
+	
+	
+	<!-- 댓글 및 대댓글 삭제 -->
+	<delete id="deleteReply" parameterType="map">
+		DELETE FROM studyReply
+			WHERE replyNum = #{replyNum}
+			<if test="mode == 'reply' ">
+				OR answer = #{replyNum}
+			</if>
+	</delete>
+	
+	
+	<!-- 댓글의 댓글 리스트 가져오기 -->
+	<select id="listReplyAnswer" parameterType="Integer" resultType="com.sp.dev.community.StudyReply">
+		SELECT replyNum, studyNum, sr.memberEmail, memberNickname, sr.content, sr.regDate, parent 
+		FROM studyReply sr
+		JOIN member m ON sr.memberEmail = m.memberEmail
+		WHERE parent = #{parent}
+		ORDER BY replyNum DESC
+	</select>
+	
+	
+	<!-- 댓글의 댓글 개수 -->
+	<select id="replyAnswerCount" parameterType="Integer" resultType="Integer">
+		SELECT NVL(COUNT(*), 0)
+		FROM studyReply WHERE parent = #{parent}
+	</select>
+	
 </mapper>

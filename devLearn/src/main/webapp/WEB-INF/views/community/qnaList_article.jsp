@@ -28,6 +28,7 @@ a#top_btn {
 </style>
 
 <script type="text/javascript">
+// 게시글 삭제
 function deleteBoard() {
 	<c:if test="${sessionScope.member.memberEmail == dto.memberEmail || sessionScope.member.memberRole == 99}">
 	if(confirm("게시글을 삭제하시겠습니까?")) {
@@ -38,6 +39,8 @@ function deleteBoard() {
 	</c:if>
 }
 
+
+// 질문 해결
 function chatak() {	
 	<c:if test="${sessionScope.member.memberEmail == dto.memberEmail}">
 	if(confirm("질문을 해결하셨습니까?")) {
@@ -48,6 +51,7 @@ function chatak() {
 	</c:if>
 }
 
+// 신고하기 모달
 function singoSubmit() {
 	var f = document.singo;
 	var str;
@@ -63,6 +67,7 @@ function singoSubmit() {
 	f.submit();
 }
 
+// 게시글 수정
 function update() {
 	var f = document.qnaList_update;
 	var str;
@@ -73,7 +78,6 @@ function update() {
 		f.subject.focus();
 		return false;
 	}
-	alert(str);
 	
 	str = window.editor.getData().trim();
     if(! str) {
@@ -82,7 +86,6 @@ function update() {
         return;
     }
     f.content.value = str;
-    alert(str);
     
     f.action = "${pageContext.request.contextPath}/community/qnaList_update";
 	f.submit();
@@ -127,7 +130,7 @@ function update() {
 				</div>
 				
 				<div class="subTitle">
-					<h6 class="userName" id="userName">${dto.memberNickName}</h6>
+					<h6 class="userName" id="userName">${dto.memberNickname}</h6>
 					<span class="enrollDate">&nbsp; · ${dto.regDate} | 조회수 : ${dto.hitCount}</span>
 				</div>
 				<hr>
@@ -159,7 +162,7 @@ function update() {
 				
 				<div>
 					<c:choose>
-						<c:when test="${sessionScope.member.memberEmail != null && dto.selected == 0}">
+						<c:when test="${sessionScope.member.memberEmail != null && dto.selected == 0 && dto.memberEmail != sessionScope.member.memberEmail}">
 							<button type="button" class="btn btn-light" onclick="location.href='${pageContext.request.contextPath}/community/qnaList_reply?qnaNum=${dto.qnaNum}&page=${page}&rows=${rows}'">답변</button>
 						</c:when>
 						<c:otherwise>

@@ -6,8 +6,13 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/studyList.css" type="text/css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/community_boot_board.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4471b0f5333b09ad48b748242ef61bff&libraries=services"></script>
 
 <!-- css 및 js -->			
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
+</style>
+
 <style>
 a#top_btn {
 	position: fixed;
@@ -42,8 +47,142 @@ a#top_btn {
 	line-height: 25px;
 }
 
-</style>
 
+
+.map_wrap, .map_wrap * {
+	margin: 0;
+	padding: 0;
+	font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
+	font-size: 12px;
+}
+.map_wrap {
+	position: relative;
+	width: 100%;
+	height: 350px;
+}
+
+
+#category {
+	top: 10px;
+	left: 10px;
+	border-radius: 5px;
+	border: 1px solid #909090;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+	background: #fff;
+	overflow: hidden;
+	z-index: 2;
+}
+#category li {
+	float: left;
+	list-style: none;
+	border-right: 1px solid #acacac;
+	padding: 6px 0;
+	text-align: center;
+	cursor: pointer;
+}
+#category li.on {
+	background: #eee;
+}
+#category li:hover {
+	background: #ffe6e6;
+	border-left: 1px solid #acacac;
+	margin-left: -1px;
+}
+#category li:last-child {
+	margin-right: 0;
+	border-right: 0;
+}
+#category li span {
+	display: block;
+	margin: 0 auto 3px;
+	width: 27px;
+	height: 28px;
+}
+#category li .category_bg {
+	background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png)
+	  no-repeat;
+}
+#category li .cafe {
+	background-position: -10px 0;
+}
+#category li .CT1 {
+	background-position: -10px -36px;
+}
+#category li .pharmacy {
+	background-position: -10px -72px;
+}
+#category li.on .category_bg {
+	background-position-x: -46px;
+}
+
+.placeinfo_wrap {
+	position: absolute;
+	bottom: 28px;
+	left: -150px;
+	width: 300px;
+}
+.placeinfo {
+	position: relative;
+	width: 100%;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	border-bottom: 2px solid #ddd;
+	padding-bottom: 10px;
+	background: #fff;
+}
+.placeinfo:nth-of-type(n) {
+	border: 0;
+	box-shadow: 0px 1px 2px #888;
+}
+.placeinfo_wrap .after {
+	content: "";
+	position: relative;
+	margin-left: -12px;
+	left: 50%;
+	width: 22px;
+	height: 12px;
+	background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+.placeinfo a,
+.placeinfo a:hover,
+.placeinfo a:active {
+	color: #fff;
+	text-decoration: none;
+}
+.placeinfo a,
+.placeinfo span {
+	display: block;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.placeinfo span {
+	margin: 5px 5px 0 5px;
+	cursor: default;
+	font-size: 13px;
+}
+.placeinfo .title {
+	font-weight: bold;
+	font-size: 14px;
+	border-radius: 6px 6px 0 0;
+	margin: -1px -1px 0 -1px;
+	padding: 10px;
+	color: #fff;
+	background: #d95050;
+	background: #d95050
+	  url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png)
+	  no-repeat right 14px center;
+}
+.placeinfo .tel {
+	color: #0f7833;
+}
+.placeinfo .jibun {
+	color: #999;
+	font-size: 11px;
+	margin-top: 0;
+}
+
+</style>
 
 <script type="text/javascript">
 function ajaxFun(url, method, query, dataType, fn) {
@@ -72,7 +211,11 @@ function ajaxFun(url, method, query, dataType, fn) {
 	});
 }
 
+//전체 / 모집중 / 모집완료 네비게이션 바
 function list_category() {
+	$(".input-group").show();
+	$(".contentHeader").show();
+	
 	const $tab = $("button[role='tab'].active");
 	let categoryNum = $tab.attr("data-categoryNum"); 
 
@@ -91,12 +234,17 @@ function list_category() {
 	ajaxFun(url, "get", query, "html", fn);
 }
 
+
+// 최신순 / 답변많은순 항목
 function list_detail() {
-	const $tab = $("button[role='tab1'].active");
+	$(".input-group").show();
+	$(".contentHeader").show();
+	
+	const $tab = $("button[role='tab3'].active");
 	let detailNum = $tab.attr("data-detailNum");
 	
 	let url = "${pageContext.request.contextPath}/community/studyList";
-	let query = "detailNum="+detailNum;
+	let query = "categoryNum="+categoryNum+"&detailNum="+detailNum;
 	let search = $("form[name=searchForm]").serialize();
 	query = query + "&" + search;
 	
@@ -105,6 +253,55 @@ function list_detail() {
 	const fn = function(data) {
 		
 		$(selector).html( ($(data).find("#nav-all")) );
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+// 지역별 네이게이션 바
+function list_region() {
+	$(".input-group").show();
+	$(".contentHeader").show();
+	
+	const $tab = $("button[role='tab1'].active");
+	
+	let jRegionNum = $tab.attr("data-jRegionNum");
+	let url = "${pageContext.request.contextPath}/community/studyList";
+	let query = "categoryNum=2&jRegionNum="+jRegionNum;
+	let search = $("form[name=searchForm]").serialize();
+	query = query + "&" + search;
+	
+	let selector = "#nav-all";
+	let selector2 = "#input-group";
+	
+	const fn = function(data) {
+		$(selector2).html( ($(data).find("#input-group")) );
+		$(selector).html( ($(data).find("#nav-all")) );
+	};
+	
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+
+// 지도 API
+function list_gido() {
+	$(".input-group").hide();
+	$(".contentHeader").hide();
+	
+	const $gido = $("button[role='tab2'].active");
+	
+	let gidoNum = $gido.attr("data-gidoNum");
+	let url = "${pageContext.request.contextPath}/community/studyList";
+	let query = "gidoNum="+gidoNum;
+	
+	let selector = "#nav-gido";
+	
+	console.log(query);
+	
+	const fn = function(data) {
+		//console.log(data);
+		
 	};
 	
 	ajaxFun(url, "get", query, "html", fn);
@@ -148,11 +345,6 @@ function sendOk() {
 	f.submit();
 }
 
-function searchList() {
-	const f = document.searchForm;
-	f.submit();
-}
-
 </script>
 
 
@@ -177,6 +369,7 @@ function searchList() {
 		</div>
 	</div>
 		
+	
 	<!-- 네비게이션 바(탭) 및  -->
 	<div class="mainContent col-9" style="float: none; margin:0 auto;">
 		<!-- TOP버튼 -->
@@ -193,19 +386,19 @@ function searchList() {
 				<button class="nav-link" id="finish-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="finish" aria-selected=${categoryNum == 1 ? "true" : "false"} data-categoryNum="1" onclick="list_category();">모집완료</button>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">지역별</a>
+				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">지역별</a>
 				<ul class="dropdown-menu">
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">서울</button></li>
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">경기</button></li>
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">인천</button></li>
+					<li><button class="dropdown-item" id="seoul-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="seoul" aria-selected=${jRegionNum == 1 ? "true" : "false"} data-jRegionNum="1" onclick="list_region();">서울</button></li>
+					<li><button class="dropdown-item" id="incheon-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="inchoen" aria-selected=${jRegionNum == 2 ? "true" : "false"} data-jRegionNum="2" onclick="list_region();">경기</button></li>
+					<li><button class="dropdown-item" id="gyeonggi-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="gyeonggi" aria-selected=${jRegionNum == 3 ? "true" : "false"} data-jRegionNum="3" onclick="list_region();">인천</button></li>
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">스터디 가능 위치</a>
+				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">스터디룸 찾기</a>
 				<ul class="dropdown-menu">
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">서울</button></li>
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">경기</button></li>
-					<li><button class="dropdown-item" id="find-tab" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab" aria-controls="find" aria-selected=${categoryNum == 0 ? "true" : "false"} data-categoryNum="0" onclick="list_category();">인천</button></li>
+					<li><button class="dropdown-item" id="seoul-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="seoulGido" aria-selected=${gidoNum == 1 ? "true" : "false"} data-gidoNum="1" onclick="list_gido();">서울</button></li>
+					<li><button class="dropdown-item" id="inchon-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="inchoenGido" aria-selected=${gidoNum == 2 ? "true" : "false"} data-gidoNum="2" onclick="list_gido();">경기</button></li>
+					<li><button class="dropdown-item" id="gyeonggi-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="gyeonggiGido" aria-selected=${gidoNum == 3 ? "true" : "false"} data-gidoNum="3" onclick="list_gido();">인천</button></li>
 				</ul>
 			</li>
 		</ul>
@@ -213,11 +406,29 @@ function searchList() {
 		
 		<!-- 검색란 -->
 		<div class="input-group mb-3 input-group-lg mb-5">
-			<form name="searchForm" action="${pageContext.request.contextPath}/community/studyList" method="post" class="input-group">
+			<form name="searchForm" action="${pageContext.request.contextPath}/community/studyList" method="post" class="input-group" id="input-group">
 				<span class="input-group-text" id="basic-addon1 inputGroup-sizing-lg" style="background: white;"><i class="fas fa-search"></i></span>
 				<input type="text" name="keyword" value="${keyword}" class="form-control" placeholder="관심 스터디를 검색해보세요!" aria-label="Username" aria-describedby="basic-addon1">
 				<input type="hidden" name="rows" value="${rows}">
-				<button class="btn btn-outline-secondary px-5" type="button" id="button-addon2" onclick="searchList()">검색</button>
+				
+				<c:choose>
+					<c:when test="${jRegionNum == '1' }">
+						<button class="btn btn-outline-secondary px-5" type="button" id="button-addon1" onclick="list_region()">검색</button>
+					</c:when>
+					
+					<c:when test="${jRegionNum == '2' }">
+						<button class="btn btn-outline-secondary px-5" type="button" id="button-addon1" onclick="list_region()">검색</button>
+					</c:when>
+				
+					<c:when test="${jRegionNum == '3' }">
+						<button class="btn btn-outline-secondary px-5" type="button" id="button-addon1" onclick="list_region()">검색</button>
+					</c:when>
+				
+					<c:when test="${jRegionNum == '4' }">
+						<button class="btn btn-outline-secondary px-5" type="button" id="button-addon1" onclick="list_category()">검색</button>
+					</c:when>
+				
+				</c:choose>
 			</form>
 		</div>
 		
@@ -226,9 +437,9 @@ function searchList() {
 		<div class="contentHeader">
 			<ul class="nav nav-pills" id="myTab" role="tablist">
 				<li class="nav-item" role="presentation">
-					<button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="0" aria-selected=${detailNum == 0 ? "true" : "false"} data-detailNum="0" onclick="list_detail();">최신순</button>
+					<button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab3" aria-controls="0" aria-selected=${detailNum == 0 ? "true" : "false"} data-detailNum="0" onclick="list_detail();">최신순</button>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="1" aria-selected=${detailNum == 1 ? "true" : "false"} data-detailNum="1" onclick="list_detail();">답변많은순</button>
+					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab3" aria-controls="1" aria-selected=${detailNum == 1 ? "true" : "false"} data-detailNum="1" onclick="list_detail();">답변많은순</button>
 				</li>
 			</ul>
 			
@@ -295,7 +506,7 @@ function searchList() {
 								
 								<div class="study_footer">
 									<p></p>
-									<p>${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
+									<p>${dto.memberNickname} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
 								</div>
 							</div>
 						</div>
@@ -307,7 +518,28 @@ function searchList() {
 					${dataCount == 0 ? "등록된 게시글이 없습니다." : paging }			
 				</div>
 			</div>
-
+			
+			
+			<div class="tab-pane fade show" id="nav-gido" role="tabpanel" aria-labelledby="all-tab">
+				<!-- 스터디 - 지도 -->
+				<ul id="category">
+					<li id="CE7" data-order="1">
+						<span class="category_bg cafe"></span>
+							스터디카페
+					</li>
+				
+					<li id="CT1" data-order="2">
+						<span class="category_bg CT1"></span>
+					 		도서관(여기는 데이터 가공해야됨)
+					</li>
+				</ul>
+				
+				<div id="map" class="map px-3 py-1" style="position: relative; overflow: hidden; float: left;"></div>
+			<hr>
+			
+			</div>
+			
+			
 		</div>
 	</div>
 </div>
@@ -446,4 +678,200 @@ ClassicEditor
 	.catch( err => {
 		console.error( err.stack );
 	});
+</script>
+
+
+<!-- kakao맵 -->
+<script type="text/javascript">
+//마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
+	var placeOverlay = new kakao.maps.CustomOverlay({zIndex:1}), 
+	    contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
+	    markers = [], // 마커를 담을 배열입니다
+	    currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
+	 
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = {
+	        center: new kakao.maps.LatLng(37.556725, 126.9234952), // 지도의 중심좌표
+	        level: 3 // 지도의 확대 레벨
+	    };  
+	
+	// 지도를 생성합니다    
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	// 장소 검색 객체를 생성합니다
+	var ps = new kakao.maps.services.Places(map); 
+	
+	// 지도에 idle 이벤트를 등록합니다
+	kakao.maps.event.addListener(map, 'idle', searchPlaces);
+	
+	// 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
+	contentNode.className = 'placeinfo_wrap';
+	
+	// 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
+	// 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다 
+	addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
+	addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
+	
+	// 커스텀 오버레이 컨텐츠를 설정합니다
+	placeOverlay.setContent(contentNode);  
+	
+	// 각 카테고리에 클릭 이벤트를 등록합니다
+	addCategoryClickEvent();
+	
+	// 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
+	function addEventHandle(target, type, callback) {
+	    if (target.addEventListener) {
+	        target.addEventListener(type, callback);
+	    } else {
+	        target.attachEvent('on' + type, callback);
+	    }
+	}
+	
+	// 카테고리 검색을 요청하는 함수입니다
+	function searchPlaces() {
+	    if (!currCategory) {
+	        return;
+	    }
+	    
+	    // 커스텀 오버레이를 숨깁니다 
+	    placeOverlay.setMap(null);
+	
+	    // 지도에 표시되고 있는 마커를 제거합니다
+	    removeMarker();
+	    
+	    ps.categorySearch(currCategory, placesSearchCB, {useMapBounds:true}); 
+	}
+	
+	// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+	function placesSearchCB(data, status, pagination) {
+	    if (status === kakao.maps.services.Status.OK) {
+	
+	        // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
+	        displayPlaces(data);
+	    } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+	        // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+	
+	    } else if (status === kakao.maps.services.Status.ERROR) {
+	        // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+	        
+	    }
+	}
+	
+	// 지도에 마커를 표출하는 함수입니다
+	function displayPlaces(places) {
+	
+	    // 몇번째 카테고리가 선택되어 있는지 얻어옵니다
+	    // 이 순서는 스프라이트 이미지에서의 위치를 계산하는데 사용됩니다
+	    var order = document.getElementById(currCategory).getAttribute('data-order');
+	
+	    
+	
+	    for ( var i=0; i<places.length; i++ ) {
+	
+	            // 마커를 생성하고 지도에 표시합니다
+	            var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
+	
+	            // 마커와 검색결과 항목을 클릭 했을 때
+	            // 장소정보를 표출하도록 클릭 이벤트를 등록합니다
+	            (function(marker, place) {
+	                kakao.maps.event.addListener(marker, 'click', function() {
+	                    displayPlaceInfo(place);
+	                });
+	            })(marker, places[i]);
+	    }
+	}
+	
+	// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+	function addMarker(position, order) {
+	    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+	        imageSize = new kakao.maps.Size(27, 28),  // 마커 이미지의 크기
+	        imgOptions =  {
+	            spriteSize : new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
+	            spriteOrigin : new kakao.maps.Point(46, (order*36)), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+	            offset: new kakao.maps.Point(11, 28) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+	        },
+	        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+	            marker = new kakao.maps.Marker({
+	            position: position, // 마커의 위치
+	            image: markerImage 
+	        });
+	
+	    marker.setMap(map); // 지도 위에 마커를 표출합니다
+	    markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+	
+	    return marker;
+	}
+	
+	// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+	function removeMarker() {
+	    for ( var i = 0; i < markers.length; i++ ) {
+	        markers[i].setMap(null);
+	    }   
+	    markers = [];
+	}
+	
+	// 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
+	function displayPlaceInfo (place) {
+	    var content = '<div class="placeinfo">' +
+	                    '   <a class="title" href="' + place.place_url + '" target="_blank" title="' + place.place_name + '">' + place.place_name + '</a>';   
+	
+	    if (place.road_address_name) {
+	        content += '    <span title="' + place.road_address_name + '">' + place.road_address_name + '</span>' +
+	                    '  <span class="jibun" title="' + place.address_name + '">(지번 : ' + place.address_name + ')</span>';
+	    }  else {
+	        content += '    <span title="' + place.address_name + '">' + place.address_name + '</span>';
+	    }                
+	   
+	    content += '    <span class="tel">' + place.phone + '</span>' + 
+	                '</div>' + 
+	                '<div class="after"></div>';
+	
+	    contentNode.innerHTML = content;
+	    placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+	    placeOverlay.setMap(map);  
+	}
+	
+	
+	// 각 카테고리에 클릭 이벤트를 등록합니다
+	function addCategoryClickEvent() {
+	    var category = document.getElementById('category'),
+	        children = category.children;
+	
+	    for (var i=0; i<children.length; i++) {
+	        children[i].onclick = onClickCategory;
+	    }
+	}
+	
+	// 카테고리를 클릭했을 때 호출되는 함수입니다
+	function onClickCategory() {
+	    var id = this.id,
+	        className = this.className;
+	
+	    placeOverlay.setMap(null);
+	
+	    if (className === 'on') {
+	        currCategory = '';
+	        changeCategoryClass();
+	        removeMarker();
+	    } else {
+	        currCategory = id;
+	        changeCategoryClass(this);
+	        searchPlaces();
+	    }
+	}
+	
+	// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+	function changeCategoryClass(el) {
+	    var category = document.getElementById('category'),
+	        children = category.children,
+	        i;
+	
+	    for ( i=0; i<children.length; i++ ) {
+	        children[i].className = '';
+	    }
+	
+	    if (el) {
+	        el.className = 'on';
+	    } 
+	}
 </script>

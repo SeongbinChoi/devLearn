@@ -5,6 +5,7 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/studyList_article.css" type="text/css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/community_boot_board.css" type="text/css">
 
 <!-- css 및 js -->
 <style>
@@ -45,9 +46,225 @@ img {
 	margin-right: 5px;
 	line-height: 25px;
 }
+
 </style>
 
 <script type="text/javascript">
+function login() {
+	location.href="${pageContext.request.contextPath}/member/login";
+}
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+
+// 페이지 처음 들어왔을때 댓글 리스트(페이징 없음)출력
+$(function(){
+	listPage();
+});
+
+
+// 댓글 리스트
+function listPage() {
+	let url = "${pageContext.request.contextPath}/community/listReply";
+	let query = "studyNum=${dto.studyNum}";
+	let selector = "#listReply";
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+
+// 댓글 등록
+$(function () {
+	$(".btnSendReply").click(function () {
+		let studyNum = "${dto.studyNum}";
+		const $tb = $(this).closest("table");
+		
+		let content = $tb.find("textarea").val().trim();
+		if(! content) {
+			alert("댓글 내용을 입력하세요");
+			$tb.find("textarea").focus();
+			return false;
+		}
+		content = encodeURIComponent(content);
+		
+		let url = "${pageContext.request.contextPath}/community/insertReply"; 
+		let query = "studyNum=${dto.studyNum}&content=" + content + "&parent=0";
+		
+		
+		const fn = function(data) {
+			$tb.find("textarea").val("");
+			
+			let state = data.state;
+			if(state === "true") {
+				listPage();
+			} else if(state === "false") {
+				alert("댓글을 추가하지 못했습니다.");
+			}
+		};
+ 
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
+
+// 댓글 삭제 
+$(function () {
+	$("body").on("click", ".deleteReply", function () {
+		if(! confirm("게시글을 삭제하시겠습니까? ")) {
+			return false;
+		}
+		
+		let replyNum = $(this).attr("data-replyNum");
+		let url = "${pageContext.request.contextPath}/community/deleteReply";
+		let query = "replyNum="+replyNum;
+		
+		const fn = function(data) {
+			listPage();
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
+
+// 댓글의 답글 리스트 가져오기
+function listReplyAnswer(parent) {
+	let url = "${pageContext.request.contextPath}/community/listReplyAnswer";
+	let query = "parent=" + parent;
+	let selector = "#listReplyAnswer" + parent;
+	
+	const fn = function(data) {
+		$(selector).html(data);
+	};
+	
+	ajaxFun(url, "get", query, "html", fn);
+}
+
+
+// 댓글의 답글 갯수 세기
+function countReplyAnswer(parent) {
+	let url = "${pageContext.request.contextPath}/community/countReplyAnswer";
+	let query = "parent=" + parent;
+	
+	const fn = function(data) {
+		let count = data.count;
+		let selector = "#answerCount" + parent;
+		$(selector).html(count);
+	};
+	
+	ajaxFun(url, "post", query, "json", fn);
+}
+
+
+// 답글 버튼(댓글의 댓글 등록폼과 답글 리스트 보여주기)
+$(function () {
+	$("body").on("click", ".btnReplyAnswerLayout", function () {
+		const $trReplyAnswer = $(this).closest("tr").next();
+		
+		let isVisible = $trReplyAnswer.is(":visible");
+		let replyNum = $(this).attr("data-replyNum");
+		
+		if(isVisible) {
+			$trReplyAnswer.hide();
+		} else {
+			$trReplyAnswer.show();
+		
+			// 답글 리스트
+			listReplyAnswer(replyNum);
+			
+			// 답글 개수
+			countReplyAnswer(replyNum);
+		}
+		
+	});
+});
+
+
+// 댓글의 댓글 등록
+$(function () {
+	$("body").on("click", ".btnSendReplyAnswer", function() {
+		let studyNum = "${dto.studyNum}";
+		let replyNum = $(this).attr("data-replyNum");
+		const $td = $(this).closest("td");
+		
+		let content = $td.find("textarea").val().trim();
+		if(! content) {
+			alert("댓글을 입력하세요.");
+			$td.find("textarea").focus();
+			return false;
+		}
+		content = encodeURIComponent(content);
+		
+		let url = "${pageContext.request.contextPath}/community/insertReply";
+		let query = "studyNum=" + studyNum + "&content=" + content + "&parent=" + replyNum;
+		
+		const fn = function(data) {
+			$td.find("textarea").val("");
+			
+			var state = data.state;
+			if(state === "true") {
+				listReplyAnswer(replyNum);
+				countReplyAnswer(replyNum);
+			}
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
+
+// 댓글의 댓글 삭제
+$(function () {
+	$("body").on("click", ".deleteReplyAnswer", function() {
+		if(! confirm("게시물을 삭제하시겠습니까?")) {
+			return false;
+		}
+		
+		let replyNum = $(this).attr("data-replyNum");
+		let parent = $(this).attr("data-parent");
+		
+		let url = "${pageContext.request.contextPath}/community/deleteReply";
+		let query = "replyNum=" + replyNum;
+		
+		const fn = function(data) {
+			listReplyAnswer(parent);
+			countReplyAnswer(parent);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
+
+// 스터디 글쓰기
 function sendOk() {
 	var f = document.boardForm;
 	var str;
@@ -86,12 +303,19 @@ function sendOk() {
 }
 
 
+// 스터디 게시글 삭제
 function deleteBoard() {
 	if(confirm("게시글을 삭제하시겠습니까?")) {
 		let query = "studyNum=${dto.studyNum}&${query}";
 		let url = "${pageContext.request.contextPath}/community/stduy_delete?" + query;
 		location.href = url;
 	}
+}
+
+
+// 스터디 신청(아직 구현안됨)
+function studyApply() {
+	alert("스터디 신청하시겠습니까??");
 }
 
 </script>
@@ -124,7 +348,7 @@ function deleteBoard() {
 					<div class="p-2 w-100">[${dto.region}]${dto.subject}</div>
 					<c:choose>
 					<c:when test="${(sessionScope.member.memberEmail != dto.memberEmail) && dto.status == 0}">
-						<button type="button" class="p-2 flex-shrink-0 btn btn-danger">스터디신청</button>
+						<button type="button" class="p-2 flex-shrink-0 btn btn-danger" onclick="studyApply();">스터디신청</button>
 					</c:when>
 					<c:otherwise>
 						<div class="p-2 flex-shrink-0"><button type="button" class="btn btn-danger" style="display : none;">스터디신청</button></div>
@@ -132,7 +356,7 @@ function deleteBoard() {
 					</c:choose>
 				</div>
 				<div class="subTitle">
-					<h6 class="userName" id="userName">${dto.memberNickName}</h6>
+					<h6 class="userName" id="userName">${dto.memberNickname}</h6>
 					<span class="enrollDate">&nbsp; · ${dto.regDate} | 조회수 : ${dto.hitCount}</span>
 				</div>
 				<hr>
@@ -188,43 +412,43 @@ function deleteBoard() {
 					<div class="answer_info_header">
 						<div class="answer_info_title" style="color: #616568; font-weight: 500; font-size: 18px;">
 							<span class="title-icon" style="font-size: 30px; margin-left: 10px;">A</span>
-							총 1개의 답글이 달렸습니다
+							스터디 원하시면 댓글을 달아보세요~
 						</div>
 					</div>
 					
 					<div class="answer_info_main" style="width : 100%; height: 600px; border: 1px solid #f1f3f5; background-color: white;">
-						<div class="answer_info_profile flex-row" style="padding: 24px 36px; border-bottom: none; display: flex; flex-direction: row;">
-							<img alt="" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" style="width:48px; height: 48px; border-radius: 100px; margin-right: 10px;">
-							<div class="profile_option" style="display: flex; flex-direction: column;">
-								<h5 class="answer_userName">아무개님,답글을 남겨보세요!</h5>
+						<form name="replyForm" method="post">
+							<div class="answer_info_profile flex-row" style="padding: 24px 36px; border-bottom: none; display: flex; flex-direction: row;">
+								<img alt="" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" style="width:48px; height: 48px; border-radius: 100px; margin-right: 10px;">
+								<div class="profile_option" style="display: flex; flex-direction: column;">
+									<h5 class="answer_userName">${sessionScope.member.memberNickname} 님,답글을 남겨보세요!</h5>
+								</div>
 							</div>
-						</div>
+							
+							
+							<table class="table table-borderless reply-form">
+								<tr>
+									<td>
+										<textarea class='form-control' name="content"></textarea>
+									</td>
+								</tr>
+							
+								<tr class="answer_submit" style="margin-top: 10px;">
+									<td>
+										<button type="button" class="btn btn-primary btnSendReply" style="float: right;">답변 등록</button>
+									</td>
+								</tr>
+							</table>
+						</form>
 						
-						<div class="ckedit">
-							<textarea>
-								df
-							</textarea>
-						</div>
-						
-						<div class="answer_submit">
-							<button type="button" class="btn btn-primary" style="float: right;">답변 등록</button>
-						</div>
+						<div id="listReply"></div>
 					</div>
+					
 					
 				</div>
 			</div>
 		</div>
-		
-		<div class="mainContent col-2" style="float: none; margin:0 auto;">
-			
-		</div>
 	</div>
-	
-	
-	<div>
-		
-	</div>
-
 
 <!-- Modal -->
 <form name="boardForm" method="post">	

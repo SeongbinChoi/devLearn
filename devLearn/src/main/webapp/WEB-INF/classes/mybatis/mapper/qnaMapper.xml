@@ -42,7 +42,7 @@
 	<select id="listQna" parameterType="map" resultType="com.sp.dev.community.Qna">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT qnaNum, memberNickName, subject, 
+				SELECT qnaNum, memberNickname, subject, 
 				REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>) content, 
 				cq.regDate, groupNum, depth, orderNo, parent, hitCount, selected, replyNum
 				FROM communityQna cq
@@ -64,7 +64,7 @@
 	
 	<!-- qnaNum을 통해 게시글 가져오기 -->
 	<select id="readQna" parameterType="Integer" resultType="com.sp.dev.community.Qna">
-		SELECT qnaNum, cq.memberEmail, memberName, memberNickName, subject, content, 
+		SELECT qnaNum, cq.memberEmail, memberName, memberNickname, subject, content, 
 			groupNum, depth, orderNo, parent, cq.regDate, hitCount, selected, replyNum
 		FROM communityQna cq
 		JOIN member m ON cq.memberEmail = m.memberEmail

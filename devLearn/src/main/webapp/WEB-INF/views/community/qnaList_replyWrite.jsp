@@ -74,7 +74,7 @@ function sendOk() {
 					<div class="answer_info_profile flex-row" style="padding: 24px 36px; border-bottom: none; display: flex; flex-direction: row;">
 						<img alt="" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" style="width:48px; height: 48px; border-radius: 100px; margin-right: 10px;">
 						<div class="profile_option" style="display: flex; flex-direction: column;">
-							<h5 class="answer_memberNickName"> ${sessionScope.member.memberNickname}님,답변해주세요!</h5>
+							<h5 class="answer_memberNickname"> ${sessionScope.member.memberNickname}님,답변해주세요!</h5>
 							<span style="font-size: 13px; font-weight: 400; color: #abb0b5;">모두에게 도움이 되는 답변의 주인공이 되어주세요!</span>
 						</div>
 					</div>

@@ -9,18 +9,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.bouncycastle.asn1.x509.qualified.TypeOfBiometricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
-
-import aj.org.objectweb.asm.Type;
 
 @Controller("community.communityController")
 @RequestMapping("/community/*")
@@ -33,6 +31,9 @@ public class CommunityController {
 	
 	@Autowired
 	private StudyService service3;
+	
+	@Autowired
+	private StudyReplyService service4;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -166,7 +167,6 @@ public class CommunityController {
 			Qna dto,
 			@RequestParam int rows,
 			@RequestParam String page,
-			@RequestParam String content,
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
@@ -325,7 +325,7 @@ public class CommunityController {
 		
 		dto.setQnaNum(qnaNum);
 		dto.setMemberEmail(info.getMemberEmail());
-		dto.setSingoNickName(info.getMemberNickname());
+		dto.setSingoNickname(info.getMemberNickname());
 		
 		try {
 			service2.insertNotified(dto);
@@ -348,6 +348,7 @@ public class CommunityController {
 			@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(defaultValue = "2") String categoryNum,
 			@RequestParam(defaultValue = "2") String detailNum,
+			@RequestParam(defaultValue = "4") String jRegionNum,
 			@RequestParam(value = "rows", defaultValue = "10") int rows,
 			HttpServletRequest req,
 			Model model) throws Exception {
@@ -363,8 +364,10 @@ public class CommunityController {
 		map.put("keyword", keyword);
 		map.put("categoryNum", categoryNum);
 		map.put("detailNum", Integer.parseInt(detailNum));
+		map.put("jRegionNum", Integer.parseInt(jRegionNum));
 		
-		System.out.println("==============" + Integer.parseInt(categoryNum));
+		// System.out.println("==============" + Integer.parseInt(categoryNum));
+		// System.out.println("==============" + Integer.parseInt(jRegionNum));
 		
 		dataCount = service3.dataCount(map);
 		
@@ -403,8 +406,10 @@ public class CommunityController {
 		
 		model.addAttribute("rows", rows);
 		model.addAttribute("keyword", keyword);
+		
 		model.addAttribute("categoryNum", categoryNum);
 		model.addAttribute("detailNum", detailNum);
+		model.addAttribute("jRegionNum", jRegionNum);
 		
 		return ".community.studyList";
 	}
@@ -469,7 +474,6 @@ public class CommunityController {
 			Study dto,
 			@RequestParam int rows,
 			@RequestParam String page,
-			@RequestParam String content,
 			HttpSession session) throws Exception {
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
@@ -493,7 +497,7 @@ public class CommunityController {
 			@RequestParam (defaultValue="") String keyword,
 			HttpSession session) throws Exception {
 		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		// SessionInfo info = (SessionInfo)session.getAttribute("member");
 		
 		String query = "page="+page+"&rows="+rows;
 		if(keyword.length() != 0) {
@@ -507,6 +511,108 @@ public class CommunityController {
 		
 		
 		return "redirect:/community/studyList?" + query;
+	}
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	// 메인 게시글 : 댓글 리스트 가져오기 => AJAX-TEXT
+	@RequestMapping(value = "listReply")
+	public String listReply(
+		@RequestParam int studyNum,
+		Model model) throws Exception {
+		
+		int dataCount = 0;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("studyNum", studyNum);
+		
+		dataCount = service4.replyCount(map);
+		
+		List<StudyReply> listReply = service4.listReply(map);
+		
+		for(StudyReply dto : listReply) {
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+		}
+		
+		model.addAttribute("listReply", listReply);
+		model.addAttribute("replyCount", dataCount);
+		
+		return "community/listReply";
+	}
+	
+	
+	// 댓글 및 댓글의 답글 등록 => AJAX-JSON
+	@RequestMapping(value = "insertReply", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> insertReply(
+			StudyReply dto, HttpSession session) {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String state = "true";
+		
+		try {
+			dto.setMemberEmail(info.getMemberEmail());
+			service4.insertReply(dto);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		
+		return model;
+	}
+	
+	
+	// 댓글 및 댓글의 답글 삭제 : AJAX-JSON
+	@RequestMapping(value = "deleteReply", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteReply(
+			@RequestParam Map<String, Object> paramMap) {
+		String state = "true";
+		
+		try {
+			service4.deleteReply(paramMap);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("state", state);
+		
+		return map;
+	}
+	
+	
+	// 댓글의 답글 리스트 : AJAX-TEXT
+	@RequestMapping(value = "listReplyAnswer")
+	public String listReplyAnswer(
+			@RequestParam int parent, Model model) throws Exception {
+		List<StudyReply> listReplyAnswer = service4.listReplyAnswer(parent);
+		
+		for(StudyReply dto : listReplyAnswer) {
+			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
+		}
+		
+		model.addAttribute("listReplyAnswer", listReplyAnswer);
+		
+		return "community/listReplyAnswer";
+	}
+	
+	
+	// 댓글의 답글 갯수 세기 : AJAX-JSON
+	@RequestMapping(value = "countReplyAnswer")
+	@ResponseBody
+	public Map<String, Object> countReplyAnswer(
+			@RequestParam(value = "parent") int parent) {
+		
+		int count = service4.replyAnswerCount(parent);
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("count", count);
+		
+		return model;
 	}
 	
 }

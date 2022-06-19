@@ -102,8 +102,7 @@ $(function(){
 	
     $("button[role='tab']").on("click", function(e){
 		const tab = $(this).attr("data-tab");
-		//let url = "${pageContext.request.contextPath}/sbbs/list?group="+tab;	
-		//location.href = url;
+		
     });
 });
 
@@ -128,12 +127,6 @@ function sendOk() {
     
 	f.action = "${pageContext.request.contextPath}/community/qnaList_write";
 	f.submit();
-}
-
-function searchList() {
-	const f = document.searchForm;
-	
-	list_category();
 }
 
 </script>
@@ -184,7 +177,7 @@ function searchList() {
 			<span class="input-group-text" id="basic-addon1 inputGroup-sizing-lg" style="background: white;"><i class="fas fa-search"></i></span>
 			<input type="text" name="keyword" value="${keyword}" class="form-control" placeholder="궁금한 질문을 검색해보세요!" aria-label="Username" aria-describedby="basic-addon1">
 			<input type="hidden" name="rows" value="${rows}">
-			<button class="btn btn-outline-secondary px-5" type="button" id="button-addon2" onclick="searchList()">검색</button>
+			<button class="btn btn-outline-secondary px-5" type="button" id="button-addon2" onclick="list_category()">검색</button>
 		</form>
 	</div>
 			
@@ -260,7 +253,7 @@ function searchList() {
 										</div>
 										
 										<div class="question_footer">
-											<p>${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
+											<p>${dto.memberNickname} | ${dto.regDate} | 조회수 : ${dto.hitCount}</p>
 										</div>
 									</div>
 								</div>
@@ -273,7 +266,7 @@ function searchList() {
 											<span style="font-size: 18px; font-weight: bold;">${dto.subject}</span>
 												<div class="question_footer" style="font-size: 18px; margin-top: 5px;">
 													<c:forEach var="n" begin="0" end="${dto.depth}">&nbsp;&nbsp;</c:forEach>
-														${dto.memberNickName} | ${dto.regDate} | 조회수 : ${dto.hitCount}
+														${dto.memberNickname} | ${dto.regDate} | 조회수 : ${dto.hitCount}
 												</div>
 								</div>
 							</c:otherwise>

@@ -4,7 +4,7 @@ public class Qna {
 	private int qnaNum;
 	private String memberEmail;
 	private String memberName;
-	private String memberNickName;
+	private String memberNickname;
 	private String subject;
 	private String content;
 	private String regDate;
@@ -35,11 +35,11 @@ public class Qna {
 	public void setMemberName(String memberName) {
 		this.memberName = memberName;
 	}
-	public String getMemberNickName() {
-		return memberNickName;
+	public String getMemberNickname() {
+		return memberNickname;
 	}
-	public void setMemberNickName(String memberNickName) {
-		this.memberNickName = memberNickName;
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
 	}
 	public String getSubject() {
 		return subject;

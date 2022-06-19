@@ -145,7 +145,7 @@ public class StudyServiceImpl implements StudyService {
 		}
 		
 		try {
-			dao.deleteData("qna.deleteStudy", studyNum);
+			dao.deleteData("study.deleteStudy", studyNum);
 			//dao.deleteData("qna.deleteStduyReply", studyNum);
 		} catch (Exception e) {
 			e.printStackTrace();

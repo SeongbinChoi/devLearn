@@ -3,7 +3,7 @@ package com.sp.dev.community;
 public class Study {
 	private int studyNum;
 	private String memberEmail;
-	private String memberNickName;
+	private String memberNickname;
 	private int regionNum;
 	private String region;
 	private String subject;
@@ -13,15 +13,12 @@ public class Study {
 	private int status;
 	private int limit;
 	private int applied;
+	private int replyCount;
 	
-	private int applyNum;
-	private String applicationEmail;
-	private int applyStatus;
-	
-	private int replyNum;
-	private String replyContent;			// 스터디답변
-	private String replyRegDate;
-	private String replyParent;
+	// 스터디모집현황은 따로 java로 뺴는게 좋아보임
+	//private int applyNum;
+	//private String applicationEmail;
+	//private int applyStatus;
 	
 	
 	public int getStudyNum() {
@@ -36,11 +33,11 @@ public class Study {
 	public void setMemberEmail(String memberEmail) {
 		this.memberEmail = memberEmail;
 	}
-	public String getMemberNickName() {
-		return memberNickName;
+	public String getMemberNickname() {
+		return memberNickname;
 	}
-	public void setMemberNickName(String memberNickName) {
-		this.memberNickName = memberNickName;
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
 	}
 	public int getRegionNum() {
 		return regionNum;
@@ -96,47 +93,11 @@ public class Study {
 	public void setApplied(int applied) {
 		this.applied = applied;
 	}
-	public int getApplyNum() {
-		return applyNum;
+	public int getReplyCount() {
+		return replyCount;
 	}
-	public void setApplyNum(int applyNum) {
-		this.applyNum = applyNum;
-	}
-	public String getApplicationEmail() {
-		return applicationEmail;
-	}
-	public void setApplicationEmail(String applicationEmail) {
-		this.applicationEmail = applicationEmail;
-	}
-	public int getApplyStatus() {
-		return applyStatus;
-	}
-	public void setApplyStatus(int applyStatus) {
-		this.applyStatus = applyStatus;
-	}
-	public int getReplyNum() {
-		return replyNum;
-	}
-	public void setReplyNum(int replyNum) {
-		this.replyNum = replyNum;
-	}
-	public String getReplyContent() {
-		return replyContent;
-	}
-	public void setReplyContent(String replyContent) {
-		this.replyContent = replyContent;
-	}
-	public String getReplyRegDate() {
-		return replyRegDate;
-	}
-	public void setReplyRegDate(String replyRegDate) {
-		this.replyRegDate = replyRegDate;
-	}
-	public String getReplyParent() {
-		return replyParent;
-	}
-	public void setReplyParent(String replyParent) {
-		this.replyParent = replyParent;
+	public void setReplyCount(int replyCount) {
+		this.replyCount = replyCount;
 	}
 	
 }
