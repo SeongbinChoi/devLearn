@@ -1,6 +1,5 @@
 package com.sp.dev.admin.noticeManage;
 
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,6 @@ public class NoticeManageController {
 	@RequestMapping(value="main")
 	private String list(
 			@RequestParam(defaultValue = "1", value="page") int currentPage,
-			@RequestParam(defaultValue = "all") String condition,
-			@RequestParam(defaultValue = "") String keyword,
 			HttpServletRequest req,
 			Model model
 			) throws Exception {
@@ -39,9 +36,6 @@ public class NoticeManageController {
 		int rows = 10;
 		int totalPage = 0;
 		
-		if (req.getMethod().equalsIgnoreCase("GET")) {
-			keyword = URLDecoder.decode(keyword , "utf-8");
-		}
 		
 		int start = ( currentPage - 1 ) * rows + 1;
 		int end = currentPage * rows;
@@ -49,9 +43,7 @@ public class NoticeManageController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("start", start);
 		map.put("end", end);
-		map.put("keyword", keyword);
-		map.put("condition",condition);
-		
+					
 		int dataCount = 0;
 	
 		dataCount = service.countNotice(map);
@@ -61,22 +53,17 @@ public class NoticeManageController {
 		if(currentPage > totalPage) {
 			totalPage = currentPage;
 		}
+		String listUrl = req.getContextPath()+"/admin/noticeManage/main";
+		String paging = myUtil.paging(currentPage, totalPage, listUrl);
 		
+		model.addAttribute("paging", paging);
 		model.addAttribute("list", list);
 		model.addAttribute("page", currentPage);
 		model.addAttribute("total_page", totalPage);
 		model.addAttribute("rows", rows);
 		model.addAttribute("dataCount", dataCount);
 		
-		model.addAttribute("condition", condition);
-		model.addAttribute("keyword", keyword);
-		return ".admin.noticeManage.list";
-	}
-	
-	@GetMapping(value="write")
-	private String writeForm () throws Exception {
-		
-		return "";
+		return ".admin.noticeManage.main";
 	}
 	
 	@PostMapping(value="write")
@@ -84,10 +71,6 @@ public class NoticeManageController {
 			Notice dto,
 			HttpSession session
 			) throws Exception {
-		
-		//dto.setContent(myUtil.htmlSymbols(dto.getContent()));
-		
-		
 		
 		service.insertNotice(dto);
 		return "redirect:/admin/noticeManage/main";
@@ -109,5 +92,38 @@ public class NoticeManageController {
 		model.addAttribute("subjectList", list);
 		return ".admin.noticeManage.notice_article";
 	}
+	
+
+	@GetMapping("update")
+	private String getUpdate () {
+		
+		return "redirect:/";
+	}
+	
+	@PostMapping("update")
+	private String updateSubmit(
+			Notice dto
+			) throws Exception {
+		service.updateNotice(dto);
+		return "redirect:/admin/noticeManage/main";
+	}
+	
+	@GetMapping("delete")
+	private String getDelete () {
+		
+		return "redirect:/";
+	}
+	
+	
+	@PostMapping("delete")
+	private String deleteNotice(
+			@RequestParam int noticeNum
+			) throws Exception {
+		
+		service.deleteNotice(noticeNum);
+		return "redirect:/admin/noticeManage/main";
+	}
+	
+	
 	
 }

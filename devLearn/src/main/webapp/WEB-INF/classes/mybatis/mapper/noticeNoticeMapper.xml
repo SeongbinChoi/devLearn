@@ -34,6 +34,7 @@
 		        		<include refid="where-list"/>
 		        	</if>
 		        </where>
+				ORDER BY n.noticeNum DESC
 		    )tb WHERE ROWNUM &lt;= #{end} 
 		) WHERE rnum &gt;= #{start}
 	</select>
@@ -63,4 +64,12 @@
 		) WHERE rnum &lt;= 7
 	</select>
 	
+	<update id="updateNotice" parameterType="com.sp.dev.admin.noticeManage.Notice">
+		UPDATE NOTICE SET subject = #{subject}, content = #{content} 
+		WHERE NoticeNum = #{noticeNum}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="Integer">
+		DELETE FROM notice WHERE NoticeNum = #{noticeNum}
+	</delete>
 </mapper>

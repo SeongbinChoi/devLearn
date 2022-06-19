@@ -2,7 +2,38 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
 
+<script type="text/javascript">
+$(function(){
+	
+	const chartDom = document.getElementById('chart');
+	let myChart = echarts.init(chartDom);
+	let option;
+
+	option = {
+		title: {
+			text: '멘토링 수익 현황'
+		},					
+		xAxis: {
+			type: 'category',
+			data: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [
+		    {
+		      data: [150, 230, 224, 218, 135, 147, 260, 100, 100, 100, 100, 100],
+		      type: 'line'
+		    }
+		  ]
+	};
+
+	option && myChart.setOption(option);		
+});
+
+</script>
 
 	<div class="container">
 		<div class="contents pt-5">
@@ -107,29 +138,28 @@
 	 		</div><!-- end row -->
 	 		<div class="row pt-3">
 				<div class="col">
-						<div class="card flex-fill w-100">
-							<div class="card-header">
-								<div class="card-actions float-end">
-									<div class="dropdown position-relative">
-										<a href="#" data-bs-toggle="dropdown" data-bs-display="static">
-				        					<i class="fas fa-align-justify" style="color:#000;"></i>
-				       					</a>
-										<div class="dropdown-menu dropdown-menu-end">
-											<a class="dropdown-item" href="#">년간</a>
-											<a class="dropdown-item" href="#">월간</a>
-											<a class="dropdown-item" href="#">Something else here</a>
-										</div>
+					<div class="card flex-fill w-100">
+						<div class="card-header">
+							<div class="card-actions float-end">
+								<div class="dropdown position-relative">
+									<a href="#" data-bs-toggle="dropdown" data-bs-display="static">
+			        					<i class="fas fa-align-justify" style="color:#000;"></i>
+			       					</a>
+									<div class="dropdown-menu dropdown-menu-end">
+										<a class="dropdown-item" href="#">년간</a>
+										<a class="dropdown-item" href="#">월간</a>
 									</div>
 								</div>
-								<h5 class="card-title mb-0">매출 현황</h5>
 							</div>
-							<div class="card-body d-flex w-100">
-								<div class="align-self-center chart chart-lg">
-									<canvas id="chartjs-dashboard-bar"></canvas>
+							<h5 class="card-title mb-0">매출 현황</h5>
+						</div>
+						<div class="card-body d-flex w-100">
+							<div class="align-self-center chart chart-lg">
+								<div class="chart" id="chart" style="width:1000px; height: 500px;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
 	 		</div>
 	 	</div>
-</div>
+	</div>

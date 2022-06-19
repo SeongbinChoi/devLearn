@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,7 +41,7 @@ public class MemberManageController {
 		
 		String cp = req.getContextPath();
 		
-		int rows = 5;
+		int rows = 20;
 		
 		int dataCount = 0;
 		int totalPage = 0;
@@ -218,7 +219,7 @@ public class MemberManageController {
 		return "admin/memberManage/applyDetail";
 	}
 	
-	@RequestMapping(value = "updateApply")
+	@RequestMapping(value = "updateApply" ,method = RequestMethod.POST)
 	public String updateApply(
 			ApplyManage dto
 			) throws Exception {

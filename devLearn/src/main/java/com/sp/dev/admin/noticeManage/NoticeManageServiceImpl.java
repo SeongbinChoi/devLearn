@@ -55,10 +55,21 @@ public class NoticeManageServiceImpl implements NoticeManageService {
 
 	@Override
 	public void updateNotice(Notice dto) throws Exception {
+		try {
+			dao.updateData("noticeManage.updateNotice",dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Override
 	public void deleteNotice(int noticeNum) {
+		try {
+			dao.deleteData("noticeManage.deleteNotice", noticeNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

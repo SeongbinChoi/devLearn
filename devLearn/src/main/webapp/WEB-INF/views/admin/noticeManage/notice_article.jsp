@@ -114,18 +114,47 @@ li {
     border: 1px solid #dbdbdb;
 }
 
+.ck.ck-editor {
+	max-width: 97%;
+	overflow-y: scroll;
+}
+
+.ck-editor__editable {
+    min-height: 250px;
+    max-height: 250px;
+}
+
 img {
 	width: 100%;
 }
 </style>
 
 <script type="text/javascript" >
+function updateOk() {
+	const f = document.noticeUpdateForm;
+	let str = f.subject.value;
+	if (!str ) {
+		f.subject.focus();
+		return;
+	}
+	str = window.editor.getData().trim();
+	if(! str) {
+        alert("내용을 입력하세요. ");
+        window.editor.focus();
+        return;
+    }
 	
+	f.content.value = str;
+	f.action= "${pageContext.request.contextPath}/admin/noticeManage/update";
+	f.submit();
+}
 
+function deleteOk() {
+	const f = document.btnForm;
+	f.action = "${pageContext.request.contextPath}/admin/noticeManage/delete";
+	f.submit();
+}
 </script>
-
-</head>
-<body>
 
 	<div class="banner mb-5">
 		<div class="container px-4">
@@ -137,11 +166,9 @@ img {
 	
 	<div class="contentBody container my-5">
 		
-		<div class="article" style="margin: 0 auto;">
-			<div class="article_title d-flex">
+		<div class="article" style="margin: 0 auto; width:80%;">
 				<p>${dto.subject}</p>
-				<p class="ms-auto"><button type="button" class="btn btn-primary" onclick="">글 수정</button></p>
-			</div>
+				
 			<hr>
 			<div class="article_body">
 				<div class="article_content pt-3 pe-5">
@@ -150,6 +177,15 @@ img {
 					</p>
 					${dto.content }
 				<hr class="mt-5">
+					<div class="btnDiv" style="margin: 0 auto;">
+						<form name="btnForm" method="post" >
+							<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#noticeUpdateModal">글 수정</button>
+							<button type="button" class="btn btn-secondary" onclick="deleteOk();">글 삭제</button>
+							<button type="button" class="btn btn-secondary" onclick="location.href='${pageContext.request.contextPath}/admin/noticeManage/main'">리스트</button>
+							<input type="hidden" value="${dto.noticeNum}" name="noticeNum">
+						</form>
+					</div>	
+				
 				</div>
 				<div class="article_post col-3">
 					<p class="article_label">최근 작성된 공지글</p>
@@ -162,45 +198,39 @@ img {
 			</div>
 		</div>	
 	</div>
-	
-<form name="noticeWriteForm" method="post">
-	<div class="modal fade" id="noticeUpdateModal" tabindex="-1" aria-labelledby="noticeUpdateModal" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-scrollable modal-lg">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="noticeUpdateModalLabel">공지 작성하기</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	      	<div class="mb-3">
-				<ul class="nav nav-pills mb-3" id="pills_button" role="tablist">
-					<li class="nav-item" role="presentation">
-				    	<button class="nav-link active" id="pills-qna-tab" data-bs-toggle="pill" data-bs-target="#qna_content" type="button" role="tab" aria-controls="pills-qna" aria-selected="true">질문과 답변</button>
-				  	</li>
-				</ul>
-			</div>
-	      	<div class="mb-3">
-			  <label for="exampleFormControlInput1" class="form-label">제목</label>
-			  <input type="text" class="form-control" id="noticeSubject" placeholder="제목을 입력해주세요." name="subject">
-			</div>
-			<div class="mb-3 tab-content" id="community_tabContent">
-			  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
-			  	<div class="tab-pane fade show active" id="noticeContent" role="tabpanel">
-			  		<div class="editor">${dto.content}</div>
-					<input type="hidden" name="content">
+	<form name="noticeUpdateForm" method="post">
+		<div class="modal fade" id="noticeUpdateModal" tabindex="-1" aria-labelledby="noticeUpdateModal" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="noticeUpdateModalLabel">공지 수정하기</h5>
+		        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		      </div>
+		      <div class="modal-body">
+		      	<div class="mb-3">
+				  <label for="exampleFormControlInput1" class="form-label">제목</label>
+				  <input type="text" class="form-control" id="noticeSubject" name="subject" value="${dto.subject}">
 				</div>
-			</div>
-			<div class="mb-3">
-				<input type="hidden" value="${sessionScope.member.memberEmail}"name="eMail">
-				<input type="hidden" value="${sessionScope.member.memberNickname}"name="nickName">
-				<button class="btn btn-primary" type="button" data-bs-dismiss="modal">취소</button>
-				<button class="btn btn-primary" type="button" onclick="sendOk();">저장</button>
-			</div>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-​</form>
+				<div class="mb-3 tab-content" id="community_tabContent">
+				  <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+				  	<div class="tab-pane fade show active" id="noticeContent" role="tabpanel">
+				  		<div class="editor">${dto.content}</div>
+						<input type="hidden" name="content">
+					</div>
+				</div>
+				<div class="mb-3" style="margin: 0 auto;">
+					<input type="hidden" value="${sessionScope.member.memberEmail}" name="eMail">
+					<input type="hidden" value="${sessionScope.member.memberNickname}" name="nickName">
+					<input type="hidden" value="${dto.noticeNum}" name="noticeNum">
+					<button class="btn btn-primary" type="button" data-bs-dismiss="modal">취소</button>
+					<button class="btn btn-primary" type="button" onclick="updateOk();">저장</button>
+				</div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	​</form>
+
 
 <script type="text/javascript">
 ClassicEditor

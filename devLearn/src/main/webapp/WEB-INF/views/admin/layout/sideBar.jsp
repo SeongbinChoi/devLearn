@@ -38,20 +38,19 @@
 				<i class="fas fa-angle-down"></i>
 			</div>
 			<ul class="sub-menu">
-				<li><a class="link_name" href="#">콘텐츠</a></li>
-				<li><a href="#">강의 승인</a></li>
-				<li><a href="#">이벤트 관리</a></li>
+				<li><a class="link_name" href="${pageContext.request.contextPath}/admin/contentManage/main">콘텐츠</a></li>
+				<li><a href="${pageContext.request.contextPath}/admin/contentManage/main">강의 승인</a></li>
 			</ul>
 		</li>
 		<li>
 			<div class="icon-link">
-				<a href="${pageContext.request.contextPath}/admin/noticeManage/main"><i class="fas fa-chalkboard"></i>
+				<a href="#"><i class="fas fa-chalkboard"></i>
 					<span class="link-name">공지사항</span>
 				</a>
 				<i class="fas fa-angle-down"></i>
 			</div>
 			<ul class="sub-menu">
-				<li><a class="#" href="#">공지사항</a></li>
+				<li><a class="#" href="${pageContext.request.contextPath}/admin/noticeManage/main">공지사항</a></li>
 				<li><a href="#">이벤트</a></li>
 				<li><a href="#">FAQ</a></li>
 				<li><a href="#">1:1문의</a></li>
