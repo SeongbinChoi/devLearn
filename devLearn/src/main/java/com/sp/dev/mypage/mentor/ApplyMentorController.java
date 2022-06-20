@@ -31,6 +31,7 @@ public class ApplyMentorController {
 	@Autowired
 	private MyUtil myUtil;
 	
+	
 	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public String mentorList(
 					  @RequestParam(value = "page", defaultValue = "1") int current_page,
