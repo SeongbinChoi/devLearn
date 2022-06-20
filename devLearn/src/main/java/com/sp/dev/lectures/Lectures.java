@@ -1,6 +1,7 @@
 package com.sp.dev.lectures;
 
 public class Lectures {
+	
 	private int lectureNum;
 	private int categoryCode;
 	private String lectureSubject;
