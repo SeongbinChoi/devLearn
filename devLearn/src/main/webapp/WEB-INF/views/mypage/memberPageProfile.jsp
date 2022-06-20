@@ -2,26 +2,14 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
+
  <style type="text/css">
 
-.sidebar {
-	padding: 40px 40px 0 0;
-	width: 20%;
-	height: 800px;
-	border-right: 1px solid #eee;
-}
 
 .myProfile {
-	width: 80%;
+	width: 100%;
 	min-height: 800px;
 	padding: 20px 0 0 40px;
 	position: relative;
@@ -30,14 +18,19 @@
 .user-info {
 	border-bottom: 1px solid #eee;	
 }
-.user-pictuer {
-	width: 70px;
-}
+
 .user-pictuer-edit {
+	width: 60px;
+	height: 60px;
 	position: absolute;
 	background: #fff;
 	border: 1px solid #ccc;
-	border-radius: 25px;
+	border-radius: 30px;
+	text-align: center;
+	font-size: 25px;
+}
+
+.user-pictuer-edit-div {
 	text-align: center;
 }
 
@@ -48,50 +41,115 @@
 
 .introduce-title {
 	height: 50px;
-	border-bottom: 1px solid #eee;
+	border-bottom: 2px solid #BDBDBD;
 	font-size: 18px;
 }
 
 .introduce-title span {
-	font-size: 20px;
+	font-size: 25px;
+	font-weight: 800;
+}
+
+.introduce-title button {
+	font-size: 18px;
 	font-weight: 800;
 }
 
 .introdus-content {
 	padding: 24px 0;
-	min-height: 700px;
+	min-height: 750px;
+	border: 1px solid lightgray;
+	border-radius: 4px;
+}
+
+.profile-img {
 	text-align: center;
 }
 
+.profile-img .is-rounded {
+	border-radius: 50%;
+	width: 300px;
+}
+
+
+label {
+	font-size: 21px;
+	font-weight: bold;
+	color: gray;
+	text-align: left;
+}
+
+label {
+	font-size: 21px;
+	font-weight: bold;
+	color: gray;
+	text-align: left;
+}
+
+
+.ck.ck-editor {
+   max-width: 97%;
+   overflow-y: scroll;
+}
+
+.ck-editor__editable {
+    min-height: 250px;
+    max-height: 250px;
+}
+
+
+.save1 {
+	text-align: center;
+}
+
+.save1 button {
+	font-size: 23px;
+	font-weight: bold;
+}
 
 </style>
-</head>
-<body>
 
+<jsp:include page="memberPage.jsp"/>
 
-<div class="container d-flex">
-	<div class="sidebar">
-		<div class="user-info d-flex align-items-center">
-			<h3 class="flex-grow-1">userID</h3>
-			<div class="user-pictuer d-flex align-items-btween">
-				<div class="user-pictuer-edit-div">
-					<button class="user-pictuer-edit" data-bs-toggle="modal" data-bs-target="#editProfilePic"><i class="fa-solid fa-pen"></i></button>
-				</div>
-				<figure class="figure">
-					<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded rounded-circle" alt="" style="width: 60px;">
-				</figure>
-			</div>
-		</div>
-	</div>
 	
 	<div class="myProfile">
 		<div class="introduce">
-			<div class="introduce-title d-flex justify-content-between align-items-center">
-				<span>내 소개</span>
-				<button class="btn btn-primary" id="edit-modal" data-bs-toggle="modal" data-bs-target="#editModal">편집</button>
+			<div class="introduce-title d-flex justify-content-between align-items-center py-5 px-3">
+				<span>프로필 설정</span>
+				<button class="btn btn-primary" id="edit-modal" data-bs-toggle="modal" data-bs-target="#editModal">개인정보수정</button>
 			</div>
-			<div class="introdus-content">
-				소개가 존재하지 않습니다.
+			<div class="introdus-content my-4 mx-3">
+				<form name="my-info" class="my-info px-5">
+					<div class="user-pictuer-edit-div">
+						<button class="user-pictuer-edit" data-bs-toggle="modal" data-bs-target="#editProfilePic"><i class="fa-solid fa-pen"></i></button>
+					</div>
+					<div class="profile-img my-4">
+						<img alt="profile" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded">
+					</div>
+					
+					<div class="nick my-4">
+						<label class="form-label">닉네임</label>
+						<input type="text" class="form-control">
+					</div>
+					<div class="my-introduce">
+						<label class="form-label">자기소개</label>
+						<div class="editor"></div>
+					</div>
+					
+					<div class="mail my-4">
+						<label class="form-label">비지니스 메일</label>
+						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+					</div>
+					
+					<div class="phone my-4">
+						<label class="form-label">휴대폰</label>
+						<input type="text" class="form-control" placeholder="010-0000-0000">
+					</div>
+					
+					<p class="save1 my-5">
+						<button type="button" class="btn btn-primary px-5">저장하기</button>
+					</p>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -133,9 +191,8 @@
 	    </div>
 	  </div>
 	</div>
-</div>
 
-</body>
+
 <script type="text/javascript">
 	let edit-modal = document.getElementById('edit-modal');
 	let edit-input = document.getElementById('edit-input');
@@ -145,6 +202,56 @@
 		
 	});
 	
-	
 </script>
-</html>
+<script type="text/javascript">
+    ClassicEditor
+    .create( document.querySelector( '.editor' ), {
+       fontFamily: {
+             options: [
+                 'default',
+                 '맑은 고딕, Malgun Gothic, 돋움, sans-serif',
+                 '나눔고딕, NanumGothic, Arial'
+             ]
+         },
+         fontSize: {
+             options: [
+                 9, 11, 13, 'default', 17, 19, 21
+             ]
+         },
+       toolbar: {
+          items: [
+             'heading','|',
+             'fontFamily','fontSize','bold','italic','fontColor','|',
+             'alignment','bulletedList','numberedList','|',
+             'imageUpload','insertTable','sourceEditing','blockQuote','mediaEmbed','|',
+             'undo','redo','|',
+             'link','outdent','indent','|',
+          ]
+       },
+       image: {
+             toolbar: [
+                 'imageStyle:full',
+                 'imageStyle:side',
+                 '|',
+                 'imageTextAlternative'
+             ],
+ 
+             // The default value.
+             styles: [
+                 'full',
+                 'side'
+             ]
+         },
+       language: 'ko',
+       ckfinder: {
+            uploadUrl: '${pageContext.request.contextPath}/image/upload' // 업로드 url (post로 요청 감)
+        }
+    })
+    .then( editor => {
+       window.editor = editor;
+    })
+    .catch( err => {
+       console.error( err.stack );
+    });
+
+</script>

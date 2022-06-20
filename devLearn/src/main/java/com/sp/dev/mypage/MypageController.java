@@ -23,13 +23,6 @@ public class MypageController {
 		return ".mypage.memberPageMyStudy";
 	}
 	
-	@RequestMapping(value = "mentor", method = RequestMethod.GET)
-	public String mentor() throws Exception {
-		
-		return ".mypage.memberPageMentor";
-	}
-
-
 	
 	@RequestMapping(value = "myInquiry", method = RequestMethod.GET)
 	public String myInquiry() throws Exception {
@@ -42,13 +35,6 @@ public class MypageController {
 	public String cart() throws Exception {
 		
 		return ".mypage.memberPageCart";
-	}
-
-	
-	@RequestMapping(value = "like", method = RequestMethod.GET)
-	public String like() throws Exception {
-		
-		return ".mypage.memberPageLike";
 	}
 
 	

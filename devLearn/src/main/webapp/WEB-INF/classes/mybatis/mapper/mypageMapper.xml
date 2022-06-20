@@ -7,7 +7,12 @@
 	<select id="qnaDataCount" parameterType="map" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) 
 		FROM communityQna
-		WHERE memberEmail=#{memberEmail} AND depth = 0
+		<where>
+			memberEmail=#{memberEmail} AND depth = 0
+			<if test="selected != 2">
+				AND selected = #{selected}
+			</if>
+		</where>
 	</select>
 
 	<!-- 커뮤니티 qna 작성글 리스트 -->
@@ -16,8 +21,142 @@
 			SELECT ROWNUM rnum, tb.* FROM (
 				SELECT qnaNum, memberEmail, subject, TO_CHAR(regDate,'YYYY-MM-DD') regDate, depth, replyNum, selected
 				FROM communityQna
-				WHERE memberEmail=#{memberEmail} AND depth = 0
+				<where>
+					memberEmail=#{memberEmail} AND depth = 0
+					<if test="selected != 2">
+						AND selected = #{selected}
+					</if>
+				</where>
 				ORDER BY regDate DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- 모집한 스터디 개수  -->
+	<select id="studyDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM study
+		<where>
+			memberEmail=#{memberEmail}
+			<if test="status != 2">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 모집한 스터디 리스트 -->
+	<select id="studyList" parameterType="map" resultType="com.sp.dev.mypage.myWrite.MyStudyWrite">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT studyNum, memberEmail, r.regionNum, region, subject, TO_CHAR(regDate,'YYYY-MM-DD') regDate, limit, applied, status
+				FROM study s
+				JOIN studyRegion r ON s.regionNum = r.regionNum
+				<where>
+					memberEmail=#{memberEmail}
+					<if test="status != 2">
+						AND status = #{status}
+					</if>
+				</where>
+				ORDER BY regDate DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- 지원한 멘토링 개수 -->
+	<select id="mentorDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM mentoringApply
+		<where>
+			memberEmail=#{memberEmail}
+			<if test="status != 9">
+				AND status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 지원한 멘토링 리스트 -->
+	<select id="mentorList" parameterType="map" resultType="com.sp.dev.mypage.mentor.ApplyMentor">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT a.mentorNum, mentoringNum, a.memberEmail, mentorSubject, mentoringPrice, mentoringDate,
+						status, approveDate, phoneNum, applyMessage, applyDate
+				FROM mentoringApply a
+				JOIN mentor m ON a.mentorNum = m.mentorNum
+				<where>
+					a.memberEmail=#{memberEmail}
+					<if test="status != 9">
+						AND status = #{status}
+					</if>
+				</where>
+				ORDER BY applyDate DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- status가 이용완료(1)인 리스트 -->
+	<select id="status1" parameterType="map" resultType="com.sp.dev.mypage.mentor.ApplyMentor">
+		SELECT a.mentorNum, mentoringNum, a.memberEmail, mentoringDate, status, applyDate
+		FROM mentoringApply a
+		JOIN mentor m ON a.mentorNum = m.mentorNum
+		WHERE a.memberEmail=#{memberEmail} AND status = 1
+	</select>
+	
+	<!-- 상담시간이 지난 데이터는 status 이용완료(3)으로 변경 -->
+	<update id="statusUpdate" parameterType="Integer">
+		UPDATE mentoringApply SET status=3 
+		WHERE mentoringNum=#{mentoringNum}
+	</update>
+	
+	<!-- 멘토링 상세 -->
+	<select id="readMentor" parameterType="map" resultType="com.sp.dev.mypage.mentor.ApplyMentor">
+		SELECT mentorSubject, mb.memberNickname, mentorContent, mentoringPrice, 
+				mentoringDate, status, applyDate
+		FROM mentoringApply a
+		JOIN mentor m ON a.mentorNum = m.mentorNum
+		JOIN member mb ON m.memberEmail = mb.memberEmail
+		<where>
+			mentoringNum=#{mentoringNum}
+		</where>
+		ORDER BY applyDate DESC
+	</select>
+	
+	<!-- 멘토링 리뷰 등록 -->
+	<insert id="insertMentorReview" parameterType="com.sp.dev.mypage.mentor.ApplyMentor">
+		INSERT INTO mentorReview(mentoringNum, mentorRate, mentorReviewContent)
+			VALUES(#{mentoringNum}, #{mentorRate}, #{mentorReviewContent})
+	</insert>
+	
+	<!-- 멘토링 리뷰 불러오기 -->
+	<select id="readMentorReview" parameterType="Integer" resultType="com.sp.dev.mypage.mentor.ApplyMentor">
+		SELECT mentoringNum, mentorRate, mentorReviewContent
+		FROM mentorReview
+		WHERE mentoringNum=#{mentoringNum}
+	</select>
+	
+	<!-- 멘토링 리뷰 수정 -->
+	<update id="updateMentorReview"  parameterType="com.sp.dev.mypage.mentor.ApplyMentor">
+		UPDATE mentorReview SET mentorRate=#{mentorRate}, mentorReviewContent=#{mentorReviewContent}
+		WHERE mentoringNum=#{mentoringNum}
+	</update>
+	
+	
+	<!-- 강의 좋아요 개수 -->
+	<select id="likeDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM lectureLike
+		WHERE memberEmail=#{memberEmail}
+	</select>
+	
+	<!-- 강의 좋아요 리스트 -->
+	<select id="likeList" parameterType="map" resultType="com.sp.dev.mypage.like.Like">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT lk.lectureNum, lectureSubject, lecturePrice, l.regDate, m.memberNickname
+				FROM lectureLike lk
+				JOIN lecture l ON lk.lectureNum = l.lectureNum
+				JOIN member m ON l.memberEmail = m.memberEmail
+				WHERE lk.memberEmail=#{memberEmail}
+				ORDER BY l.regDate DESC
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>

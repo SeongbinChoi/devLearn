@@ -64,12 +64,12 @@
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/mentor">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/mentor/list?status=9">
 								<span>멘토링</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myWrite/myWrite">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myWrite/myWrite?status=2">
 								<span>작성한 게시글</span>
 							</a>
 						</li>

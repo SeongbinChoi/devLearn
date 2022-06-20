@@ -38,4 +38,30 @@ public class MyWriteServiceImpl implements MyWriteService {
 		return list;
 	}
 
+	@Override
+	public int studyDataCount(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("my.studyDataCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<MyStudyWrite> studyList(Map<String, Object> map) {
+		List<MyStudyWrite> list = null;
+		
+		try {
+			list = dao.selectList("my.studyList", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
 }

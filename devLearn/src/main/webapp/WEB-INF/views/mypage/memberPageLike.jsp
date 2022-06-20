@@ -2,12 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
 <style type="text/css">
 .topSection {
 	display: flex;
@@ -141,11 +136,10 @@ p span {
 
 
 </style>
-</head>
-<body>
+
 <jsp:include page="memberPage.jsp"/>
 	<div class="topSection">
-		<p>전체 <span>11</span></p>
+		<p>전체 <span>${dataCount}</span></p>
 		<div class="topSelect">
 			<select class="free">
 				<option>유료/무료</option>
@@ -161,13 +155,13 @@ p span {
 		</div>
 	</div>
 	
-	<div class="lecture-section my-3">
-		<c:forEach begin="1" end="21">
+	<div class="row row-cols-md-3 lecture-section my-3">
+		<c:forEach var="vo" items="${list}">
 				<div class="card border-light" style="cursor:pointer;">
 					<img src="https://cdn.inflearn.com/public/courses/328742/cover/e1dfb69f-15e7-4ee9-8118-65b400f622f4/328742-eng-resize.png" class="card-img-top" alt="...">
 					<div class="card-body">
-						<div class="card-title">네트워크, 그림으로 이해하자</div>
-						<div class="instructor">예술하는 개발자</div>
+						<div class="card-title">${vo.lectureSubject}</div>
+						<div class="instructor">${vo.memberNickname}</div>
 						<div class='RatingStar'>
 							<div class='RatingScore'>
 								<div class='outer-star'>
@@ -176,7 +170,7 @@ p span {
 								</div>
 							</div>
 						</div>
-						<div class="Price">₩74,800</div>
+						<div class="Price">${vo.lecturePrice}</div>
 						<div class="tags row row-cols-4 d-flex justify-content-start gap-1 py-2">
 							<span class="tag col">+100명</span>
 							<span class="tag col">업데이트</span>
@@ -186,6 +180,3 @@ p span {
 				</div>
 			</c:forEach>
 	</div>
-</main>
-</body>
-</html>
