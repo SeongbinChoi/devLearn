@@ -35,8 +35,8 @@
 				
 			</when>
 			
-			<when test="status == '3' ">
-				AND status &lt;= #{status}
+			<when test="status == '4' ">
+				AND status &gt;= #{status} 
 			</when>
 			<otherwise>
 				AND status = #{status}
@@ -57,7 +57,7 @@
 	</update>
 	
 	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
-		SELECT TO_DATE(SUBSTR(mentoringDate, 0, 10), 'YYYY-MM-DD')mentoringDate FROM mentoringApply ma
+		SELECT DISTINCT TO_DATE(SUBSTR(mentoringDate, 0, 10), 'YYYY-MM-DD')mentoringDate FROM mentoringApply ma
 		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
 		JOIN member m ON m.memberEmail = mt.memberEmail
 		<where>
@@ -75,6 +75,56 @@
 		LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
 		WHERE ma.mentoringDate LIKE '${mentoringDate}%'
 		AND m.memberEmail = #{memberEmail}
+	</select>
+	
+	<select id="listMentoringDetail" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
+		select mentorSubject, ma.memberEmail, mentoringPrice, mentoringDate, phoneNum, applyMessage 
+		FROM mentoringApply ma
+		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+		WHERE mentoringNum = #{mentoringNum}
+	</select>
+	
+	<select id="mentoringRevenueList" parameterType="map" resultType="map">
+		WITH T_TEMP AS
+	    (
+	        SELECT
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'01', mentoringPrice, 0)), 0)AS "1월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'02', mentoringPrice, 0)), 0)AS "2월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'03', mentoringPrice, 0)), 0)AS "3월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'04', mentoringPrice, 0)), 0)AS "4월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'05', mentoringPrice, 0)), 0)AS "5월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'06', mentoringPrice, 0)), 0)AS "6월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'07', mentoringPrice, 0)), 0)AS "7월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'08', mentoringPrice, 0)), 0)AS "8월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'09', mentoringPrice, 0)), 0)AS "9월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'10', mentoringPrice, 0)), 0)AS "10월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'11', mentoringPrice, 0)), 0)AS "11월",
+	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'12', mentoringPrice, 0)), 0)AS "12월"
+	        FROM mentoringApply ma
+	        JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+	        WHERE status = 1
+	        AND mt.memberEmail = #{memberEmail}
+	        AND mentoringDate LIKE '${year}%'
+	    )
+		SELECT month, value
+		FROM T_TEMP
+		UNPIVOT( value FOR month IN ("1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"))
+	</select>
+	
+	<select id="mentoringYearList" parameterType="String" resultType="map">
+		SELECT DISTINCT SUBSTR(mentoringDate, 0, 4) year 
+		FROM mentoringApply ma
+		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+		WHERE mt.memberEmail = #{membeEmail}
+	</select>
+	
+	<select id="mentoringDetailList" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentorSubject, ma.memberEmail, SUBSTR(mentoringDate,0,10) mentoringDate, mentoringPrice FROM mentoringApply ma
+		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
+		JOIN member m ON m.memberEmail = mt.memberEmail
+		WHERE ma.status = 1
+		AND mentoringDate LIKE '${year}%'
+		AND mt.memberEmail = #{memberEmail}
 	</select>
 	
 </mapper>

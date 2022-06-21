@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+.chart{
+	width: 100%;
+	height: 500px;
+}
+
+.rev-table {
+	text-align: center;
+	width: 100%;
+}
+
+.rev-table td:nth-child(4n+2) {
+	text-align: left;
+	padding-left: 5px;
+}
+
+.btnDIV {
+	width: 100%;
+	height: 100px;
+}
+
+.btnDIV button {
+	margin-right: 10px;
+}

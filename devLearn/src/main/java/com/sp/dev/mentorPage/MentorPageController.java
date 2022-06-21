@@ -1,5 +1,6 @@
 package com.sp.dev.mentorPage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,14 +76,17 @@ public class MentorPageController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		
+		// 0: 승인대기, 1: 승인, 2: 거절, 3: 이용완료, 4:취소, 5:환불, -1: 전체
 		if(status.equals("wait")) {
 			status = "0";
 		} else if(status.equals("accept")) {
 			status = "1";
 		} else if(status.equals("cancel")) {
-			status = "3";
+			// 취소/환불
+			status = "4";
 		} else {
-			status = "-1";
+			// 전체
+			status = "-1"; 
 		}
 		
 		map.put("memberEmail", info.getMemberEmail());
@@ -138,8 +142,8 @@ public class MentorPageController {
 	@RequestMapping(value = "listMentoring")
 	@ResponseBody
 	public Map<String, Object> mentorPlan(
-			@RequestParam(defaultValue = "2022-05-29") String sDate,
-			@RequestParam(defaultValue = "2022-07-10") String eDate,
+			@RequestParam() String sDate,
+			@RequestParam() String eDate,
 			HttpSession session			
 			) throws Exception {			
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -182,11 +186,59 @@ public class MentorPageController {
 		return model;
 	}
 	
+	@RequestMapping(value = "MentoringDetail", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> mentoringDetail(@RequestParam int mentoringNum) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		Mentors dto = service.listMentoringDetail(mentoringNum);
+		
+		model.put("dto", dto);
+		
+		return model;
+	}
+	
 	@RequestMapping(value = "revenueManage")
-	public String mentorRevenue() throws Exception {
+	public String mentorRevenue(
+			@RequestParam(required = false) String year,
+			HttpSession session,
+			Model model
+			) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		List<Object> revenueList = new ArrayList<Object>();
+		List<Mentors> mentoringDetailList = new ArrayList<Mentors>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("year", year);
+		map.put("memberEmail", info.getMemberEmail());
+		
+		revenueList = service.mentoringRevenueList(map);
+		mentoringDetailList = service.mentoringDetailList(map);
+		System.out.println("----------------------------" + revenueList);
+		model.addAttribute("revenueList", revenueList);
+		model.addAttribute("mentoringDetailList", mentoringDetailList);
+		model.addAttribute("mentoringYearList", service.mentoringYearList(info.getMemberEmail()));
+		model.addAttribute("year", year);
 		
 		return ".mentorPage.mentorRevenueManage";
 	}
 	
+	// 사용 안함 json
+	@RequestMapping(value = "mentoringRevenueList")
+	@ResponseBody
+	public Map<String, Object> mentoringRevenueList(
+			@RequestParam String year,
+			HttpSession session
+			) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("year", year);
+		map.put("memberEmail", info.getMemberEmail());
+		
+		model.put("revenueList", service.mentoringRevenueList(map));
+		model.put("mentoringYearList", service.mentoringYearList(info.getMemberEmail()));
+		model.put("year", year);
+		
+		return model;
+	}
 	
 }

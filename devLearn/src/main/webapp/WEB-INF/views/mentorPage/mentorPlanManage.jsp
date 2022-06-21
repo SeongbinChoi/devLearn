@@ -4,6 +4,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/vendor/fullcalendar5/lib/main.min.css">
+<style>
+#detailInfoTable tr {
+	height: 40px;
+}
+</style>
 <script type="text/javascript">
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
@@ -47,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				for(let i=0; i<data.list.length; i++){
 					let item = data.list[i];
 					let obj = {};
-					obj.title = '예약된 멘토링 : ' + data.list.length + "개";
+					obj.title = '예정된 멘토링';
 					obj.start = item.mentoringDate;
 					obj.end = item.mentoringDate;
 					obj.color = '#000fff';
@@ -103,13 +108,36 @@ function showModal(data) {
 	for(let i = 0; i < data.list.length; i++) {
 		str += "<tr><td>" + data.list[i].memberEmail + "</td>";
 		str += "<td>" + data.list[i].mentoringDate + "</td>";
-		str += "<td><button type='button' class='btn btn-primary' data-num =" + data.list[i].mentoringNum + ">상세보기</button></td></tr>";
+		str += "<td><button type='button' class='btn btn-sm btn-primary' data-num =" + data.list[i].mentoringNum + " onclick='showDetail(" + data.list[i].mentoringNum + ");'>상세보기</button></td></tr>";
 	}
 	$("#detailMentoring").html(str);
 	
 	$("#addModal").modal("show");
 }
 
+function showDetail(param) {
+	let mentoringNum = param;
+	let url = "${pageContext.request.contextPath}/mentorPage/MentoringDetail";
+	let query = "mentoringNum=" + mentoringNum;
+	
+	const fn = function(data) {
+		let str = "<tr style='height:20px;'><td style='width:30%;'>멘토링 명</td>";
+		str += "<td style='width:70%;'>" + data.dto.mentorSubject + "</td></tr>";
+		str += "<tr><td>멘티 이메일</td>";
+		str += "<td>" + data.dto.memberEmail + "</td></tr>";
+		str += "<tr><td>멘티 연락처</td>";
+		str += "<td>" + data.dto.phoneNum + "</td></tr>";
+		str += "<tr><td>예약 일정</td>";
+		str += "<td>" + data.dto.mentoringDate + "</td></tr>";
+		str += "<tr><td colspan='2' style='text-align: center;'>예약 일정</td></tr>";
+		str += "<tr><td colspan='2'><textarea class='form-control' style='width:100%; height:300px;'>" + data.dto.applyMessage + "</textarea></td></tr>";
+		$("#detailInfoTable").html(str);
+
+		$("#detailModal").modal("show");
+	};
+	
+	ajaxFun(url, "get", query, "json", fn);
+}
 
 </script>
 
@@ -131,7 +159,7 @@ function showModal(data) {
 			<div class="modal-body">
 				<div class="subject">
 					<label class="form-label">날짜</label>
-					<input type="text" name="subject" class="form-control long subject" value="">
+					<input type="text" name="subject" class="form-control long subject" value="" readonly="readonly">
 				</div>
 					<label class="form-label">목록</label>
 				<div class="table-responsive" style="overflow-y: scroll; height: 300px; border:1px solid #eee;">
@@ -152,5 +180,25 @@ function showModal(data) {
 		</div>
 	</div>
 </div>	
-	
+
+<div class="modal" id="detailModal" tabindex="-1" aria-labelledby="detailModal" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="detailModal">신청 정보 확인</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		    </div>
+		    <div class="modal-body check px-4">
+				<div class="detailInfo">
+					<table class="detailInfo" id="detailInfoTable" style="width:100%;">
+						
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>	
 				

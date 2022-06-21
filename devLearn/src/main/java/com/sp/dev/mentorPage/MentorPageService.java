@@ -15,4 +15,8 @@ public interface MentorPageService {
 	public void updateMentoringApply(Map<String, Object> map) throws Exception;
 	public List<Mentors> listMentoring(Map<String, Object> map);
 	public List<Mentors> listMentoringPlan(Map<String, Object> map);
+	public Mentors listMentoringDetail(int mentoringNum);
+	public List<Object> mentoringRevenueList(Map<String, Object> map);
+	public List<Object> mentoringYearList(String memberEmail);
+	public List<Mentors> mentoringDetailList(Map<String, Object> map);
 }

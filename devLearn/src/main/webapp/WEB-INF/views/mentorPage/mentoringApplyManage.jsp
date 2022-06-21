@@ -122,7 +122,9 @@ function sendOk(param) {
 									<c:when test="${dto.status eq 0}">승인 대기</c:when>
 									<c:when test="${dto.status eq 1}">예약 확정</c:when>
 									<c:when test="${dto.status eq 2}">승인 거절</c:when>
-									<c:when test="${dto.status eq 3}">예약 환불</c:when>
+									<c:when test="${dto.status eq 3}">이용 완료</c:when>
+									<c:when test="${dto.status eq 4}">취 소</c:when>
+									<c:when test="${dto.status eq 5}">환 불</c:when>
 								</c:choose>
 							</td>
 							<td>
