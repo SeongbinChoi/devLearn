@@ -3,7 +3,7 @@ package com.sp.dev.lectures;
 public class Lectures {
 	private String memberEmail;
 	private int lectureNum;
-	private int categoryCode;
+	private String categoryCode;
 	private String lectureSubject;
 	private String lectureContent;
 	private int price;
@@ -70,10 +70,10 @@ public class Lectures {
 	public void setLectureNum(int lectureNum) {
 		this.lectureNum = lectureNum;
 	}
-	public int getCategoryCode() {
+	public String getCategoryCode() {
 		return categoryCode;
 	}
-	public void setCategoryCode(int categoryCode) {
+	public void setCategoryCode(String categoryCode) {
 		this.categoryCode = categoryCode;
 	}
 	public String getLectureSubject() {
