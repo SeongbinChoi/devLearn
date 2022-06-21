@@ -8,6 +8,7 @@ public class Lectures {
 	private String lectureContent;
 	private int price;
 	private int dcPercent;
+	private String memberNickname;
 	
 	private String mainCategory;
 	private String categoryName;
@@ -56,6 +57,7 @@ public class Lectures {
 	private String reviewRegDate;
 	private double lectureRate;
 	private String reviewAnswer;
+	
 	public String getMemberEmail() {
 		return memberEmail;
 	}
@@ -97,6 +99,12 @@ public class Lectures {
 	}
 	public void setDcPercent(int dcPercent) {
 		this.dcPercent = dcPercent;
+	}
+	public String getMemberNickname() {
+		return memberNickname;
+	}
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
 	}
 	public String getMainCategory() {
 		return mainCategory;

@@ -26,30 +26,54 @@ public class LecInqServiceImpl implements LecInqService {
 
 	@Override
 	public int dataCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("lectureInquiry.dataCount", map);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		
+		return result;
 	}
 
 	@Override
 	public List<LecInq> listLecInq(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		List<LecInq> list = null;
+		
+		try {
+			list = dao.selectList("lectureInquiry.listLecInq", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 	@Override
 	public LecInq readInq(int inquirynum) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void answerInq(LecInq dto) throws Exception {
-		// TODO Auto-generated method stub
+		LecInq dto = null;
 		
+		try {
+			dto = dao.selectOne("lectureInquiry.readInq", inquirynum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
 	}
 
 	@Override
-	public void deleteAnswer(int inquirynum) throws Exception {
+	public void insertAnswer(LecInq dto) throws Exception {
+		try {
+			dao.insertData("lectureInquiry.insertAnswer", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	@Override
+	public void deleteAns(int inquirynum) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,9 +8,7 @@ public interface LecInqService {
 	public int dataCount(Map<String, Object> map);
 	public List<LecInq> listLecInq(Map<String, Object> map);
 	public LecInq readInq(int inquirynum);
-	public void answerInq(LecInq dto) throws Exception;
-	public void deleteAnswer(int inquirynum) throws Exception;
+	public void insertAnswer(LecInq dto) throws Exception;
+	public void deleteAns(int inquirynum) throws Exception;
 	public void deleteInq(int inquirynum) throws Exception;
-	
-
 }

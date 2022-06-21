@@ -6,4 +6,26 @@
 		insert into lectureinquiry(inquirynum, lecturenum, qmember, question, q_regdate)
 		values (lectureinquiry_seq.NEXTVAL, #{lectureNum}, #{qmember}, #{question}, sysdate)
 	</insert>
+	
+	<select id="dataCount" resultType="Integer">
+		select NVL(COUNT(*), 0) from lectureInquiry
+	</select>
+	
+	<select id="listLecInq" parameterType="map" resultType="com.sp.dev.lectureInquiry.LecInq">
+		select * from (
+			select rownum rnum, tb.* from (
+				select inquirynum, lecturenum, qmember, question, q_regdate
+				from lectureInquiry l
+				join member m on qmember = m.memberEmail
+				order by inquirynum DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="readInq" resultType="com.sp.dev.lectureInquiry.LecInq" parameterType="Integer">
+		select lecturenum, memberEmail, qmember, question, q_regDate
+		from lectureinquiry l
+		join member m on 
+		
+	</select>
 </mapper>
