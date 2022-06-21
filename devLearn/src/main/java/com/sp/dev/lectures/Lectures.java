@@ -1,7 +1,7 @@
 package com.sp.dev.lectures;
 
 public class Lectures {
-	
+	private String memberEmail;
 	private int lectureNum;
 	private int categoryCode;
 	private String lectureSubject;
@@ -23,11 +23,11 @@ public class Lectures {
 	
 	private int inquiryNum;
 	private String qMember;
-	private String inquirySubject;
-	private String inquiryQuestion;
-	private String inquiry;
-	private String inquiryRegDate;
-	private String answerRegDate;
+	private String question;
+	private String q_regDtae;
+	private String amember;
+	private String answer;
+	private String a_regDate;
 	
 	private int qnaNum;
 	private String qnaSubject;
@@ -55,18 +55,23 @@ public class Lectures {
 	private String reviewContent;
 	private String reviewRegDate;
 	private double lectureRate;
-	private String reiewAnswer;
-	
+	private String reviewAnswer;
+	public String getMemberEmail() {
+		return memberEmail;
+	}
+	public void setMemberEmail(String memberEmail) {
+		this.memberEmail = memberEmail;
+	}
 	public int getLectureNum() {
 		return lectureNum;
 	}
 	public void setLectureNum(int lectureNum) {
 		this.lectureNum = lectureNum;
 	}
-	public int getcategoryCode() {
+	public int getCategoryCode() {
 		return categoryCode;
 	}
-	public void setcategoryCode(int categoryCode) {
+	public void setCategoryCode(int categoryCode) {
 		this.categoryCode = categoryCode;
 	}
 	public String getLectureSubject() {
@@ -159,35 +164,35 @@ public class Lectures {
 	public void setqMember(String qMember) {
 		this.qMember = qMember;
 	}
-	public String getInquirySubject() {
-		return inquirySubject;
+	public String getQuestion() {
+		return question;
 	}
-	public void setInquirySubject(String inquirySubject) {
-		this.inquirySubject = inquirySubject;
+	public void setQuestion(String question) {
+		this.question = question;
 	}
-	public String getInquiryQuestion() {
-		return inquiryQuestion;
+	public String getQ_regDtae() {
+		return q_regDtae;
 	}
-	public void setInquiryQuestion(String inquiryQuestion) {
-		this.inquiryQuestion = inquiryQuestion;
+	public void setQ_regDtae(String q_regDtae) {
+		this.q_regDtae = q_regDtae;
 	}
-	public String getInquiry() {
-		return inquiry;
+	public String getAmember() {
+		return amember;
 	}
-	public void setInquiry(String inquiry) {
-		this.inquiry = inquiry;
+	public void setAmember(String amember) {
+		this.amember = amember;
 	}
-	public String getInquiryRegDate() {
-		return inquiryRegDate;
+	public String getAnswer() {
+		return answer;
 	}
-	public void setInquiryRegDate(String inquiryRegDate) {
-		this.inquiryRegDate = inquiryRegDate;
+	public void setAnswer(String answer) {
+		this.answer = answer;
 	}
-	public String getAnswerRegDate() {
-		return answerRegDate;
+	public String getA_regDate() {
+		return a_regDate;
 	}
-	public void setAnswerRegDate(String answerRegDate) {
-		this.answerRegDate = answerRegDate;
+	public void setA_regDate(String a_regDate) {
+		this.a_regDate = a_regDate;
 	}
 	public int getQnaNum() {
 		return qnaNum;
@@ -315,11 +320,11 @@ public class Lectures {
 	public void setLectureRate(double lectureRate) {
 		this.lectureRate = lectureRate;
 	}
-	public String getReiewAnswer() {
-		return reiewAnswer;
+	public String getReviewAnswer() {
+		return reviewAnswer;
 	}
-	public void setReiewAnswer(String reiewAnswer) {
-		this.reiewAnswer = reiewAnswer;
+	public void setReviewAnswer(String reviewAnswer) {
+		this.reviewAnswer = reviewAnswer;
 	}
 	
 }

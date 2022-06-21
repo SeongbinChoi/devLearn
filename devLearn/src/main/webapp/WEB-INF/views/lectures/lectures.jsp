@@ -103,14 +103,14 @@
 			</div>
 			<div class="col">
 				<div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
-					<c:forEach var="i" begin="1" end="20">
+					<c:forEach var="dto" items="${list}">
 						<div class="col">
-							<div style="cursor:pointer;" onclick="location.href='${pageContext.request.contextPath}/lectures/detail';">
+							<div style="cursor:pointer;" onclick="location.href='${pageContext.request.contextPath}/lectures/detail?lectureNum=${dto.lectureNum}';">
 								<div class="card border-light" style="cursor:pointer;">
 									<img src="https://cdn.inflearn.com/public/courses/328742/cover/e1dfb69f-15e7-4ee9-8118-65b400f622f4/328742-eng-resize.png" class="card-img-top" alt="...">
 									<div class="card-body">
-										<div class="card-title">네트워크, 그림으로 이해하자</div>
-										<div class="instructor">예술하는 개발자</div>
+										<div class="card-title">${dto.lectureSubject}</div>
+										<div class="instructor">${dto.memberNickname}</div>
 										<div class='RatingStar'>
 											<div class='RatingScore'>
 												<div class='outer-star'>
@@ -119,7 +119,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="Price">₩74,800</div>
+										<div class="Price">${dto.price}</div>
 										<div class="tags row row-cols-4 d-flex justify-content-start gap-1 py-2">
 											<span class="tag col">+100명</span>
 											<span class="tag col">업데이트</span>
