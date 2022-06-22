@@ -2,13 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="https://use.fontawesome.com/releases/v6.1.1/js/all.js"></script>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
 <style type="text/css">
 .container {
 	gap: 15px;
@@ -28,6 +22,10 @@
 	margin-right: 15px;
 	position: relative;
 	border-bottom: 1px solid #ddd;
+}
+
+.cart-content {
+	overflow-y:scroll; height:600px;
 }
 
 .cart-card {
@@ -189,42 +187,138 @@
 
 }
 </style>
-</head>
-<body>
+
+<script type="text/javascript">
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status===403) {
+				login();
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		},
+	});
+}
+
+function selectAll(selectAll)  {
+	  const checkboxes 
+	       = document.getElementsByName('cartCheck');
+	  
+	  checkboxes.forEach((checkbox) => {
+	    checkbox.checked = selectAll.checked;
+	  });
+}
+
+
+$(function(){
+	$("input:checkbox").on('click', function() {
+		let chk_val = [];
+		$('.cart-content input:checkbox[name=cartCheck]:checked').each(function(i, iVal){
+			chk_val.push(iVal.value);
+		});
+		
+		if(chk_val.length == 0){
+			chk_val.push(0);
+		}
+		
+		let url = "${pageContext.request.contextPath}/mypage/cart/result";
+		let query = {
+				lectureNum : chk_val
+		};
+		
+		var fn = function(data){
+			console.log(data);
+			$(".totalPrice").html(data.dto.totalPrice);
+			$(".totalDc").html("-"+data.dto.totalDiscount);
+			$(".totalResult").html(data.dto.totalPrice - data.dto.totalDiscount);
+		};
+
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+
+
+
+
+$(function() {
+	$('.deletebtn').click(function() {
+		let chk_val = [];
+		$('.cart-content input:checkbox[name=cartCheck]:checked').each(function(i, iVal){
+			chk_val.push(iVal.value);
+		});
+		
+		if(chk_val.length == 0){
+			alert('삭제할 항목을 선택하세요');
+			return false;
+		}
+		
+		if(!confirm('선택한 항목을 삭제하시겠습니까?')){
+			return false;
+		}
+		
+		let url = "${pageContext.request.contextPath}/mypage/cart/delete";
+		let query = {
+				lectureNum : chk_val
+		};
+		
+		var fn = function(data){
+			location.href = "${pageContext.request.contextPath}/mypage/cart";
+		};
+
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+
+
+</script>
+
 
 <div class="container d-flex mt-5">
-	<div class="list-section flex-fill">
+	<div class="list-section flex-fill mx-3">
 		<h3 style="font-weight: 800;">수강바구니</h3>
 		<div class="cart-head d-flex align-items-center justify-content-baseline">
 			<div class="form-check">
-				<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-				<span>전체선택</span><span>3</span>/<span>3</span>
+				<input class="form-check-input" type="checkbox" name="cartCheck" value="selectall" id="flexCheckDefault" onclick='selectAll(this)'>
+				<span>전체선택</span>
 			</div>
 			<button type="button" class="btn btn-primary deletebtn">선택 삭제 <i class="fa-solid fa-xmark"></i></button>
 		</div>
-		<div class="cart-content " >
-			<c:forEach var="i" begin="1" end="3">
-				<div class="cart-card d-flex ">
+		<div class="cart-content" >
+			<c:forEach var="dto" items="${list}">
+				<div class="cart-card d-flex px-3">
 					<div class="form-check">
-						<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+						<input class="form-check-input" name="cartCheck" type="checkbox" value="${dto.lectureNum}" id="flexCheckDefault">
 					</div>
 					<div class="cart-img">
 						<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" >
 					</div>
 					<div class="cart-course-title flex-fill">
-						<p>스프링 CSS 웹개발 어쩌구</p>
-						<span>강사이름&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>수강 기간</span>				
+						<p>${dto.lectureSubject}</p>
+						<span>${dto.memberNickname}&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>수강 기간 ${dto.lectureDuration == 0 ? "무제한" : dto.lectureDuration + "까지"}</span>				
 					</div>
 					<div class="closeBtnSection">
 						<i class="fa-solid fa-xmark"></i>
 					</div>
 					<div class="priceSection">
-						<span class="dcPercent">30%</span> <span class="originalPrice">99,000원</span>
-						<p class="finalPrice">69,300원</p>
+						<span class="dcPercent">${dto.dcPercent}%</span> <span class="originalPrice">${dto.lecturePrice}원</span>
+						<p class="finalPrice">${dto.dcAfterPrice}원</p>
 					</div>
 				</div>
 			</c:forEach>
 			<!-- 할인 안하는 카드 가격 확인용(지우고 작업해주세요) -->
+			<!-- 
 			<div class="cart-card d-flex ">
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
@@ -243,6 +337,7 @@
 						<p class="finalPrice">69,300원</p>
 					</div>
 				</div>
+			 -->
 		</div>
 	</div>
 	
@@ -256,11 +351,11 @@
 				<table class="info-table">
 					<tr>
 						<td>이름</td>
-						<td>김자바</td>
+						<td>${sessionScope.member.memberName}</td>
 					</tr>
 					<tr>
 						<td>이메일</td>
-						<td>devLearn@devLearn.com</td>
+						<td>${sessionScope.member.memberEmail}</td>
 					</tr>
 				</table>
 			</div>
@@ -294,27 +389,25 @@
 				<table class="amount-table">
 					<tr>
 						<td style="font-weight: 500;">선택상품 금액</td>
-						<td>229,900</td>
+						<td class="totalPrice"></td>
 					</tr>
-					<tr class="" style="color:red;">
+					<tr class="totalDiscount" style="color:red;">
 						<td> - 할인금액</td>
-						<td>- 50,000</td>
+						<td class="totalDc">- 0</td>
 					</tr>
-					<tr class="discounted" style="color: #999;">
-						<td>&nbsp;- 즉시할인</td>
-						<td> -10,000</td>
-					</tr>
+					<!-- 
 					<tr class="discounted" style="color: #999;">
 						<td>&nbsp;- 쿠폰할인</td>
 						<td> -20,000</td>
 					</tr>
-					<tr class="discounted" style="color: #999;">
+					<tr class="discounted2" style="color: #999;">
 						<td>&nbsp;- 포인트사용</td>
 						<td> -20,000</td>
 					</tr>
+					 -->
 					<tr>
 						<td>총 결제 금액</td>
-						<td>179,900</td>
+						<td class="totalResult">0</td>
 					</tr>
 				</table>
 			</div>
@@ -323,6 +416,3 @@
 		</div>
 	</div>
 </div>
-
-</body>
-</html>

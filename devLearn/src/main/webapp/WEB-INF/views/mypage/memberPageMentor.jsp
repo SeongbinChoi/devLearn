@@ -163,11 +163,16 @@ $(function() {
 		var fn = function(data){
 			$('.reviewSubmit').attr('data-num', mentoringNum);
 			
-			let point = data.readReview.mentorRate;
-			$('.point-list i').parent().children('i').removeClass('star');
-			$('.point-list i:nth-child('+point+')').addClass('star').prevAll('i').addClass('star');
-			
-			$(".review-content").html(data.readReview.mentorReviewContent);
+			if(data.readReview != null){
+				console.log(data.readReview);
+				let point = data.readReview.mentorRate;
+				$('.point-list i').parent().children('i').removeClass('star');
+				$('.point-list i:nth-child('+point+')').addClass('star').prevAll('i').addClass('star');
+				
+				$(".review-content").html(data.readReview.mentorReviewContent);
+				
+				
+			}
 			
 			$('#mentorReviewModal').modal('show');
 		};

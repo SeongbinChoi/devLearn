@@ -29,13 +29,6 @@ public class MypageController {
 		
 		return ".mypage.memberPageInquiry";
 	}
-	
-	
-	@RequestMapping(value = "cart", method = RequestMethod.GET)
-	public String cart() throws Exception {
-		
-		return ".mypage.memberPageCart";
-	}
 
 	
 	@RequestMapping(value = "coupon", method = RequestMethod.GET)
@@ -67,11 +60,6 @@ public class MypageController {
 		return ".mypage.memberPageNoti";
 	}
 	
-	@RequestMapping(value = "profile", method = RequestMethod.GET)
-	public String profile() throws Exception {
-		
-		return ".mypage.memberPageProfile";
-	}
 
 	
 	@RequestMapping(value = "setNoti", method = RequestMethod.GET)
