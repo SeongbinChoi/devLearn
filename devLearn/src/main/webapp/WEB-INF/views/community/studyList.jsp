@@ -47,7 +47,10 @@ a#top_btn {
 	line-height: 25px;
 }
 
-
+.map {
+	width: 970px;
+	height: 700px;
+}
 
 .map_wrap, .map_wrap * {
 	margin: 0;
@@ -62,58 +65,16 @@ a#top_btn {
 }
 
 
-#category {
-	top: 10px;
-	left: 10px;
-	border-radius: 5px;
-	border: 1px solid #909090;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
-	background: #fff;
-	overflow: hidden;
-	z-index: 2;
-}
-#category li {
-	float: left;
-	list-style: none;
-	border-right: 1px solid #acacac;
-	padding: 6px 0;
-	text-align: center;
-	cursor: pointer;
-}
-#category li.on {
-	background: #eee;
-}
-#category li:hover {
-	background: #ffe6e6;
-	border-left: 1px solid #acacac;
-	margin-left: -1px;
-}
-#category li:last-child {
-	margin-right: 0;
-	border-right: 0;
-}
-#category li span {
-	display: block;
-	margin: 0 auto 3px;
-	width: 27px;
-	height: 28px;
-}
-#category li .category_bg {
-	background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png)
-	  no-repeat;
-}
-#category li .cafe {
-	background-position: -10px 0;
-}
-#category li .CT1 {
-	background-position: -10px -36px;
-}
-#category li .pharmacy {
-	background-position: -10px -72px;
-}
-#category li.on .category_bg {
-	background-position-x: -46px;
-}
+#category {top:10px;left:10px;border-radius: 5px; border:1px solid #909090;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);background: #fff;overflow: hidden;z-index: 2;}
+#category li {float:left;list-style: none;border-right:1px solid #acacac;padding:6px 0;text-align: center; cursor: pointer;}
+#category li.on {background: #eee;}
+#category li:hover {background: #ffe6e6;border-left:1px solid #acacac;margin-left: -1px;}
+#category li:last-child{margin-right:0;border-right:0;}
+#category li span {display: block;margin:0 auto 3px;width:27px;height: 28px;}
+#category li .category_bg {background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_category.png) no-repeat;}
+#category li .cafe {background-position: -10px -144px;}
+#category li .store {background-position: -10px -180px;}
+#category li.on .category_bg {background-position-x:-46px;}
 
 .placeinfo_wrap {
 	position: absolute;
@@ -185,6 +146,10 @@ a#top_btn {
 </style>
 
 <script type="text/javascript">
+function login() {
+	location.href="${pageContext.request.contextPath}/member/login";
+}
+
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
 		type:method,
@@ -202,7 +167,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 				login();
 				return false;
 			} else if(jqXHR.status === 400) {
-				alert("요청 처리가 실패했습니다.");
+				alert("요청 처리가 실패 했습니다.");
 				return false;
 			}
 	    	
@@ -292,12 +257,20 @@ function list_gido() {
 	const $gido = $("button[role='tab2'].active");
 	
 	let gidoNum = $gido.attr("data-gidoNum");
+	if(gidoNum == 1) {
+		setCenter1();
+	} else if(gidoNum == 2) {
+		setCenter2();
+	} else if(gidoNum == 3) {
+		setCenter3();
+	} else {
+		setCenter0();
+	}
+	
 	let url = "${pageContext.request.contextPath}/community/studyList";
 	let query = "gidoNum="+gidoNum;
 	
 	let selector = "#nav-gido";
-	
-	console.log(query);
 	
 	const fn = function(data) {
 		//console.log(data);
@@ -308,6 +281,28 @@ function list_gido() {
 }
 
 
+// 공공api데이터 받아서 카카오멥api에 카테고리로 데이터 추가하고싶은데 안된다.. 왜 안될까 반나절해서 안되서 일단 포기
+$(function(){
+		var url="${pageContext.request.contextPath}/community/lib";
+		
+		var query = "";
+		var fn = function(data) {
+			printCovid(data);
+		};
+		ajaxFun(url, "get", query, "json", fn);
+	
+	function printCovid(data) {
+		var out = "<h3>항목 확인 : </h3>";
+		$.each(data.response.body.items.item, function(index, item) {
+			out += "도서관명 : " + item.lbrryNm + ", 위도 : " + item.latitude + ", 경도 : " + item.longitude + ", 도로명주소 : " + item.rdnmadr + ", 운영시작 : " + item.satOperOperOpenHhmm + ", 운영종료 : " + item.satOperCloseHhmm + "<br>";
+		});
+		
+		//console.log(out);
+	}
+});
+
+
+// 글쓰기 함수
 function sendOk() {
 	var f = document.boardForm;
 	var str;
@@ -394,8 +389,9 @@ function sendOk() {
 				</ul>
 			</li>
 			<li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">스터디룸 찾기</a>
+				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="studyButton" aria-expanded="false">스터디 장소 찾기</a>
 				<ul class="dropdown-menu">
+					<li><button class="dropdown-item" id="cur-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="curGido" aria-selected=${gidoNum == 99 ? "true" : "false"} data-gidoNum="99" onclick="list_gido();">현재 위치</button></li>
 					<li><button class="dropdown-item" id="seoul-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="seoulGido" aria-selected=${gidoNum == 1 ? "true" : "false"} data-gidoNum="1" onclick="list_gido();">서울</button></li>
 					<li><button class="dropdown-item" id="inchon-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="inchoenGido" aria-selected=${gidoNum == 2 ? "true" : "false"} data-gidoNum="2" onclick="list_gido();">경기</button></li>
 					<li><button class="dropdown-item" id="gyeonggi-gido" data-bs-toggle="tab" data-bs-target="#nav-gido" type="button" role="tab2" aria-controls="gyeonggiGido" aria-selected=${gidoNum == 3 ? "true" : "false"} data-gidoNum="3" onclick="list_gido();">인천</button></li>
@@ -445,6 +441,7 @@ function sendOk() {
 			
 			<div class="btnGroup">
 				<button type="button" class="btn btn-outline-primary" onclick='location.href="${pageContext.request.contextPath}/community/studyList";'><i class="fas fa-redo-alt"></i>새로고침</button>
+				<button type="button" id="btnlib" class="btn" style="display: none;">도서관 목록</button>
 				<c:choose>
 					<c:when test="${sessionScope.member.memberEmail == null}">
 						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">글쓰기</button>
@@ -499,7 +496,7 @@ function sendOk() {
 									</div>
 									<div class="answerNum mx-4">
 										<div class="num_center">
-											<span>0<br>댓글</span>
+											<span>${dto.replyCount}<br>댓글</span>
 										</div>
 									</div>
 								</div>
@@ -523,13 +520,13 @@ function sendOk() {
 			<div class="tab-pane fade show" id="nav-gido" role="tabpanel" aria-labelledby="all-tab">
 				<!-- 스터디 - 지도 -->
 				<ul id="category">
-					<li id="CE7" data-order="1">
+					<li id="CE7" data-order="4">
 						<span class="category_bg cafe"></span>
 							스터디카페
 					</li>
 				
-					<li id="CT1" data-order="2">
-						<span class="category_bg CT1"></span>
+					<li id="CS2" data-order="5">
+						<span class="category_bg store"></span>
 					 		도서관(여기는 데이터 가공해야됨)
 					</li>
 				</ul>
@@ -688,12 +685,61 @@ ClassicEditor
 	    contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
 	    markers = [], // 마커를 담을 배열입니다
 	    currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
-	 
+	
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = {
-	        center: new kakao.maps.LatLng(37.556725, 126.9234952), // 지도의 중심좌표
+       		center: new kakao.maps.LatLng(37.50719187568753, 126.73129050639602), // 지도의 중심좌표
+			
 	        level: 3 // 지도의 확대 레벨
-	    };  
+	    };
+	
+	
+	// 현재 위치
+	function setCenter0() {
+		if (navigator.geolocation) {
+			// GeoLocation을 이용해서 접속 위치를 얻어 오기
+		    navigator.geolocation.getCurrentPosition(function(position) {
+		        
+		        var lat = position.coords.latitude, // 위도
+		            lon = position.coords.longitude; // 경도
+		        
+		        locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성
+		        
+		        // 지도의 중심을 현재 위치 정보로 변경
+		        map.setCenter(locPosition);
+		    });
+		}
+	}
+	
+	// 홍대입구(서울)
+	function setCenter1() {            
+	    // 이동할 위도 경도 위치를 생성합니다 
+	    var moveLatLon = new kakao.maps.LatLng(37.56, 126.919);
+	    
+	    // 지도 중심을 이동 시킵니다
+	    map.setCenter(moveLatLon);
+	}
+	
+	
+	// 일산(경기)
+	function setCenter2() {            
+	    // 이동할 위도 경도 위치를 생성합니다 
+	    var moveLatLon = new kakao.maps.LatLng(37.68184914770742, 126.76988597679569);
+	    
+	    // 지도 중심을 이동 시킵니다
+	    map.setCenter(moveLatLon);
+	}
+	
+	
+	// 굴포천역(인천)
+	function setCenter3() {            
+	    // 이동할 위도 경도 위치를 생성합니다 
+	    var moveLatLon = new kakao.maps.LatLng(37.50719187568753, 126.73129050639602);
+	    
+	    // 지도 중심을 이동 시킵니다
+	    map.setCenter(moveLatLon);
+	}
+	
 	
 	// 지도를 생성합니다    
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
@@ -768,7 +814,7 @@ ClassicEditor
 	
 	    for ( var i=0; i<places.length; i++ ) {
 	
-	            // 마커를 생성하고 지도에 표시합니다
+	            // 마커를 생성하고 지도에 표시합니다 (5번인경우에는 도서관이기에 데이터를 따로 넣어준다.)
 	            var marker = addMarker(new kakao.maps.LatLng(places[i].y, places[i].x), order);
 	
 	            // 마커와 검색결과 항목을 클릭 했을 때
@@ -874,4 +920,5 @@ ClassicEditor
 	        el.className = 'on';
 	    } 
 	}
+	
 </script>

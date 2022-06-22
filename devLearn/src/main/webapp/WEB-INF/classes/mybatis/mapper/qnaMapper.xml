@@ -18,7 +18,7 @@
 	<!-- 검색시 조건 sql -->
 	<sql id="where-list">
 		( INSTR(subject, #{keyword}) &gt; 0
-			OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+			OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>), #{keyword}) &gt; 0 )
 	</sql>
 	
 	

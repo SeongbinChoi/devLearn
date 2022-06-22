@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sp.dev.common.APISerializer;
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
 
@@ -36,8 +37,21 @@ public class CommunityController {
 	private StudyReplyService service4;
 	
 	@Autowired
+	private StudyApplyService service5;
+	
+	@Autowired
+	private UserService service6;
+	
+	@Autowired
+	private APISerializer apiSerializer;
+	
+	@Autowired
 	private MyUtil myUtil;
 
+	
+	///////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////
+	// Qna
 	// QnA 리스트 가져오기
 	@RequestMapping(value = "qnaList")
 	public String qnaList(
@@ -383,6 +397,10 @@ public class CommunityController {
 		map.put("end", end);
 		
 		List<Study> list = service3.listStudy(map);
+		for(Study dto : list) {
+			int replyCount = service3.replyCount(dto.getStudyNum());
+			dto.setReplyCount(replyCount);
+		}
 		
 		String cp = req.getContextPath();
 		String query = "rows=" + rows;
@@ -497,8 +515,6 @@ public class CommunityController {
 			@RequestParam (defaultValue="") String keyword,
 			HttpSession session) throws Exception {
 		
-		// SessionInfo info = (SessionInfo)session.getAttribute("member");
-		
 		String query = "page="+page+"&rows="+rows;
 		if(keyword.length() != 0) {
 			query += "&keyword="+URLEncoder.encode(keyword, "utf-8");
@@ -514,9 +530,40 @@ public class CommunityController {
 	}
 	
 	
+	// 스터디신청
+	@RequestMapping(value = "studyApply")
+	public String study_apply(
+			@RequestParam int studyNum,
+			@RequestParam String page,
+			@RequestParam int rows,
+			@RequestParam (defaultValue="") String keyword,
+			HttpSession session) throws Exception {
+		
+		System.out.println("=================" + studyNum);
+		
+		String query = "page="+page+"&rows="+rows;
+		if(keyword.length() != 0) {
+			query += "&keyword="+URLEncoder.encode(keyword, "utf-8");
+		}
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			SessionInfo info = (SessionInfo)session.getAttribute("member");
+			
+			map.put("studyNum", studyNum);
+			map.put("applicantEmail", info.getMemberEmail());
+			
+			service5.insertStudyApply(map);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/community/studyList?" + query;
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
+	// 스터디 상세 댓글 및 대댓글
 	// 메인 게시글 : 댓글 리스트 가져오기 => AJAX-TEXT
 	@RequestMapping(value = "listReply")
 	public String listReply(
@@ -614,5 +661,24 @@ public class CommunityController {
 		
 		return model;
 	}
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	// 도서관 데이터 출력(안됨보류)
+	@RequestMapping(value = "lib", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String lib() throws Exception {
+		String result = "";
+		
+		String spec = "http://api.data.go.kr/openapi/tn_pubr_public_lbrry_api";
+		spec += "?serviceKey=Kv20xKpg1sHZ%2FVWCawpK2FFHX%2BEPSzrew6LKhxDRF8mB5cOqUopiV3Di4BZbj0noxR2ACM4K5oNj8u1%2FSAJkWg%3D%3D";
+		
+		result = apiSerializer.receiveXmlToJson(spec);
+		
+		return result;
+	}
+	
 	
 }

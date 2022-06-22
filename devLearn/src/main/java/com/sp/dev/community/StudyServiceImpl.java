@@ -130,9 +130,15 @@ public class StudyServiceImpl implements StudyService {
 
 	
 	@Override
-	public int replyCount(Map<String, Object> map) throws Exception {
+	public int replyCount(int studyNum) throws Exception {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("study.replyCount", studyNum);
+		} catch (Exception e) {
+		}
 
-		return 0;
+		return result;
 	}
 
 	

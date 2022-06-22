@@ -17,7 +17,7 @@ public interface StudyService {
 	public void updateStudy(Study dto) throws Exception;
 	
 	public void updateStatus(int studyNum) throws Exception;
-	public int replyCount(Map<String, Object> map) throws Exception;
+	public int replyCount(int studyNum) throws Exception;
 	public void deleteStudy(int studyNum) throws Exception;
 	
 }

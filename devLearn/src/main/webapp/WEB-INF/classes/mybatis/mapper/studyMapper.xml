@@ -8,11 +8,10 @@
 		SELECT study_seq.NEXTVAL FROM dual
 	</select>
 	
-	
 	<!-- sql으로 검색시 추가 -->
 	<sql id="where-list">
 		( INSTR(subject, #{keyword}) &gt; 0
-			OR DBMS_LOB.INSTR(content, #{keyword}) &gt; 0 )
+			OR DBMS_LOB.INSTR(REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>), #{keyword}) &gt; 0 )
 	</sql>
 
 	
@@ -67,8 +66,8 @@
 			SELECT ROWNUM rnum, tb.* FROM (
 				SELECT studyNum, memberNickname, subject, 
 				REGEXP_REPLACE(content, <![CDATA['<[^>]*>|\&([^;])*;']]>) content,
-				hitCount, st.regDate, status, limit, applied,
-				st.regionNum, region
+				hitCount, st.regDate, status, limit, applied, 
+				st.regionNum, region, replyCount
 				FROM study st
 				JOIN member m ON st.memberEmail = m.memberEmail
 				JOIN StudyRegion sr ON st.regionNum = sr.regionNum
@@ -165,6 +164,12 @@
 	</delete>
 	
 	
+	<!-- 스터디 신청 -->
+	<insert id="insertStudyApply" parameterType="map">
+		insert into studyApply(applyNum, studyNum, applicantEmail, status)
+			VALUES(studyApply_seq.NEXTVAL, #{studyNum}, #{applicantEmail}, 0)
+	</insert>
+	
 	<!-- ================================================================== -->
 	<!-- ================================================================== -->
 	<!-- 댓글 입력 -->
@@ -173,9 +178,10 @@
     		VALUES(studyReply_seq.NEXTVAL, #{studyNum}, #{memberEmail}, #{content}, SYSDATE, #{parent})
 	</insert>
 	
+	<!-- 댓글 입력 시 게시글의 댓글개수 추가하기 -->
 	
 	<!-- 댓글 갯수세기 -->
-	<select id="replyCount" parameterType="map" resultType="Integer">
+	<select id="replyCount" parameterType="Integer" resultType="Integer">
 		SELECT NVL(COUNT(*), 0) FROM studyReply
 			WHERE studyNum = #{studyNum} AND parent = 0
 	</select>

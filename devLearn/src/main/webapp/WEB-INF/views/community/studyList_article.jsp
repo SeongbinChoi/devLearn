@@ -47,6 +47,9 @@ img {
 	line-height: 25px;
 }
 
+.reply-menu-item {
+	cursor: pointer;
+}
 </style>
 
 <script type="text/javascript">
@@ -313,16 +316,23 @@ function deleteBoard() {
 }
 
 
-// 스터디 신청(아직 구현안됨)
+// 스터디 신청
 function studyApply() {
-	alert("스터디 신청하시겠습니까??");
+	if(confirm("스터디 신청하시겠습니까??")) {
+		let query = "studyNum=${dto.studyNum}&${query}"
+		
+		console.log(query);
+		
+		let url = "${pageContext.request.contextPath}/community/studyApply?" + query;
+		location.href = url;
+	}
 }
 
 </script>
 
 
 <!-- 메인코드 -->
-	<div class="contentBody container col-11 my-5">
+	<div class="contentBody container col-11 my-5 h-100">
 	
 		<div class="sideMenu col-2">
 			<div class="cmmu-menu list-group px-1">
@@ -331,7 +341,7 @@ function studyApply() {
 		</div>
 			
 			
-		<div class="mainContent col-8" style="float: none;">
+		<div class="mainContent col-8 h-100" style="min-height: 500px;">
 			<!-- TOP버튼 -->
 			<a id="top_btn" href="#"><i class="fa-solid fa-circle-chevron-up fa-2x"></i></a>
 			
@@ -348,6 +358,7 @@ function studyApply() {
 					<div class="p-2 w-100">[${dto.region}]${dto.subject}</div>
 					<c:choose>
 					<c:when test="${(sessionScope.member.memberEmail != dto.memberEmail) && dto.status == 0}">
+						<input type="hidden" name="studyNum" value="${dto.studyNum}">
 						<button type="button" class="p-2 flex-shrink-0 btn btn-danger" onclick="studyApply();">스터디신청</button>
 					</c:when>
 					<c:otherwise>
@@ -416,7 +427,7 @@ function studyApply() {
 						</div>
 					</div>
 					
-					<div class="answer_info_main" style="width : 100%; height: 600px; border: 1px solid #f1f3f5; background-color: white;">
+					<div class="answer_info_main" style="width : 100%; height: 100%; border: 1px solid #f1f3f5; background-color: white;">
 						<form name="replyForm" method="post">
 							<div class="answer_info_profile flex-row" style="padding: 24px 36px; border-bottom: none; display: flex; flex-direction: row;">
 								<img alt="" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" style="width:48px; height: 48px; border-radius: 100px; margin-right: 10px;">
