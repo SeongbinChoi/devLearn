@@ -118,7 +118,7 @@ $(function(){
 			<tbody>
 
 				<c:forEach var="dto" items="${list}">
-					<tr onclick="">
+					<tr onclick="location.href='${qnaArticleUrl}&qnaNum=${dto.qnaNum}'">
 						<td>${dto.listNum}</td>
 						<td>${dto.subject}</td>
 						<td>${dto.regDate}</td>

@@ -9,4 +9,6 @@ public interface MyWriteService {
 	
 	public int studyDataCount(Map<String, Object> map);
 	public List<MyStudyWrite> studyList(Map<String, Object> map);
+	
+	public List<StudyApply> studyApplyList(int studyNum);
 }

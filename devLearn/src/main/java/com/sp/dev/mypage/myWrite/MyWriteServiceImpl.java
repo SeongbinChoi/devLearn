@@ -64,4 +64,17 @@ public class MyWriteServiceImpl implements MyWriteService {
 		return list;
 	}
 
+	@Override
+	public List<StudyApply> studyApplyList(int studyNum) {
+		List<StudyApply> list = null;
+		
+		try {
+			list = dao.selectList("my.studyApplyList", studyNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
+
 }

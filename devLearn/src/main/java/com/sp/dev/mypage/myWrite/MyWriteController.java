@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
@@ -139,7 +140,7 @@ public class MyWriteController {
 		}
 		
 		String listUrl = cp + "/mypage/myWrite/myStudyWrite";
-		String studyArticleUrl = cp + "/community/qnaList_article?page=1&rows=10";
+		String studyArticleUrl = cp + "/community/studyList_article?page=1&rows=10";
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
@@ -157,4 +158,14 @@ public class MyWriteController {
 	}
 	
 
+	
+	@RequestMapping(value = "applyList", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> applyList(@RequestParam int studyNum) throws Exception {
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		return model;
+	}
+	
 }

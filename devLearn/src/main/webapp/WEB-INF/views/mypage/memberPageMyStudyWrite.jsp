@@ -55,7 +55,7 @@ th, td {
 	padding-left: 5px;
 }
 
-.myQuestion tbody tr:hover {
+#study tbody tr:hover {
 	cursor: pointer;
 }
 
@@ -76,6 +76,11 @@ $(function(){
 });
 
 
+$(function(){
+	$('.apply').click(function(){
+		$('#applyConfirmModal').modal('show');
+	});
+});
 
 </script>
 
@@ -111,18 +116,20 @@ $(function(){
 					<th>제목</th>
 					<th style="width: 13%;">등록일</th>
 					<th style="width: 10%;">모집 인원</th>
-					<th style="width: 12%;">상태</th>
+					<th style="width: 12%;">상태</th>	
+					<th style="width: 12%;">지원자</th>	
 					<th style="width: 10%;">모집완료</th>
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach var="vo" items="${list}">
-					<tr>
+					<tr onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">
 						<td>${vo.region}</td>
 						<td>${vo.subject}</td>
 						<td>${vo.regDate}</td>
 						<td>${vo.applied}/${vo.limit}</td>
 						<td>${vo.status == 0 ? "모집중" : "모집완료"}</td>
+						<td><button type="button" class="btn btn-secondary apply">확인하기</button>
 						<c:choose>
 							<c:when test="${vo.status == 0}">
 								<td><button type="button" class="btn btn-secondary">완료</button></td>
@@ -173,3 +180,37 @@ $(function(){
 	</div>
 </div>
 
+
+
+<!-- 지원자 확인 모달 -->
+<div class="modal fade" id="applyConfirmModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">지원자 확인</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<table class="table">
+					<tr>
+						<td width="15%">번호</td>
+						<td width="30%" class="table-light col-3 align-middle">이름</td>
+						<td>이메일</td>
+						<td width="20%">승인</td>
+					</tr>
+					<c:forEach var="i" begin="1" end="10">
+						<tr>
+							<td>${i}</td>
+							<td class="table-light col-3 align-middle">김자바</td>
+							<td>user@naver.com</td>
+							<td><button type="button" class="btn btn-primary">승인</button></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			</div>
+		</div>
+	</div>
+</div>
