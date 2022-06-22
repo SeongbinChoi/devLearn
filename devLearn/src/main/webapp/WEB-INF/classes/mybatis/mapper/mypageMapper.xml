@@ -134,13 +134,13 @@
 	
 	<!-- 멘토링 리뷰 등록 -->
 	<insert id="insertMentorReview" parameterType="com.sp.dev.mypage.mentor.ApplyMentor">
-		INSERT INTO mentorReview(mentoringNum, mentorRate, mentorReviewContent)
-			VALUES(#{mentoringNum}, #{mentorRate}, #{mentorReviewContent})
+		INSERT INTO mentorReview(mentoringNum, mentorRate, mentorReviewContent, mentorNum)
+			VALUES(#{mentoringNum}, #{mentorRate}, #{mentorReviewContent}, #{mentorNum})
 	</insert>
 	
 	<!-- 멘토링 리뷰 불러오기 -->
 	<select id="readMentorReview" parameterType="Integer" resultType="com.sp.dev.mypage.mentor.ApplyMentor">
-		SELECT mentoringNum, mentorRate, mentorReviewContent
+		SELECT mentoringNum, mentorRate, mentorReviewContent, mentorNum
 		FROM mentorReview
 		WHERE mentoringNum=#{mentoringNum}
 	</select>

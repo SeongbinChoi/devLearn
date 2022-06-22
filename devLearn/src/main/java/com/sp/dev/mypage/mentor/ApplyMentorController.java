@@ -148,7 +148,7 @@ public class ApplyMentorController {
 		
 	}
 	
-	
+	// 멘토링 후기 등록
 	@RequestMapping(value = "insertReview", method = RequestMethod.POST)
 	public String insertReview(ApplyMentor dto, Model model) throws Exception {
 		

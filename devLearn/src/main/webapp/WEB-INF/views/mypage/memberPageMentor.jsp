@@ -156,12 +156,14 @@ $(function() {
 	$(".reviewBtn").click(function() {
 
 		let mentoringNum = $(this).attr("data-num");
+		let mentorNum = $(this).attr("mentor-num");
 		
 		let url = "${pageContext.request.contextPath}/mypage/mentor/readReview";
 		let query = "mentoringNum="+mentoringNum;
 		
 		var fn = function(data){
 			$('.reviewSubmit').attr('data-num', mentoringNum);
+			$('.reviewSubmit').attr('mentor-num', mentorNum);
 			
 			if(data.readReview != null){
 				console.log(data.readReview);
@@ -213,9 +215,11 @@ $(function() {
 		const f = document.reviewForm;
 		let mentoringNum = $(this).attr("data-num");
 		let mentorRate = $(this).attr("point-num");
+		let mentorNum = $(this).attr("mentor-num");
 		
 		$(".mentoringNum").val(mentoringNum);
 		$(".mentorRate").val(mentorRate);
+		$(".mentorNum").val(mentorNum);
 		
 		let url = "${pageContext.request.contextPath}/mypage/mentor/insertReview";
 		
@@ -268,7 +272,7 @@ $(function() {
 								<td><button type="button" class="btn btn-secondary detail detailBtn" data-num="${dto.mentoringNum}">자세히</button></td>
 							</c:when>
 							<c:when test="${dto.status == 3}">
-								<td><button type="button" class="btn btn-secondary reviewBtn" data-num="${dto.mentoringNum}">후기작성</button></td>
+								<td><button type="button" class="btn btn-secondary reviewBtn" data-num="${dto.mentoringNum}" mentor-num="${dto.mentorNum}">후기작성</button></td>
 							</c:when>
 						</c:choose>
 					</tr>
@@ -378,9 +382,10 @@ $(function() {
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-						<button type="button" class="btn btn-primary reviewSubmit" point-num="1" data-num="">작성하기</button>
+						<button type="button" class="btn btn-primary reviewSubmit" point-num="1" data-num="" mentor-num="">작성하기</button>
 						<input type="hidden" name="mentoringNum" class="mentoringNum" value="">
 						<input type="hidden" name="mentorRate" class="mentorRate" value="">
+						<input type="hidden" name="mentorNum" class="mentorNum" value="">
 					</div>
 				</div>
 			</div>
