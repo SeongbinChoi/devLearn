@@ -19,13 +19,19 @@
 	<select id="listMentoring" parameterType="map" resultType="com.sp.dev.mentors.Mentors">
 	SELECT * FROM (
 		SELECT ROWNUM rnum, tb.* FROM (
-			SELECT mt.mentorNum,mt.memberEmail, m.memberNickname, mp.saveFilename, mentorSubject, categoryNum,
-				(SELECT NVL(count(*), 1) FROM mentorReview WHERE mentorNum = mentorNum)ReviewCnt,
-	            (SELECT NVL(sum(mentorRate), 0) FROM mentorReview WHERE mentorNum = mentorNum) reviewSum,
-	            (SELECT NVL(count(*), 0) FROM mentoringApply WHERE mentorNum = mentorNum) applyCnt
+			SELECT DISTINCT mt.mentorNum, m.memberNickname, mp.saveFilename, mt.mentorSubject, applyCnt, ReviewCnt, reviewAve
 			FROM mentor mt
 			LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
-			LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
+			LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = m.memberEmail
+            LEFT OUTER JOIN (
+                SELECT mentorNum, count(*)applyCnt
+                FROM mentoringApply 
+                GROUP BY mentorNum
+                ) ma ON ma.mentorNum = mt.mentorNum
+            LEFT OUTER JOIN(
+                SELECT mentorNum, count(*)ReviewCnt, AVG(mentorRate)reviewAve 
+                FROM mentorReview GROUP BY mentorNum
+                ) mr ON mr.mentorNum = mt.mentorNum
 			<if test="categoryNum != 00">
 				WHERE categoryNum = #{categoryNum}
 			</if>
@@ -60,5 +66,15 @@
 		VALUES ( MENTORINGAPPLY_SEQ.NEXTVAL, #{dto.mentorNum}, #{dto.memberEmail}, #{dto.mentorPrice},
 			'${dto.mentoringDate}', 0, #{dto.phoneNum}, #{dto.applyMessage}, SYSDATE )
 	</insert>
+	
+	<select id="mentorReviewList" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
+		SELECT mentorRate, mentorReviewContent 
+		FROM mentorReview
+		WHERE mentoringNum IN (
+			SELECT mentoringNum 
+			FROM mentoringApply 
+			WHERE mentorNum = #{mentorNum}
+		)
+	</select>
 	
 </mapper>

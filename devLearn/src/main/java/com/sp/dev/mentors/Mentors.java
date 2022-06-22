@@ -19,7 +19,7 @@ public class Mentors {
 	private int reviewCnt;		// 후기 개수
 	private int reviewSum;	// 후기 별점 합계
 	private double reviewAve; // 후기 별점 평균
-	private int mentorReviewContent; 
+	private String mentorReviewContent; 
 	
 	private int applyCnt;	// 멘토링 신청 개수
 	
@@ -134,10 +134,10 @@ public class Mentors {
 	public void setReviewAve(double reviewAve) {
 		this.reviewAve = reviewAve;
 	}
-	public int getMentorReviewContent() {
+	public String getMentorReviewContent() {
 		return mentorReviewContent;
 	}
-	public void setMentorReviewContent(int mentorReviewContent) {
+	public void setMentorReviewContent(String mentorReviewContent) {
 		this.mentorReviewContent = mentorReviewContent;
 	}
 	public int getApplyCnt() {

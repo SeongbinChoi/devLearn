@@ -12,4 +12,5 @@ public interface MentorsService {
 	public Mentors readMentors(int mentorNum);
 	public Mentors readAbleTime(int mentorNum);
 	public void insertMentoringApply(Map<String, Object> map) throws Exception;
+	public List<Mentors> mentorReviewList(int mentorNum);
 }

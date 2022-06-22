@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -174,5 +175,23 @@ public class MentorsController {
 		}
 		
 		return "redirect:/mentors/mentor";
+	}
+	
+	@GetMapping(value = "mentorReviewList")
+	@ResponseBody
+	public Map<String, Object> mentorReviewList(
+			@RequestParam int mentorNum,
+			@RequestParam(value = "page", defaultValue = "1") int current_page,
+			@RequestParam(defaultValue = "0") int choiceValue,
+			@RequestParam(defaultValue = "0") int categoryNum,
+			HttpServletRequest req
+			) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		
+		List<Mentors> list = service.mentorReviewList(mentorNum);
+		
+		model.put("list", list);
+		
+		return model;		
 	}
 }

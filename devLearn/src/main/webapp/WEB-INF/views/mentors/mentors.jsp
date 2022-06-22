@@ -177,6 +177,38 @@ function selectFn() {
 	location.href="${pageContext.request.contextPath}/mentors/mentor?choiceValue="+choiceValue+"&categoryNum="+categoryNum;
 }
 
+// 멘토링 후기 함수
+$(function() {
+	$(".mentor_review").click(function() {
+		let mentorNum = $(this).attr("data-num");
+		let choiceValue = $("#choiceValue").val();
+		let categoryNum = $("input[name='categoryNum']:checked").val();
+		let url = "${pageContext.request.contextPath}/mentors/mentorReviewList";
+		let query = "mentorNum=" + mentorNum + "&choiceValue=" + choiceValue + "&categoryNum=" + categoryNum + "&page=${page}";
+		
+		
+		const fn = function(data) {
+			console.log(data);
+			let str = "";
+			$.each(data.list, function(index, item) {
+				str += "<div class='review_content mb-5'>";	
+				str += "<p>";
+					for(let i = 0; i < item.mentorRate; i++) {
+						str += "<i class='fas fa-star'></i>";
+					}
+					for(let i = 0; i < 5 - item.mentorRate; i++) {
+						str += "<i class='fa-regular fa-star'></i>"
+					}
+				str += "</p>";
+				str += "<p>" + item.mentorReviewContent + "</p></div>";
+			});
+			console.log(str);
+			$(".reviewContainer").html(str);
+		};
+		
+		ajaxFun(url, "get", query, "json", fn);
+	})
+});
 
 </script>
 
@@ -223,7 +255,7 @@ function selectFn() {
 											<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded img-fluid" alt="">
 										</figure>
 									</div>
-									<button class="mentor_review px-1 py-1" data-bs-toggle="modal" data-bs-target="#reviewModal">
+									<button class="mentor_review px-1 py-1" data-num="${dto.mentorNum}" data-bs-toggle="modal" data-bs-target="#reviewModal">
 										<span><i class="fas fa-star"></i></span>
 										<span>${dto.reviewAve}<span>/5 〉</span></span>
 									</button>
@@ -254,22 +286,13 @@ function selectFn() {
 	<!-- Review Modal -->
 	<div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable">
-	    <div class="modal-content">
+	    <div class="modal-content" style="height: 900px;">
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">멘토링 후기</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body px-4">
-	      	<c:forEach var="i" begin="1" end="5">
-				<div class="review_content mb-5">
-					<p>
-						<c:forEach var="s" begin="1" end="5">
-							<i class="fas fa-star"></i>
-						</c:forEach>
-					</p>
-					<p>혼자 개발하는 경우가 많아 코드를 어떻게 개선할 수 있을까 고민하다가 신청하게 되었는데 준비도 많이 해주시고 여러가지 방안을 제시해주셔서 도움이 많이 되었습니다. 실제 코드도 봐주시고 평소에 개발하면서 궁금한 부분들도 속시원하게 답변해 주셔서 좋았습니다. 앞으로도 개발하다가 고민거리가 생기면 찾아뵐것 같습니다. 이런 채널이 있다는게 감사한것 같아요. 감사합니다 !!</p>
-				</div>
-			</c:forEach>
+	      <div class="modal-body px-4 reviewContainer">
+	      	
 	      </div>
 	    </div>
 	  </div>

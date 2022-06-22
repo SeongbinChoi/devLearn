@@ -1,5 +1,6 @@
 package com.sp.dev.mentors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,13 +45,6 @@ public class MentorsServiceImpl implements MentorsService {
 		try {
 			list = dao.selectList("mentors.listMentoring", map);
 			
-			for(Mentors dto : list) {
-				if(dto.getReviewSum() != 0 && dto.getReviewCnt() != 0) {
-					Double ave = (double)(dto.getReviewSum() / dto.getReviewCnt()); 
-					dto.setReviewAve(ave);
-				}
-				dto.setReviewAve(0);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -93,6 +87,18 @@ public class MentorsServiceImpl implements MentorsService {
 			throw e;
 		}
 		
+	}
+
+	@Override
+	public List<Mentors> mentorReviewList(int mentorNum) {
+		List<Mentors> list = new ArrayList<Mentors>();
+		
+		try {
+			list = dao.selectList("mentors.mentorReviewList", mentorNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 
