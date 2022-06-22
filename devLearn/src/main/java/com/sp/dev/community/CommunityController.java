@@ -40,9 +40,6 @@ public class CommunityController {
 	private StudyApplyService service5;
 	
 	@Autowired
-	private UserService service6;
-	
-	@Autowired
 	private APISerializer apiSerializer;
 	
 	@Autowired
