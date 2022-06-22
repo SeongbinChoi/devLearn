@@ -144,6 +144,16 @@ public class MyWriteController {
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
+		
+		// 내가 지원한 스터디
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("memberEmail", id);
+		map2.put("status", status);
+		
+		List<MyStudyWrite> myList = service.myStudyList(map2);
+		String studyArticleUrl2 = cp + "/community/studyList_article?page=1&rows=10";
+		
+		
 		model.addAttribute("list", list);
 		model.addAttribute("listUrl", listUrl);
 		model.addAttribute("studyArticleUrl", studyArticleUrl);
@@ -153,19 +163,57 @@ public class MyWriteController {
 		model.addAttribute("paging", paging);
 		model.addAttribute("status", status);
 		
+		model.addAttribute("myList", myList);
+		model.addAttribute("studyArticleUrl2",studyArticleUrl2);
+		
 		
 		return ".mypage.memberPageMyStudyWrite";
 	}
 	
 
-	
+	// 지원자리스트 AJAX-Text
 	@RequestMapping(value = "applyList", method = RequestMethod.GET)
+	public String applyList(@RequestParam int studyNum, Model model) throws Exception {
+		
+		List<StudyApply> list = service.studyApplyList(studyNum);
+
+		model.addAttribute("applyList", list);
+		
+		return "mypage/studyApplyList";
+	}
+	
+	
+	// 지원자 승인 시 승인된 인원수 증가
+	@RequestMapping(value = "updateStatus", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> applyList(@RequestParam int studyNum) throws Exception {
+	public Map<String, Object> updateStatus(@RequestParam int studyNum, @RequestParam int applyNum){
 		
 		Map<String, Object> model = new HashMap<String, Object>();
+
+		service.updateApplyStatus(applyNum);
+		service.updateApplyNum(studyNum);
+		
+		return model;
+		
+	}
+	
+	@RequestMapping(value = "studyStatus", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> updateStudyStatus(@RequestParam int studyNum) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+
+		service.updateStudyStatus(studyNum);
 		
 		return model;
 	}
 	
+	
+	@RequestMapping(value = "cancel", method = RequestMethod.GET)
+	public String cancelApply(@RequestParam int applyNum) throws Exception {
+		
+		service.cancelApply(applyNum);
+		
+		return "redirect:/mypage/myWrite/myStudyWrite?status=2";
+	}
+
 }

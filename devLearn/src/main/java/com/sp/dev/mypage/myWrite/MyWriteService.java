@@ -11,4 +11,11 @@ public interface MyWriteService {
 	public List<MyStudyWrite> studyList(Map<String, Object> map);
 	
 	public List<StudyApply> studyApplyList(int studyNum);
+	public void updateApplyStatus(int applyNum);
+	public void updateApplyNum(int studyNum);
+	
+	public void updateStudyStatus(int studyNum);
+	public List<MyStudyWrite> myStudyList(Map<String, Object> map);
+	
+	public void cancelApply(int applyNum);
 }

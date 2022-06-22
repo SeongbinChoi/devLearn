@@ -1,17 +1,19 @@
 package com.sp.dev.mypage.myWrite;
 
 public class StudyApply {
-	private int listNum;
+	private int applyNum;
 	private int studyNum;
 	private String applicantEmail;
 	private int status;
+	private String memberName;
 	
-	public int getListNum() {
-		return listNum;
+	public int getApplyNum() {
+		return applyNum;
 	}
-	public void setListNum(int listNum) {
-		this.listNum = listNum;
+	public void setApplyNum(int applyNum) {
+		this.applyNum = applyNum;
 	}
+
 	public int getStudyNum() {
 		return studyNum;
 	}
@@ -30,6 +32,12 @@ public class StudyApply {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
+	}
+
 	
 }

@@ -64,13 +64,46 @@
 	
 	<!-- 스터디 지원자 리스트 -->
 	<select id="studyApplyList" parameterType="Integer" resultType="com.sp.dev.mypage.myWrite.StudyApply">
-		SELECT applyNum, studyNum, applicantEmail, status
-		FROM studyApply
+		SELECT applyNum, studyNum, s.applicantEmail, status, memberName
+		FROM studyApply s
+		JOIN member m ON m.memberEmail=s.applicantEmail
 		WHERE studyNum=#{studyNum}
 	</select>
 	
+	<!-- 스터디 지원자 승인 -->
+	<update id="updateApplyStatus" parameterType="Integer">
+		UPDATE studyApply SET status= 1 WHERE applyNum=#{applyNum}
+	</update>
+	
+	<!-- 지원자 승인 시 승인완료된 인원 증가 -->
+	<update id="updateApplyNum" parameterType="Integer">
+		UPDATE study SET applied=applied+1 WHERE studyNum=#{studyNum}
+	</update>
+	
+	<!-- 완료버튼 클릭 시 지원 마감 -->
+	<update id="updateStudyStatus" parameterType="Integer">
+		UPDATE study SET status=1 WHERE studyNum=#{studyNum}
+	</update>
 	
 	
+	<!-- 내가 지원한 스터디 리스트 -->
+	<select id="myStudyList" parameterType="map" resultType="com.sp.dev.mypage.myWrite.MyStudyWrite">
+		SELECT a.studyNum, applyNum, a.applicantEmail, r.regionNum, region, subject, TO_CHAR(regDate,'YYYY-MM-DD') regDate, limit, applied, s.status, a.status applyStatus
+		FROM studyApply a
+		JOIN study s ON a.studyNum=s.studyNum
+		JOIN studyRegion r ON s.regionNum = r.regionNum
+		<where>
+			a.applicantEmail=#{memberEmail}
+			<if test="status != 2">
+				AND s.status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 스터디 지원 취소 -->
+	<update id="cancelApply" parameterType="Integer">
+		UPDATE studyApply SET status= 2 WHERE applyNum=#{applyNum}
+	</update>
 	
 	
 	

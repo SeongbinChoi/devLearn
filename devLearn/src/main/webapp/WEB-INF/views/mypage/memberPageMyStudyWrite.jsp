@@ -43,6 +43,11 @@ table {
 	width: 100%;
 	text-align: center;
 	vertical-align: middle;
+	
+}
+
+.scroll {
+	overflow-y:scroll; height:400px;
 }
 
 th, td {
@@ -67,6 +72,28 @@ th, td {
 </style>
 
 <script type="text/javascript">
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status===403) {
+				login();
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		},
+	});
+}
 
 $(function(){
 	
@@ -76,11 +103,78 @@ $(function(){
 });
 
 
+// 지원자확인하기 버튼 누르면
+
 $(function(){
 	$('.apply').click(function(){
-		$('#applyConfirmModal').modal('show');
+		let studyNum = $(this).attr("data-num");
+		
+		let url = "${pageContext.request.contextPath}/mypage/myWrite/applyList";
+		let query = "studyNum="+studyNum;
+		
+		let selector = "#studyApply";
+		
+		const fn = function(data){
+			$(selector).html(data);
+			
+			$('#applyConfirmModal').modal('show');
+		};
+
+		ajaxFun(url, "get", query, "html", fn);
+		
 	});
 });
+
+
+$(function(){
+	$("body").on("click", ".applyOk", function(){
+		let studyNum = $(this).attr("study-num");
+		let applyNum = $(this).attr("apply-num");
+		
+		let url = "${pageContext.request.contextPath}/mypage/myWrite/updateStatus";
+		let query = "studyNum="+studyNum + "&applyNum="+applyNum;
+		
+		const fn = function(data){
+			let url = "${pageContext.request.contextPath}/mypage/myWrite/applyList";
+			let query = "studyNum="+studyNum;
+			
+			let selector = "#studyApply";
+			
+			const fn = function(data){
+				$(selector).html(data);
+			};
+
+			ajaxFun(url, "get", query, "html", fn);
+		};
+
+		ajaxFun(url, "get", query, "json", fn);
+		
+	});
+});
+
+
+$(function(){
+	$('.finish').click(function(){
+		let studyNum = $(this).attr("data-num");
+		
+		let url = "${pageContext.request.contextPath}/mypage/myWrite/studyStatus";
+		let query = "studyNum="+studyNum;
+		
+		const fn = function(data){
+			location.href="${pageContext.request.contextPath}/mypage/myWrite/myStudyWrite?status=2";
+		};
+
+		ajaxFun(url, "get", query, "json", fn);
+	});
+
+});
+
+
+function cancelBtn() {
+	let applyNum = $('.cancel').attr("apply-num");
+	
+	location.href = "${pageContext.request.contextPath}/mypage/myWrite/cancel?applyNum="+applyNum;
+}
 
 </script>
 
@@ -109,74 +203,77 @@ $(function(){
 			</ul>
 		</div>
 		<h3 class="mt-3">모집한 스터디</h3>
-		<table class="mystudy-table table table-striped"><!-- 내가 모집한 스터디 목록 -->
-			<thead>
-				<tr>
-					<th style="width: 8%;">지역</th>
-					<th>제목</th>
-					<th style="width: 13%;">등록일</th>
-					<th style="width: 10%;">모집 인원</th>
-					<th style="width: 12%;">상태</th>	
-					<th style="width: 12%;">지원자</th>	
-					<th style="width: 10%;">모집완료</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="vo" items="${list}">
-					<tr onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">
-						<td>${vo.region}</td>
-						<td>${vo.subject}</td>
-						<td>${vo.regDate}</td>
-						<td>${vo.applied}/${vo.limit}</td>
-						<td>${vo.status == 0 ? "모집중" : "모집완료"}</td>
-						<td><button type="button" class="btn btn-secondary apply">확인하기</button>
-						<c:choose>
-							<c:when test="${vo.status == 0}">
-								<td><button type="button" class="btn btn-secondary">완료</button></td>
-							</c:when>
-							<c:otherwise>
-								<td><button type="button" class="btn btn-secondary" disabled="disabled">완료</button></td>
-							</c:otherwise>
-						</c:choose>
+		<div class="scroll">
+			<table class="mystudy-table table table-striped"><!-- 내가 모집한 스터디 목록 -->
+				<thead>
+					<tr>
+						<th style="width: 8%;">지역</th>
+						<th>제목</th>
+						<th style="width: 13%;">등록일</th>
+						<th style="width: 10%;">모집 인원</th>
+						<th style="width: 12%;">상태</th>	
+						<th style="width: 12%;">지원자</th>	
+						<th style="width: 10%;">모집완료</th>
 					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-		<div>
-			${dataCount == 0 ? "등록된 게시글이 없습니다." : paging }
+				</thead>
+				<tbody>
+					<c:forEach var="vo" items="${list}">
+						<tr>
+							<td onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">${vo.region}</td>
+							<td onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">${vo.subject}</td>
+							<td onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">${vo.regDate}</td>
+							<td onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">${vo.applied}/${vo.limit}</td>
+							<td onclick="location.href='${studyArticleUrl}&studyNum=${vo.studyNum}'">${vo.status == 0 ? "모집중" : "모집완료"}</td>
+							<td><button type="button" class="btn btn-secondary apply" data-num=${vo.studyNum}>확인하기</button>
+							<c:choose>
+								<c:when test="${vo.status == 0}">
+									<td><button type="button" class="btn btn-secondary finish" data-num=${vo.studyNum}>완료</button></td>
+								</c:when>
+								<c:otherwise>
+									<td><button type="button" class="btn btn-secondary" disabled="disabled">완료</button></td>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
 		</div>
 		<!--  ---------------------------------------------------------------------- -->
 		<h3 class="mt-3">지원한 스터디</h3>
-		<table class="applyStudy-table table table-striped">
-			<thead>
-				<tr>
-					<th style="width: 8%;">지역</th>
-					<th>제목</th>
-					<th style="width: 13%;">등록일</th>
-					<th style="width: 10%;">모집 인원</th>
-					<th style="width: 12%;">상태</th>
-					<th style="width: 10%;">지원취소</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>서울</td>
-					<td>오라클 스터디</td>
-					<td>2022-05-10</td>
-					<td>4/8</td>
-					<td>모집중</td>
-					<td><button type="button" class="btn btn-secondary">취소</button></td>
-				</tr>
-				<tr>
-					<td>경기</td>
-					<td>스프링 스터디</td>
-					<td>2022-02-10</td>
-					<td>2/2</td>
-					<td>모집완료</td>
-					<td><button type="button" class="btn btn-secondary" disabled="disabled">취소</button></td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="scroll">
+			<table class="applyStudy-table table table-striped">
+				<thead>
+					<tr>
+						<th style="width: 8%;">지역</th>
+						<th>제목</th>
+						<th style="width: 13%;">등록일</th>
+						<th style="width: 10%;">모집 인원</th>
+						<th style="width: 12%;">상태</th>
+						<th style="width: 10%;">지원취소</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="vo" items="${myList}">
+						<tr>
+							<td onclick="location.href='${studyArticleUrl2}&studyNum=${vo.studyNum}'">${vo.region}</td>
+							<td onclick="location.href='${studyArticleUrl2}&studyNum=${vo.studyNum}'">${vo.subject}</td>
+							<td onclick="location.href='${studyArticleUrl2}&studyNum=${vo.studyNum}'">${vo.regDate}</td>
+							<td onclick="location.href='${studyArticleUrl2}&studyNum=${vo.studyNum}'">${vo.applied}/${vo.limit}</td>
+							<td onclick="location.href='${studyArticleUrl2}&studyNum=${vo.studyNum}'">${vo.status == 0 ? "모집중" : "모집완료"}</td>
+							<c:choose>
+								<c:when test="${vo.applyStatus == 2}">
+									<td><button type="button" class="btn btn-secondary" disabled="disabled">취소</button></td>
+								</c:when>
+								<c:otherwise>
+									<td><button type="button" class="btn btn-secondary cancel" data-num=${vo.studyNum} apply-num=${vo.applyNum} onclick="cancelBtn();">취소</button></td>
+								</c:otherwise>
+							</c:choose>
+						</tr>
+					</c:forEach>
+							
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
@@ -190,23 +287,8 @@ $(function(){
 				<h5 class="modal-title">지원자 확인</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<table class="table">
-					<tr>
-						<td width="15%">번호</td>
-						<td width="30%" class="table-light col-3 align-middle">이름</td>
-						<td>이메일</td>
-						<td width="20%">승인</td>
-					</tr>
-					<c:forEach var="i" begin="1" end="10">
-						<tr>
-							<td>${i}</td>
-							<td class="table-light col-3 align-middle">김자바</td>
-							<td>user@naver.com</td>
-							<td><button type="button" class="btn btn-primary">승인</button></td>
-						</tr>
-					</c:forEach>
-				</table>
+			<div class="modal-body" id="studyApply">
+				
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

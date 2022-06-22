@@ -3,6 +3,7 @@ package com.sp.dev.mypage.myWrite;
 public class MyStudyWrite {
 	private int listNum;
 	private int studyNum;
+	private int applyNum;
 	private String memberEmail;
 	private int regionNum;
 	private String region;
@@ -11,6 +12,7 @@ public class MyStudyWrite {
 	private int limit;
 	private int applied;
 	private int status;
+	private int applyStatus;
 	
 	public int getListNum() {
 		return listNum;
@@ -71,6 +73,18 @@ public class MyStudyWrite {
 	}
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	public int getApplyNum() {
+		return applyNum;
+	}
+	public void setApplyNum(int applyNum) {
+		this.applyNum = applyNum;
+	}
+	public int getApplyStatus() {
+		return applyStatus;
+	}
+	public void setApplyStatus(int applyStatus) {
+		this.applyStatus = applyStatus;
 	}
 	
 	
