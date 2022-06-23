@@ -190,7 +190,7 @@ function sendOk() {
 				<li class="nav-item" role="presentation">
 					<button class="nav-link active" id="tab-0" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="0" aria-selected=${detailNum == 0 ? "true" : "false"} data-detailNum="0" onclick="list_detail();">최신순</button>
 				<li class="nav-item" role="presentation">
-					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="1" aria-selected=${detailNum == 1 ? "true" : "false"} data-detailNum="1" onclick="list_detail();">답변많은순</button>
+					<button class="nav-link" id="tab-1" data-bs-toggle="tab" data-bs-target="#nav-all" type="button" role="tab1" aria-controls="1" aria-selected=${detailNum == 1 ? "true" : "false"} data-detailNum="1" onclick="list_detail();" style="display: none;">답변많은순</button>
 				</li>
 			</ul>
 
