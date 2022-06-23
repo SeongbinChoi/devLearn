@@ -19,4 +19,7 @@ public interface MentorPageService {
 	public List<Object> mentoringRevenueList(Map<String, Object> map);
 	public List<Object> mentoringYearList(String memberEmail);
 	public List<Mentors> mentoringDetailList(Map<String, Object> map);
+	public int allRevenueCount(String memberEmail);
+	public int monthRevenueCount(Map<String, Object> map);
+	public Map<String, Object> dashbardDataList(String memberEmail);
 }

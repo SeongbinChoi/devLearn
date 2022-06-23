@@ -1,7 +1,6 @@
 package com.sp.dev.lectureInquiry;
 
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
@@ -23,44 +23,20 @@ import com.sp.dev.member.SessionInfo;
 public class LecInqController {
 	@Autowired
 	private LecInqService service;
+	
 	@Autowired
 	private MyUtil myUtil;
 	
+	// 연결하면서 강의 번호 받아오기 - 이거 없애면 404
 	@RequestMapping("inquiry")
 	public String inquiry(@RequestParam int lectureNum, Model model) throws Exception {
-		model.addAttribute("lectureNum", lectureNum);
+		model.addAttribute("lectureNum", lectureNum); // 이걸로 강의번호를 받아오긴 했는데 이걸로 끝인가?
 		
 		return ".lectureInquiry.inquiry";
 	}
 	
-	public Map<String, Object> list(@RequestParam(value = "pageNo", defaultValue = "1") int current_page) throws Exception {
-		int rows = 10;
-		int dataCount = 0;
-		int total_page = myUtil.pageCount(rows, dataCount);
-		if(current_page > total_page) {
-			current_page = total_page;
-		}
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		int start = (current_page - 1) * rows + 1;
-		int end = current_page * rows;
-		map.put("start", start);
-		map.put("end", end);
-		
-		List<LecInq> list = service.listLecInq(map);
-		for(LecInq dto : list) {
-			dto.setQuestion(dto.getQuestion().replaceAll("\n", "<br>"));
-		}
-		
-		map.put("dataCount", dataCount);
-		map.put("total_page", total_page);
-		map.put("pageNo", current_page);
-		map.put("list", list);
-		
-		return map;
-	}
-	
-	// AJAX
+	// AJAX - 문의 등록(까지는 작동했다)
+	@ResponseBody
 	@RequestMapping(value = "insert", method = RequestMethod.POST)
 	public Map<String, Object> writeSubmit(LecInq dto, HttpSession session, @RequestParam int lectureNum) throws Exception {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -74,64 +50,79 @@ public class LecInqController {
 			state = "false";
 		}
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("state", state);
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
 		
-		return map;
+		return model;
 	}
 	
-	
-	public String writeForm() throws Exception {
-		
-		return "redirect:/lectureInquiry/inquiry";
-	}
-	
-	@RequestMapping(value = "article", method = RequestMethod.GET)
-	public String article(@RequestParam int inquirynum,
-			@RequestParam String page,
+	// 리스트(페이지에 들어가면 질문+답변 2가지가 모두, 1명의 문답만이 아니라 전체 사용자의 문답이 한꺼번에 다 나오도록)
+	// sb쪽을 보면 문의 쪽은 list/article.jsp 형태로 나뉘지만 방명록은 guest.jsp 하나만 존재한다 >> 내 경우는 list만 만들면 되는 것
+	// 따라서 방명록 쪽에는 listGuest만 있고 readGuest 같은건 없다
+	// 반면 문의는 listInquiry와 readInquiry가 모두 있어야 한다(insert, dataCount, delete는 다 있는거고 문의는 answer도 필요하긴 하다)
+	@ResponseBody
+	@RequestMapping(value = "list")
+	public Map<String, Object> list(
+			@RequestParam int lectureNum,
 			@RequestParam(defaultValue = "all") String condition,
 			@RequestParam(defaultValue = "") String keyword,
+			@RequestParam(value = "pageNo", defaultValue = "1") int current_page,
 			HttpSession session,
-			Model model) throws Exception {
+			Model model
+			) throws Exception {
 		
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		// SessionInfo info = (SessionInfo) session.getAttribute("member");
 		keyword = URLDecoder.decode(keyword, "utf-8");
-
-		String query = "page=" + page;
-		if (keyword.length() != 0) {
-			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+			
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lectureNum", lectureNum); // 이게 가장 먼저 나와야 그 아래에서 강의별 dataCount든 list든 가져올 수 있다!
+		
+		int rows = 5;
+		int dataCount = service.dataCount(map);
+		int total_page = myUtil.pageCount(rows, dataCount);
+		if (current_page > total_page) {
+			current_page = total_page;
 		}
 		
-		LecInq dto = service.readInq(inquirynum);
-		if(dto == null) {
-			return "redirect:/lectureInquiry/inquiry?" + query;
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+		
+		List<LecInq> list = service.listLecInq(map);
+		for(LecInq dto : list) {
+			dto.setQuestion(dto.getQuestion().replaceAll("\n", "<br>"));
 		}
 		
-		if(! info.getMemberEmail().equals(dto.getMemberEmail()) && info.getMemberRole() != "99") {
-			return "redirect:/lectureInquiry/inquiry?" + query;
+		Map<String, Object> mod = new HashMap<>();
+		
+		mod.put("dataCount", dataCount);
+		mod.put("total_page", total_page);
+		mod.put("pageNo", current_page);
+		mod.put("list", list);
+		
+		return mod;
+	}
+	
+	@RequestMapping(value = "delete", method = RequestMethod.POST)
+	public Map<String, Object> deleteInq(@RequestParam int lectureNum, @RequestParam int inquiryNum, HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		Map<String, Object> map = new HashMap<>();
+		map.put("lectureNum", lectureNum);
+		 
+		String state = "true";
+		try {
+			map.put("inquiryNum", inquiryNum);
+			map.put("memberRole", info.getMemberRole());
+			map.put("memberEmail", info.getMemberEmail());
+			service.deleteInquiry(map);
+		} catch (Exception e) {
+			state = "false";
 		}
 		
-		model.addAttribute("dto", dto);
-		model.addAttribute("page", page);
-		model.addAttribute("condition", condition);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("query", query);
-		
-		return ".lectureInquiry.inquiry";
-	}
-	
-	public String answerSubmit() throws Exception {
-		
-		return "redirect:/lectureInquiry/inquiry?";// + query;
-	}
-	
-	public String deleteAnswer() throws Exception {
-		
-		return "redirect:/lectureInquiry/inquiry?";// + query;
-	}
-	
-	public String delete() throws Exception {
-		
-		return "redirect:/lectureInquiry/inquiry?";// + query;
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		return model;
 	}
 }

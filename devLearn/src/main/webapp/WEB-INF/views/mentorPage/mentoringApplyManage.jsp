@@ -111,9 +111,9 @@ function sendOk(param) {
 					</tr>
 				</thead>
 				<tbody>			
-					<c:forEach var="dto" items="${list}">
+					<c:forEach var="dto" items="${list}" varStatus="status">
 						<tr>	
-							<td>1</td>
+							<td>${status.count}</td>
 							<td>${dto.mentorSubject}</td>
 							<td>${dto.mentoringDate}</td>
 							<td>${dto.mentoringPrice}</td>		

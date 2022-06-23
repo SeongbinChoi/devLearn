@@ -158,6 +158,28 @@ public class StudyServiceImpl implements StudyService {
 			throw e;
 		}
 	}
+
+
+	@Override
+	public void updateReplyCount(int studyNum) throws Exception {
+		try {
+			dao.updateData("study.updateReplyCount", studyNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+
+	@Override
+	public void updateReplyCountDelete(Map<String, Object> map) throws Exception {
+		try {
+			dao.updateData("study.updateReplyCountDelete", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
 	
 
 }

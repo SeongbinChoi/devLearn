@@ -1,6 +1,7 @@
 package com.sp.dev.mentorPage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -173,5 +174,38 @@ public class MentorPageServiceImpl implements MentorPageService {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	@Override
+	public int allRevenueCount(String memberEmail) {
+		int result = 0;
+		try {
+			result = dao.selectOne("mentorPage.allRevenueCount", memberEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public int monthRevenueCount(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = dao.selectOne("mentorPage.monthRevenueCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> dashbardDataList(String memberEmail) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			map = dao.selectOne("mentorPage.dashbardDataList", memberEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 }

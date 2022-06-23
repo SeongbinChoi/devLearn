@@ -102,7 +102,7 @@
 	            NVL(SUM(DECODE(SUBSTR(mentoringDate, 6,2),'12', mentoringPrice, 0)), 0)AS "12월"
 	        FROM mentoringApply ma
 	        JOIN mentor mt ON mt.mentorNum = ma.mentorNum
-	        WHERE status = 1
+	        WHERE status IN(1, 3)
 	        AND mt.memberEmail = #{memberEmail}
 	        AND mentoringDate LIKE '${year}%'
 	    )
@@ -122,9 +122,44 @@
 		SELECT mentorSubject, ma.memberEmail, SUBSTR(mentoringDate,0,10) mentoringDate, mentoringPrice FROM mentoringApply ma
 		JOIN mentor mt ON mt.mentorNum = ma.mentorNum
 		JOIN member m ON m.memberEmail = mt.memberEmail
-		WHERE ma.status = 1
+		WHERE ma.status IN(1, 3)
 		AND mentoringDate LIKE '${year}%'
 		AND mt.memberEmail = #{memberEmail}
 	</select>
 	
+	<select id="allRevenueCount" parameterType="String" resultType="Integer">
+		SELECT NVL(SUM(mentoringPrice), 0) 
+		FROM mentoringApply ma
+		JOIN mentor m ON m.mentorNum = ma.mentorNum
+		WHERE m.memberEmail = #{memberEmail}
+		AND STATUS IN (1, 3)
+	</select>
+	
+	<select id="monthRevenueCount" parameterType="map" resultType="Integer">
+		SELECT NVL(SUM(mentoringPrice), 0) 
+		FROM mentoringApply ma
+		JOIN mentor m ON m.mentorNum = ma.mentorNum
+		WHERE m.memberEmail = #{memberEmail}
+		AND STATUS IN (1, 3)
+		AND mentoringDate LIKE '${nowYearMonth}%'
+	</select>
+	
+	<select id="dashbardDataList" parameterType="String" resultType="map">
+		SELECT
+		    (SELECT NVL(COUNT(*), 0)
+		        FROM mentoringApply ma 
+		        JOIN mentor m ON m.mentorNum = ma.mentorNum 
+		        WHERE m.memberEmail = #{memberEmail} 
+		        AND STATUS = 3) menteeCnt,
+		    (SELECT NVL(SUM(mentoringPrice), 0)
+		        FROM mentoringApply ma 
+		        JOIN mentor m ON m.mentorNum = ma.mentorNum 
+		        WHERE m.memberEmail = #{memberEmail}  
+		        AND STATUS = 3) revenue,
+		    (SELECT NVL(AVG(mentorRate), 0) 
+		        FROM mentorReview mr
+		        JOIN mentor m ON m.mentorNum = mr.mentorNum 
+		        WHERE m.memberEmail = #{memberEmail}) avg
+		FROM dual
+	</select>
 </mapper>

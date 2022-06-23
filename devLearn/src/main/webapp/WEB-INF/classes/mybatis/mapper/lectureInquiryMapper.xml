@@ -7,25 +7,28 @@
 		values (lectureinquiry_seq.NEXTVAL, #{lectureNum}, #{qmember}, #{question}, sysdate)
 	</insert>
 	
-	<select id="dataCount" resultType="Integer">
+	<select id="dataCount" resultType="Integer" parameterType="map">
 		select NVL(COUNT(*), 0) from lectureInquiry
+		where lectureNum = #{lectureNum}
 	</select>
 	
+	<!-- 리스트 출력 : 문의 쪽 Mapper의 list 부분처럼 하면 된다 -->
 	<select id="listLecInq" parameterType="map" resultType="com.sp.dev.lectureInquiry.LecInq">
-		select * from (
-			select rownum rnum, tb.* from (
-				select inquirynum, lecturenum, qmember, question, q_regdate
-				from lectureInquiry l
-				join member m on qmember = m.memberEmail
-				order by inquirynum DESC
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate, aMember, answer, a_regDate
+				FROM lectureInquiry l
+				WHERE lectureNum = #{lectureNum}
+				ORDER BY inquiryNum DESC
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
 	
-	<select id="readInq" resultType="com.sp.dev.lectureInquiry.LecInq" parameterType="Integer">
-		select lecturenum, memberEmail, qmember, question, q_regDate
-		from lectureinquiry l
-		join member m on 
-		
-	</select>
+	<delete id="deleteInquiry" parameterType="map">
+		DELETE from lectureinquiry WHERE inquirynum = #{inquirynum}
+			<if test="memberRole != 99">
+				AND qMember = #{qMember}
+			</if>
+	</delete>
+	
 </mapper>

@@ -358,7 +358,7 @@ public class CommunityController {
 			@RequestParam(value = "page", defaultValue = "1") int current_page,
 			@RequestParam(defaultValue = "") String keyword,
 			@RequestParam(defaultValue = "2") String categoryNum,
-			@RequestParam(defaultValue = "2") String detailNum,
+			@RequestParam(defaultValue = "0") String detailNum,
 			@RequestParam(defaultValue = "4") String jRegionNum,
 			@RequestParam(value = "rows", defaultValue = "10") int rows,
 			HttpServletRequest req,
@@ -598,6 +598,12 @@ public class CommunityController {
 		try {
 			dto.setMemberEmail(info.getMemberEmail());
 			service4.insertReply(dto);
+			
+			// 댓글이라면 -> 게시글의 댓글개수 추가
+			if(dto.getParent().equals("0")) {
+				service3.updateReplyCount( dto.getStudyNum() );
+			}
+			
 		} catch (Exception e) {
 			state = "false";
 		}
@@ -615,9 +621,10 @@ public class CommunityController {
 	public Map<String, Object> deleteReply(
 			@RequestParam Map<String, Object> paramMap) {
 		String state = "true";
-		
+
 		try {
 			service4.deleteReply(paramMap);
+			service3.updateReplyCountDelete(paramMap);
 		} catch (Exception e) {
 			state = "false";
 		}

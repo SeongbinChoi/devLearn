@@ -141,13 +141,15 @@ $(function () {
 // 댓글 삭제 
 $(function () {
 	$("body").on("click", ".deleteReply", function () {
-		if(! confirm("게시글을 삭제하시겠습니까? ")) {
+		if(! confirm("댓글을 삭제하시겠습니까? ")) {
 			return false;
 		}
 		
 		let replyNum = $(this).attr("data-replyNum");
 		let url = "${pageContext.request.contextPath}/community/deleteReply";
-		let query = "replyNum="+replyNum;
+		let query = "replyNum="+replyNum+"&studyNum=${dto.studyNum}";
+		
+		console.log(query);
 		
 		const fn = function(data) {
 			listPage();
@@ -247,7 +249,7 @@ $(function () {
 // 댓글의 댓글 삭제
 $(function () {
 	$("body").on("click", ".deleteReplyAnswer", function() {
-		if(! confirm("게시물을 삭제하시겠습니까?")) {
+		if(! confirm("댓글을 삭제하시겠습니까?")) {
 			return false;
 		}
 		
@@ -255,7 +257,7 @@ $(function () {
 		let parent = $(this).attr("data-parent");
 		
 		let url = "${pageContext.request.contextPath}/community/deleteReply";
-		let query = "replyNum=" + replyNum;
+		let query = "replyNum=" + replyNum + "&mode=reply";
 		
 		const fn = function(data) {
 			listReplyAnswer(parent);

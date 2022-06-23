@@ -56,6 +56,9 @@ function ajaxFun(url, method, query, dataType, fn) {
 
 
 function list_category() {
+	$("#tab-1").removeClass("active");
+	$("#tab-0").addClass("active");
+	
 	const $tab = $("button[role='tab'].active");
 	let categoryNum = $tab.attr("data-categoryNum"); 
 
