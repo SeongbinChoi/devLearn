@@ -273,7 +273,14 @@ $(function() {
 								<div class="mentor_header">
 									<div class="mentor_img mb-4">
 										<figure class="figure">
-											<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded img-fluid" alt="">
+											<c:choose>
+												<c:when test="${dto.saveFilename eq null}">
+													<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded img-fluid" alt="" style="width:60px; height:60px;">
+												</c:when>
+												<c:otherwise>
+													<img src="${pageContext.request.contextPath}/uploads/profile/${dto.saveFilename}" class="is-rounded img-fluid" alt="" style="width:60px; height:60px;">
+												</c:otherwise>
+											</c:choose>
 										</figure>
 									</div>
 									<button class="mentor_review px-1 py-1" data-num="${dto.mentorNum}" data-bs-toggle="modal" data-bs-target="#reviewModal">

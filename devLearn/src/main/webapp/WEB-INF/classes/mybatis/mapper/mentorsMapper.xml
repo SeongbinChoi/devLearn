@@ -22,7 +22,7 @@
 			SELECT DISTINCT mt.mentorNum, m.memberNickname, mp.saveFilename, mt.mentorSubject, applyCnt, ReviewCnt, reviewAve
 			FROM mentor mt
 			LEFT OUTER JOIN member m ON mt.memberEmail = m.memberEmail
-			LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = m.memberEmail
+			LEFT OUTER JOIN memberProfile mp ON mt.memberEmail = mp.memberEmail
             LEFT OUTER JOIN (
                 SELECT mentorNum, count(*)applyCnt
                 FROM mentoringApply 
