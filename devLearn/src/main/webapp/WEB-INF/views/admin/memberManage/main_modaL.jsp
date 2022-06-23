@@ -5,12 +5,65 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/admin.css" type="text/css">
 
-<div id="detailModal" style="display: none;"></div>
 	<div class="container">
+
 		<div class="contents pt-5">
+	 		<div class="row">
+		 		<div class="col-sm-4">
+	                <div class="card widget-flat">
+		                <div class="card-body">
+			                <div class="float-end">
+			                	<i class="mdi mdi-account-multiple widget-icon"></i>
+			                </div>
+			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당일 총 접속자</h5>
+			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <p class="mb-0 text-muted">
+				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
+				                <span class="text-nowrap">Since last month</span>  
+			                </p>
+		                </div> <!-- end card-body-->
+	                </div> <!-- end card-->
+	               </div> <!-- end col-->
+	               
+	               <div class="col-sm-4">
+	                <div class="card widget-flat">
+		                <div class="card-body">
+			                <div class="float-end">
+			                	<i class="mdi mdi-account-multiple widget-icon"></i>
+			                </div>
+			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">동시 접속자</h5>
+			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <p class="mb-0 text-muted">
+				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
+				                <span class="text-nowrap">Since last month</span>  
+			                </p>
+		                </div> <!-- end card-body-->
+	                </div> <!-- end card-->
+	               </div> <!-- end col-->
+	               
+	               <div class="col-sm-4">
+	                <div class="card widget-flat">
+		                <div class="card-body">
+			                <div class="float-end">
+			                	<i class="mdi mdi-account-multiple widget-icon"></i>
+			                </div>
+			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">신규 유입 회원(month)</h5>
+			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <p class="mb-0 text-muted">
+				                <span class ="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
+				                <span class ="text-nowrap">Since last month</span>  
+			                </p>
+		                </div> <!-- end card-body-->
+	                </div> <!-- end card-->
+	        	</div> <!-- end col-->
+	 		</div><!-- end row -->
+	 		
 	 		<!--  -->
 	 		<!-- 나중에 지워야함 -->
 	 		<button data-bs-toggle="modal" data-bs-target="#jisikModal">지식공유자</button>
+	 		<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
 	 		<!--  -->
 	 		<!--  -->
 	 		
@@ -34,7 +87,7 @@
 							<div class="tableTop my-2 ml-2 d-flex">
 								<span>&nbsp;&nbsp;&nbsp;${memberCount}명의 회원 ${page}/${totalPage}페이지</span>
 								<button type="button" onclick="location.href='${pageContext.request.contextPath}/admin/memberManage/main';">새로고침</button>
-								<form name="Form"  class="ms-auto" style="display: block">
+								<form name="memberListForm"  class="ms-auto" style="display: block">
 									<select name="condition">
 										<option value="all" ${condition == 'all' ? "selected='selected'" : "" }>::검색조건::</option>
 										<option value="memberEmail" ${condition == 'memberEmail' ? "selected='selected'" : "" }>아이디</option>
@@ -58,7 +111,7 @@
 									<button type="button" onclick="searchMember();">검색</button>
 								</form>
 							</div>
-							<div class="table-responsive" style="min-height: 700px;">
+							<div class="table-responsive" >
 								<table class="table table-centered table-nowrap table-hover mb-0">
 									<thead>
 										<tr class="mb-3">
@@ -83,6 +136,7 @@
 										</tr>
 									</thead>
 									<tbody>
+										
 										<c:forEach var="vo" items="${list}" varStatus="status">
 											<tr onclick="memberDetail('${vo.eMail}');" >
 												<td>
@@ -138,10 +192,8 @@
 							<div class="page-box">
 								${paging}
 							</div>
-						
+							
 						</div>
-						
-						
 						
 						<!-- 권한 신청-->
 						<div class="applyDetailModal" id="applyDetailModal"></div>
@@ -171,31 +223,13 @@ function searchMember() {
 
 function memberDetail(eMail) { //리스트에서 tr 클릭해서 상세정보 보기
 	
-	let dlg = $("#detailModal").dialog({
-		  autoOpen: false,
-		  modal: true,
-		  height: 550,
-		  width: 830,
-		  buttons: {
-		       " 닫기 " : function() {
-				$(this).dialog("close");
-				searchMember();
-		    	$(this).css("border", "1px solid red");	
-		       }
-		  },
-		  title: "회원상세정보",
-		  close: function(event, ui) {
-		  }
-	});
 	let url = "${pageContext.request.contextPath}/admin/memberManage/detail";
 	let query = "eMail="+eMail;
 	
 	const fn = function(data) {
-		$("#detailModal").html(data);
-		dlg.dialog("open");		
-		//console.log(query);
-		//console.log(data);
-		$(".ui-dialog-titlebar-close").css("display", "none");
+		$("#detailModalPlace").html(data);
+		$("#exampleModal").modal("show");
+		alert(":??");
 	};
 	ajaxFun(url, "post", query, "html", fn);
 }
@@ -411,6 +445,8 @@ function notifyDetail(notifyNum) {
 	};
 	ajaxFun(url, "post", query, "html", fn);
 }
+
+
 </script>
 
 

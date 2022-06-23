@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="adminRev">
+	<select id="sugangTotal" parameterType="java.util.Map" resultType="Integer">
+		WITH T_TEMP AS
+			(SELECT 
+			<foreach collection="months" item="month" separator=",">
+				SUM( DECODE(TO_CHAR(payDate, 'YYYY-MM'), #{month} ,totalPay, 0)) AS "${month}"
+			</foreach>
+		    FROM pay
+		    )	
+		SELECT value
+		FROM T_TEMP
+		UNPIVOT ( value FOR month IN (
+			<foreach collection="months" item="month"  separator="," >
+			 	"${month}"
+			</foreach>
+	 	))
+	</select>
+	
+	<select id="lectureCategoryValue" parameterType="java.util.Map" resultType="Integer">
+		WITH T_TEMP AS(
+			SELECT 
+			<foreach collection="categories" item="category" separator=",">
+				SUM( DECODE( SUBSTR(categoryCode, 0 ,2 ), #{category} , paid , 0)) AS "${category}"
+			</foreach>
+		    FROM (
+			    SELECT detailNum, sd.lectureNum, sd.sugangNum, sd.memberEmail, (lecturePay-discount) paid, categoryCode
+				FROM sugangDetail sd
+				JOIN member m ON m.memberEmail = sd.memberEmail
+				JOIN lecture l on l.lectureNum = sd.lectureNum
+	            JOIN sugang s ON sd.sugangNum = s.sugangNum
+                JOIN pay p ON p.sugangNum = s.sugangNum
+                WHERE to_CHAR(p.paydate, 'YYYY-MM') = #{stdMonth}
+				)
+			) SELECT value 
+			FROM T_TEMP
+			UNPIVOT ( value FOR categoryCode IN (
+			<foreach collection="categories" item="category"  separator="," >
+			 	"${category}"
+			</foreach>			
+	 	))
+	</select>
+	
+	<select id="getMainCategory" resultType="String">
+		SELECT categoryName FROM category WHERE mainCategory IS null
+	</select>
+	
+	<select id="mentorTotalSales" parameterType="java.util.Map" resultType="Integer">
+		WITH T_TEMP AS
+			(SELECT 
+			<foreach collection="months" item="month" separator=",">
+				SUM( DECODE(TO_CHAR(payDate, 'YYYY-MM'), #{month} ,paid, 0)) AS "${month}"
+			</foreach>
+		    FROM mentorPay
+		    )	
+		SELECT value
+		FROM T_TEMP
+		UNPIVOT ( value FOR month IN (
+			<foreach collection="months" item="month"  separator="," >
+			 	"${month}"
+			</foreach>
+	 	))
+	</select>
+	
+	<select id="mentorCategoryValue" parameterType="java.util.Map" resultType="Integer">
+		WITH T_TEMP AS(
+			SELECT 
+			<foreach collection="categories" item="category" separator=",">
+				SUM( DECODE( categoryNum, #{category} , paid , 0)) AS "${category}"
+			</foreach>
+		    FROM (
+			   SELECT mp.paid paid,categoryNum 
+                FROM mentorPay mp
+                JOIN mentoringApply ma ON mp.detailNum = ma.MENTORINGNUM
+                JOIN mentor m ON m.mentornum = ma.mentornum
+                WHERE to_CHAR(mp.paydate, 'YYYY-MM') = #{stdMonth}
+				)
+			) SELECT value 
+			FROM T_TEMP
+			UNPIVOT ( value FOR categoryCode IN (
+			<foreach collection="categories" item="category"  separator="," >
+			 	"${category}"
+			</foreach>			
+	 	))
+	
+	</select>
+</mapper>

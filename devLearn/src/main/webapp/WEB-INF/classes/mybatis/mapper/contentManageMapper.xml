@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="contentManage">
+	<select id="listLecture" parameterType="java.util.Map" resultType="com.sp.dev.admin.contentManage.ContentManage">
+		SELECT * FROM(
+		    SELECT ROWNUM rnum, tb.* FROM(
+		        select l.lectureNum, l.memberEmail instMail, m.membername instName , lectureSubject subject, lecturePrice price, l.regDate, dcpercent , 
+		            lectureDuration duration, categoryCode category, lectureContent content, lecturestate state
+		        FROM lecture l
+		        JOIN member m on l.memberEmail = m.memberEmail
+		        <where>
+					<if test="state != '99'">
+						lectureState = #{state}
+					</if>
+				</where>
+		    )tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="countLecture" parameterType="java.util.Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM LECTURE
+		<where>
+			<if test="state != '99'">
+				lectureState = #{state}
+			</if>
+		</where>
+	</select>
+	
+	<select id="readLecture" parameterType="java.util.Map" resultType="com.sp.dev.admin.contentManage.ContentManage">
+		SELECT lectureNum, l.memberEmail instMail, membername instmail , lectureSubject subject, 
+			lecturePrice price, l.regDate, dcpercent , 
+		    lectureDuration duration, categoryCode category, lectureContent content, lecturestate state
+		FROM lecture l
+		JOIN member m on l.memberEmail = m.memberEmail
+		WHERE lectureNum = #{lectureNum}
+	</select>
+
+	<update id="updateLectureState">
+		UPDATE lecture SET lectureState = 1 WHERE lectureNum = #{lectureNum}
+	</update>
+</mapper>

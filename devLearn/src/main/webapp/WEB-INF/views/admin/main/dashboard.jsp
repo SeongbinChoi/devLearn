@@ -3,107 +3,70 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
-
 <script type="text/javascript">
 $(function(){
-	
-	const chartDom = document.getElementById('chart');
+	total();
+});
+
+function total(){
+	let url = "${pageContext.request.contextPath}/admin/rev/totalSales";
+	let query = "";
+	const fn = function(data){
+		drawTotalChart(data);
+	}
+
+	ajaxFun(url, "post", query, "json", fn);
+
+}
+function drawTotalChart(data) {
+	const chartDom = document.getElementById('totalChart');
 	let myChart = echarts.init(chartDom);
 	let option;
 
 	option = {
-		title: {
-			text: '멘토링 수익 현황'
-		},					
+					
 		xAxis: {
 			type: 'category',
-			data: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+			data: data.monthList
 		},
 		yAxis: {
 			type: 'value'
 		},
 		series: [
 		    {
-		      data: [150, 230, 224, 218, 135, 147, 260, 100, 100, 100, 100, 100],
+		      data: data.totalSales,
 		      type: 'line'
 		    }
 		  ]
 	};
 
 	option && myChart.setOption(option);		
-});
+}
+
 
 </script>
+
 
 	<div class="container">
 		<div class="contents pt-5">
 	 		<div class="row">
 		 		<div class="col-sm-4">
 	                <div class="card widget-flat">
-		                <div class="card-body">
+		                <div class="card-body" >
 			                <div class="float-end">
 			                	<i class="mdi mdi-account-multiple widget-icon"></i>
 			                </div>
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당일 총 접속자</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <h2 class="mt-3 mb-3" style="text-align: center;" >${totalCount}</h2>
 			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
+				                <span class="text-nowrap">전 일 대비</span>  
+				                <span class="text-success me-2"></span>
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
 	               </div> <!-- end col-->
-	               
-	               <div class="col-sm-4">
-	                <div class="card widget-flat">
-		                <div class="card-body">
-			                <div class="float-end">
-			                	<i class="mdi mdi-account-multiple widget-icon"></i>
-			                </div>
-			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">동시 접속자</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
-			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
-			                </p>
-		                </div> <!-- end card-body-->
-	                </div> <!-- end card-->
-	               </div> <!-- end col-->
-	               
-	               <div class="col-sm-4">
-	                <div class="card widget-flat">
-		                <div class="card-body">
-			                <div class="float-end">
-			                	<i class="mdi mdi-account-multiple widget-icon"></i>
-			                </div>
-			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">신규 유입 회원(month)</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
-			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
-			                </p>
-		                </div> <!-- end card-body-->
-	                </div> <!-- end card-->
-	        	</div> <!-- end col-->
-	 		</div><!-- end row -->
-	 		
-	 		<div class="row pt-3">
-		 		<div class="col-sm-4">
-	                <div class="card widget-flat">
-		                <div class="card-body">
-			                <div class="float-end">
-			                	<i class="mdi mdi-account-multiple widget-icon"></i>
-			                </div>
-			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">신규 개설 강의</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
-			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
-			                </p>
-		                </div> <!-- end card-body-->
-	                </div> <!-- end card-->
-	               </div> <!-- end col-->
-	               
+	              
+	              
 	               <div class="col-sm-4">
 	                <div class="card widget-flat">
 		                <div class="card-body">
@@ -111,10 +74,44 @@ $(function(){
 			                	<i class="mdi mdi-account-multiple widget-icon"></i>
 			                </div>
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">승인 대기 강의</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <h2 class="mt-3 mb-3" style="text-align: center;" >${dto.waitingLecture}</h2>
 			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
+			                	&nbsp;
+			                </p>
+		                </div> <!-- end card-body-->
+	                </div> <!-- end card-->
+	               </div> <!-- end col-->
+	               
+	              
+	               <div class="col-sm-4">
+	                <div class="card widget-flat">
+		                <div class="card-body">
+			                <div class="float-end">
+			                	<i class="mdi mdi-account-multiple widget-icon"></i>
+			                </div>
+			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당월 신규 회원</h5>
+			                <h2 class="mt-3 mb-3" style="text-align: center;">${dto.monthNewMember}</h2>
+			                <p class="mb-0 text-muted">
+				                <span class="text-nowrap">전 월 대비</span>  
+				                <span class="text-success me-2">${newMemberPer}% ${monthnewMember - lastMonthNewMember < 0 ? "감소":"증가"}</span>
+			                </p>
+		                </div> <!-- end card-body-->
+	                </div> <!-- end card-->
+	        	</div> <!-- end col-->
+	 		</div><!-- end row -->
+	 		
+	 		<div class="row pt-3">
+		 		 
+	               <div class="col-sm-4">
+	                <div class="card widget-flat">
+		                <div class="card-body">
+			                <div class="float-end">
+			                	<i class="mdi mdi-account-multiple widget-icon"></i>
+			                </div>
+			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">동시 접속자</h5>
+			                <h2 class="mt-3 mb-3"  style="text-align: center;">${currentCount}</h2>
+			                <p class="mb-0 text-muted">
+								&nbsp;
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
@@ -127,15 +124,31 @@ $(function(){
 			                	<i class="mdi mdi-account-multiple widget-icon"></i>
 			                </div>
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">답변 대기 문의</h5>
-			                <h3 class="mt-3 mb-3">36,254</h3>
+			                <h2 class="mt-3 mb-3" style="text-align: center;" >${dto.waitingQnA}</h2>
 			                <p class="mb-0 text-muted">
-				                <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i> 5.27%</span>
-				                <span class="text-nowrap">Since last month</span>  
+			               		 <span class="text-nowrap">&nbsp;</span>
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
 	        	</div> <!-- end col-->
+                
+                <div class="col-sm-4">
+                <div class="card widget-flat">
+	                <div class="card-body">
+		                <div class="float-end">
+		                	<i class="mdi mdi-account-multiple widget-icon"></i>
+		                </div>
+		                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당월 신규 개설 강의</h5>
+		                <h2 class="mt-3 mb-3" style="text-align: center;" >${dto.monthnewLecture}</h2>
+		                <p class="mb-0 text-muted">
+			                <span class="text-nowrap">전 월 대비</span>  
+			                <span class="text-success me-2"> ${newLecturePer}% ${monthnewLecture - lastMonthNewLecture < 0 ? "감소":"증가"}</span>
+		                </p>
+	                </div> <!-- end card-body-->
+                </div> <!-- end card-->
+               </div> <!-- end col-->
 	 		</div><!-- end row -->
+	 		
 	 		<div class="row pt-3">
 				<div class="col">
 					<div class="card flex-fill w-100">
@@ -155,7 +168,7 @@ $(function(){
 						</div>
 						<div class="card-body d-flex w-100">
 							<div class="align-self-center chart chart-lg">
-								<div class="chart" id="chart" style="width:1000px; height: 500px;"></div>
+								<div class="chart" id="totalChart" style="width:1300px; height: 500px; margin: 0 auto;"></div>
 							</div>
 						</div>
 					</div>
