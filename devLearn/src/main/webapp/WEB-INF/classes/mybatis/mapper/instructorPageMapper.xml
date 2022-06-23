@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="lecturePage">
+<mapper namespace="instructorPage">
 	
-	<update id="insertLecture" parameterType="com.sp.dev.lectures.Lectures">
-		INSERT INTO lecture(lectureNum, lectureEmail, categoryCode, lectureSubject, 
-			lectureContent, lecturePrice, reg_date, , dcPercent, 
-			lectureDuration)
+	<insert id="insertLecture" parameterType="com.sp.dev.instrutorPage.Lectures">
+		INSERT INTO lecture(lectureNum, memberEmail, categoryCode, lectureSubject, 
+			lectureContent, lecturePrice, regDate, dcPercent, 
+			lectureDuration, thumbNail, lectureState)
 		VALUES(lecture_seq.NEXTVAL, #{memberEmail}, #{categoryCode}, #{lectureSubject},
 			#{lectureContent}, #{lecturePrice}, SYSDATE, #{dcPercent}, 
-			#{lectureDuration})
-	</update>
+			#{lectureDuration}, #{thumbNail}, 0)
+	</insert>
 	
-	<update id="updateLecture" parameterType="com.sp.dev.lectures.Lectures">
+	<update id="updateLecture" parameterType="com.sp.dev.instrutorPage.Lectures">
 		UPDATE lecture SET categoryCode= #{categoryCode}, lectureSubject = #{lectureSubject}, 
 			lectureContent = #{lectureContent}, lecturePrice = #{lecturePrice},
-			dcPercent = #{dcPercent}, lectureDuration = #{lectureDuration}
+			dcPercent = #{dcPercent}, lectureDuration = #{lectureDuration}, thumbNail = {thumbNail}
 		WHERE memberEmail = #{memberEmail}
 	</update>
 	
-	<select id="readLecture" parameterType="String" resultType="com.sp.dev.lectures.Lectures">
+	<select id="readLecture" parameterType="String" resultType="com.sp.dev.instrutorPage.Lectures">
 		SELECT lectureNum, lectureEmail, categoryCode, lectureSubject, 
-			lectureContent, lecturePrice, reg_date, , dcPercent, lectureState,
-			lectureDuration 
+			lectureContent, lecturePrice, reg_date, dcPercent, lectureState,
+			lectureDuration, thumbNail
 		FROM lecture
 		WHERE memberEmail = #{memberEmail}
 	</select>
+	
+	<select id="listCategory" resultType="com.sp.dev.instrutorPage.Lectures">
+		SELECT categoryCode, categoryName  FROM category
+		WHERE mainCategory IS NULL
+	</select>
+	
+	<select id="listSubCategory" parameterType="String" resultType="com.sp.dev.instrutorPage.Lectures">
+		SELECT categoryCode, mainCategory, categoryName  FROM category
+		WHERE mainCategory = #{categoryCode}
+	</select>
+	
 </mapper>

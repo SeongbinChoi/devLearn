@@ -55,7 +55,7 @@ th, td {
       <td>172</td>
       <td>5</td>
       <td>$300,000</td>
-      <td><a href="#">임시저장</a></td>
+      <td><a href="#">미승인</a></td>
     </tr>
     <tr>
       <th scope="row">
@@ -68,7 +68,7 @@ th, td {
       <td>172</td>
       <td>4</td>
       <td>$250,000</td>
-      <td><a href="#">공개</a></td>
+      <td><a href="#">승인</a></td>
     </tr>
     <tr>
       <th scope="row">
@@ -81,7 +81,7 @@ th, td {
       <td>12</td>
       <td>0</td>
       <td>$280,000</td>
-      <td><a href="#">비공개</a></td>
+      <td><a href="#">미승인</a></td>
     </tr>
     <tr>
       <th scope="row">
@@ -94,7 +94,7 @@ th, td {
       <td>69</td>
       <td>2</td>
       <td>$250,000</td>
-      <td><a href="#">공개</a></td>
+      <td><a href="#">승인</a></td>
     </tr>
     <tr>
       <th scope="row">
@@ -107,7 +107,7 @@ th, td {
       <td>109</td>
       <td>11</td>
       <td>$730,000</td>
-      <td><a href="#">공개</a></td>
+      <td><a href="#">승인</a></td>
     </tr>
     <tr>
       <th scope="row">
@@ -120,7 +120,7 @@ th, td {
       <td>72</td>
       <td>5</td>
       <td>$300,000</td>
-      <td><a href="#">공개</a></td>
+      <td><a href="#">승인</a></td>
     </tr>
   </tbody>
 </table>

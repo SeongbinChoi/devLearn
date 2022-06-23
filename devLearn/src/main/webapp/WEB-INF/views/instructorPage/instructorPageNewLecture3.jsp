@@ -2,7 +2,6 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,218 +10,279 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
 <style type="text/css">
-.lecture_content {
-    overflow: hidden;
-    background-color: #212529;
+.lecture_edit_container {
+    margin-top: 16px;
+    border: 1px solid #efefef;
+    padding: 2rem;
 }
 
-.lecture_header {
-    line-height: 1.5;
-    letter-spacing: -.3px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    padding: 20px 32px 0;	
-    color: #ffffff;
-    font-weight: 700;
+.heading_cover {
+    max-width: 1056px;
 }
 
-.lecture_body {
-	padding: 0 32px 32px;
-	
-	
-}
-
-.lecture_video_content {
-	margin-bottom: 40px;
-    width: 100%;
-}
-
-.lecture_video {
-	padding: 0px;
-    word-spacing: normal;
-    position: relative;
-    box-sizing: content-box !important;
+.lecture_edit_container h4.heading {
+    margin-top: 0.5rem;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    color: #747474;
     text-align: left;
-    user-select: none;
-    font-family: sans-serif;
-    min-height: 15px;
-    font-size: 14px;
-    line-height: 1em;
-    direction: ltr;
-    
-    width: 720px;
-    height: 360px;
-    margin-bottom: 50px;
-    background: #EAEAEA;
 }
 
-.lecture_info {
-	display: flex;
-    align-items: center;
+.lecture_edit_container h3.heading {
+    margin-top: 0.5rem;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1;
+    color: #313131;
+    text-align: left;
+}
+.lecture_edit_container .lecture_def {
+	margin-top: 16px;
+    border: 1px solid #efefef;
+    padding: 2rem;
 }
 
-.lecture_title {
-	font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: -.3px;
-    font-size: 16px;
-    color: #212529;
+
+.lecture_def .label span {
+    color: #595959;
+    font-size: 1rem;
+    font-weight: 800;
 }
 
-.list_title {
-	line-height: 1.5;
-    letter-spacing: -.3px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #495057;
-    color: #fff;
+.lecture_def  .label small {
+    color: #ff645c;
+}
+
+.container .wrapper2 {
+	max-width: 1314px;
+	margin: 0 auto;
+}
+
+.title {
+    color: #000a12;
+    font-size: 28px;
     font-weight: 700;
+    margin-bottom: 1.43rem;
 }
 
-.cart_button_cover {
-	margin-left: auto;
+.subtitle {
+    font-size: 16px;
+    color: #747474;
+    margin-bottom: 1.75rem;
+    margin-top: auto;
+    font-weight: 600;
 }
 
-.list {
-display: flex;
-    align-items: center;
-    padding: 12px;
-    border-bottom: 1px solid #343a40;
-    cursor: pointer;
-}
-
-.list_thumbnail {
-	flex-shrink: 0;
-    position: relative;
-    overflow: hidden;
-    margin-right: 12px;
-    width: 95px;
-    height: 64px;
-    border-radius: 4px;
-}
-
-.thumbnail_label_cover {
-	position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: none;
+.button_container {
+    display: flex;
     justify-content: center;
-    align-items: center;
+    margin-top: 32px;
+}
+
+.button_container .btn.btn-outline-secondary {
+    font-weight: bold;
+    color : black;
+}
+
+.wrapper {
+	margin-top: 50px;
+}
+
+.buttons>button {
+	font-weight: bold; 
+	margin-top: 10px;
+	margin-right: 8px; 
+	margin-bottom: 8px; 
+	height: 45px;
+	width : 90px;
+}
+
+.card_cover {
+	display: flex;
+	margin-top: 20px;
+}
+
+.card_cover .lec_img {
+	cursor: pointer;
+	border: 1px solid #ccc;
+	width: 300px;
+	height: 200px;
+	background-image: url("${pageContext.request.contextPath}/resources/images/no_image.gif");
+	position: relative;
+	z-index: 9999;
+	background-repeat : no-repeat;
+	background-size : cover;
+}
+
+img {
+	max-width: 100%;
+ 	max-height: 100%;
+}
+
+.card_cover .lec_value {
+	padding : 10px;
+}
+
+.btn-group {
+
+}
+
+
+.ck-editor__editable {
+	height: 250px;
+}
+
+.wrapper .duration_cover {
+	display: flex;
+}
+
+.lec_video {
+	background: #eaeaea; 
+	text-align: center; 
+	padding: 60px 0 67px; 
+	margin-top: 20px; 
+	margin-bottom: 50px;
+}
+
+.lectureVideo {
+	position: static;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,.48);
-}
-
-.thumbnail_cover {
-	display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.5;
-    letter-spacing: -.3px;
-    font-size: 12px;
-    padding: 0 6px;
-    height: 22px;
-    border-radius: 2px;
-    background-color: #e5503c;
-    color: #fff;
-    font-weight: 700;
-}
-
-.list_content_title {
-    font-weight: 400;
-    line-height: 1.43;
-    letter-spacing: -.3px;
-    font-size: 14px;
-    margin-right: 36px;
-    color: #fff;
-}
-
-.list_content_runtime {
-	font-weight: 400;
-    line-height: 1.43;
-    letter-spacing: -.3px;
-    font-size: 14px;
-    margin-left: auto;
-    color: #fff;
+    object-fit: contain;
+    transition: filter 0.2s linear 0s;
+    min-height: auto;
+    max-height: none;
+    min-width: auto;
 }
 </style>
+<script type="text/javascript">
+
+$(function() {
+	var video = "${dto.videoTitle}";
+	if( video ) { 
+		video = "${pageContext.request.contextPath}/uploads/Lecturevideo/" + video;
+		$(".lectureVideo").empty();
+		$("#lvideo").attr("src", "video");
+	}
+	
+	$(".lectureVideo").click(function(){
+		$("form[name=lectureForm] input[name=selectFile]").trigger("click"); 
+	});
+	
+	$("form[name=lectureForm] input[name=selectFile]").change(function(){
+		var file=this.files[0];
+		if(! file) {
+			$("lectureVideo").empty();
+			if( video ) {
+				video = "${pageContext.request.contextPath}/uploads/Lecturevideo/" + video;
+				$("#lvideo").attr("src", "video");
+			} else {
+				video = "";
+				$("#lvideo").attr("src", "video");
+			}
+			return false;
+		}
+		
+		if(! file.type.match("video.*")) {
+			this.focus();
+			return false;
+		}
+		
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$(".lectureVideo").empty();
+			$("#lvideo").attr("src", e.target.result);
+		}
+		reader.readAsDataURL(file);
+	});
+});
+
+$(function(){
+	$('#videoupload').click(function(){
+		alert("비디오 업로드");
+	});
+})
+
+window.addEventListener("load", function(){
+	const inputFileEl = document.querySelector("form input[name=selectFile]");
+	const inputTimeEl = document.querySelector("form input[name=filetotaltime]");
+	const videoEl = document.getElementById("lvideo");
+	
+	inputFileEl.addEventListener("change", function(){
+		const file = inputFileEl.files[0];
+		if(! file) {
+			return;
+		}
+		const videoUrl = URL.createObjectURL(file);
+		videoEl.setAttribute("src", videoUrl);
+		  
+		videoEl.onloadedmetadata = function() {
+			const secondsNumber = parseInt(videoEl.duration);
+			let hours = Math.floor(secondsNumber / 3600);
+			let minutes = Math.floor((secondsNumber - hours * 3600) / 60);
+			let seconds = secondsNumber - hours * 3600 - minutes * 60;
+			  
+			inputTimeEl.value = secondsNumber;
+		};
+	});
+});
+</script>
 </head>
 <body>
 <main>
-<div class="lecture_content">
-	<div class="lecture">
-		<div class="lecture_header">
-			"강의 영상"
-		</div>
-		<div class="lecture_body">
-			<div class="lecture_video_content">
-				<div class="lecture_video">
-				
-				</div>
-				<div class="lecture_info">
-					<div class="lecture_title">소개 영상</div>
-				</div>
-			</div>
-			<div class="lecture_list">
-				<div class="list_title">
-				강의 순서
-					<div class="cart_button_cover">
-						<button type="button" class="btn btn-outline-dark">수강바구니에 담기</button>
-					</div>	
-				</div>
-				<div class="list_content">
-					<div class="list">
-						<div class="list_thumbnail">
-							<img src="data:image/png;base64,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" style="max-width: 100%; height: auto; display: block;">
-							<div class="thumbnail_label_cover">
-								<div class="thumbnail_label">재생중</div>
-							</div>
-						</div>
-						<div class="list_content_title">강의 소개</div>
-						<div class="list_content_runtime">02:52</div>
-					</div>
-					<div class="list">
-						<div class="list_thumbnail">
-							<img src="data:image/png;base64,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" style="max-width: 100%; height: auto; display: block;">
-							<div class="thumbnail_label_cover">
-								<div class="thumbnail_label">재생중</div>
-							</div>
-						</div>
-						<div class="list_content_title">강의 소개</div>
-						<div class="list_content_runtime">02:52</div>
-					</div>
-					<div class="list">
-						<div class="list_thumbnail">
-							<img src="data:image/png;base64,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" style="max-width: 100%; height: auto; display: block;">
-							<div class="thumbnail_label_cover">
-								<div class="thumbnail_label">재생중</div>
-							</div>
-						</div>
-						<div class="list_content_title">강의 소개</div>
-						<div class="list_content_runtime">02:52</div>
-					</div>
-					<div class="list">
-						<div class="list_thumbnail">
-							<img src="data:image/png;base64,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" style="max-width: 100%; height: auto; display: block;">
-							<div class="thumbnail_label_cover">
-								<div class="thumbnail_label">재생중</div>
-							</div>
-						</div>
-						<div class="list_content_title">강의 소개</div>
-						<div class="list_content_runtime">02:52</div>
-					</div>
-				</div>
-			</div>
-		</div>
+<jsp:include page="/WEB-INF/views/instructorPage/instructorPage.jsp"/>
+<div class="lecture_edit_container">
+	<div class="heading_cover">
+		<h4 class="heading">강의제작</h4>
+	    <h3 class="heading">강의영상</h3>
 	</div>
+
+	<div class="lecture_def">
+	<form name="lectureForm" method="post" enctype="multipart/form-data">
+        
+        <label for="lecture_sum" class="label input_label">
+        	<span>강의 명</span>
+        </label>
+        
+        <input type="text" value="" class="form-control" id="" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
+		
+		<label for="lecture_sum" class="label input_label" style="margin-top: 40px;">
+        	<span>강의영상 미리보기</span>
+        </label>
+		<div class="lec_video">
+			<video class="lectureVideo" src="" id="lvideo" controls="controls"></video>
+		</div>
+		
+		<div class="lec_value">
+	         		<label for="thumb_nail" class="label input_label">	
+						<span style="font-size: 15px;">강의영상 올리기</span>
+						<br>
+						<small style="color: #A6A6A6;">확장자: mkv, avi, mp4</small>
+					</label>
+					
+					<input type="file" name="selectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
+	         		
+	         		<label for="lecture_sum" class="label input_label">
+        				<span>영상 재생시간</span>
+        			</label>
+        			<input type="text" class="form-control" id="filetotaltime" name="filetotaltime" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
+	     </div>  
+    	
+    	
+      </form>
+     </div>
+        
+     
+     <div class="button_container">   
+    	<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의 제작완료</button>
+	 </div>
+	
+	
+
 </div>
 </main>
+
 </body>
-</html>	
+</html>

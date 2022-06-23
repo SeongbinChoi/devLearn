@@ -2,6 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +11,8 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://use.fontawesome.com/releases/v5.2.0/js/all.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/ckeditor5/ckeditor.js"></script>
 <style type="text/css">
 .lecture_edit_container {
     margin-top: 16px;
@@ -138,14 +141,20 @@ img {
 	display: flex;
 }
 
+.duration {
+	display: flex;
+}
+
+.box > p{
+	display: flex;
+}
+
 .lec_video {
 	background: #eaeaea; 
 	text-align: center; 
 	padding: 60px 0 67px; 
 	margin-top: 20px; 
 	margin-bottom: 50px;
-	width: 640px;
-	height: 360px;
 }
 
 .lectureVideo {
@@ -159,8 +168,17 @@ img {
     min-width: auto;
 }
 </style>
-<script type="text/javascript">
-
+<script>
+const add_textbox = () => {
+	const box = document.getElementById("box");
+	const newP = document.createElement('p');
+	newP.innerHTML = "<input type='text' readonly='readonly' class='form-control' placeholder='영상 추가하기 (강의명[영상 이름]이 들어갈 예정)' style='margin-top: 10px; margin-right: 30px; margin-left: 30px;'> <input type='button' class='btn btn-secondary' value='영상삭제' onclick='remove(this)' style='margin-top: 10px; margin-right: 20px;'> <input type='button' class='btn btn-secondary' value='영상추가' data-bs-toggle='modal' data-bs-target='#videoModal' style='margin-top: 10px;'>";
+	box.appendChild(newP);
+}
+const remove = (obj) => {
+	document.getElementById('box').removeChild(obj.parentNode);
+}
+      
 $(function() {
 	var video = "${dto.videoTitle}";
 	if( video ) { 
@@ -170,18 +188,18 @@ $(function() {
 	}
 	
 	$(".lectureVideo").click(function(){
-		$("form[name=lectureForm] input[name=selectFile]").trigger("click"); 
+		$("form[name=videoForm] input[name=selectFile]").trigger("click"); 
 	});
 	
-	$("form[name=lectureForm] input[name=selectFile]").change(function(){
+	$("form[name=videoForm] input[name=selectFile]").change(function(){
 		var file=this.files[0];
 		if(! file) {
 			$("lectureVideo").empty();
 			if( video ) {
-				img = "${pageContext.request.contextPath}/uploads/Lecturevideo/" + video;
+				video = "${pageContext.request.contextPath}/uploads/Lecturevideo/" + video;
 				$("#lvideo").attr("src", "video");
 			} else {
-				video = "${pageContext.request.contextPath}/resources/videos/11.mp4";
+				video = "";
 				$("#lvideo").attr("src", "video");
 			}
 			return false;
@@ -195,7 +213,7 @@ $(function() {
 		var reader = new FileReader();
 		reader.onload = function(e) {
 			$(".lectureVideo").empty();
-			$("#lvideo").attr("src", "e.target.result");
+			$("#lvideo").attr("src", e.target.result);
 		}
 		reader.readAsDataURL(file);
 	});
@@ -206,6 +224,30 @@ $(function(){
 		alert("비디오 업로드");
 	});
 })
+
+window.addEventListener("load", function(){
+	const inputFileEl = document.querySelector("form input[name=selectFile]");
+	const inputTimeEl = document.querySelector("form input[name=filetotaltime]");
+	const videoEl = document.getElementById("lvideo");
+	
+	inputFileEl.addEventListener("change", function(){
+		const file = inputFileEl.files[0];
+		if(! file) {
+			return;
+		}
+		const videoUrl = URL.createObjectURL(file);
+		videoEl.setAttribute("src", videoUrl);
+		  
+		videoEl.onloadedmetadata = function() {
+			const secondsNumber = parseInt(videoEl.duration);
+			let hours = Math.floor(secondsNumber / 3600);
+			let minutes = Math.floor((secondsNumber - hours * 3600) / 60);
+			let seconds = secondsNumber - hours * 3600 - minutes * 60;
+			  
+			inputTimeEl.value = secondsNumber;
+		};
+	});
+});
 </script>
 </head>
 <body>
@@ -214,46 +256,138 @@ $(function(){
 <div class="lecture_edit_container">
 	<div class="heading_cover">
 		<h4 class="heading">강의제작</h4>
-	    <h3 class="heading">강의영상</h3>
+	    <h3 class="heading">커리큘럼</h3>
 	</div>
 
 	<div class="lecture_def">
 	<form name="lectureForm" method="post" enctype="multipart/form-data">
 		<label for="lecture_sum" class="label input_label">
-        	<span>강의영상 미리보기</span>
+        	<span>챕터- 영상 추가하기</span>
         </label>
         
-		<div class="lec_video">
-			<video class="lectureVideo" src="" id="lvideo" controls="controls"></video>
-		</div>
+        <div id="box" class="box">
+        	<div id="box2" style="display: flex;">
+            	<input type="text" class="form-control" placeholder="ex) 챕터의 이름을 입력하세요." style="margin-top: 10px; margin-right: 30px; margin-bottom: 25px;"> 
+            	<input type="button" class="btn btn-secondary" value="추가" onclick="add_textbox()" style="margin-top: 10px; margin-bottom: 25px;">
+        	</div>
+        </div>
 		
-		<div class="lec_value">
-	         		<label for="thumb_nail" class="label input_label">	
-						<span style="font-size: 15px;">강의영상 올리기</span>
-						<br>
-						<small style="color: #A6A6A6;">확장자: mkv, avi, mp4</small>
-					</label>
-					
-					<input type="file" name="selectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px;">
-	         		
-	         		<div class="justify-content-md-end btn-group" style="float : right; margin-top: 50px; margin-right: 10px;">
-						<button type="button" class="btn btn-secondary" id="videoupload">업로드</button>
-					</div>
-	     </div>  
-    	
-    	
       </form>
      </div>
         
      
      <div class="button_container">   
-    	<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의영상 등록완료</button>
+    	<button type="button" class="btn btn-outline-secondary" onclick="sendOk();">강의 등록완료</button>
 	 </div>
+	 
+	 <!-- Modal -->
+	 <form name="videoForm" method="post">
+	<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">강의영상</h5>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="mb-3">
+				<label for="lecture_sum" class="label input_label">
+        			<span>강의 명</span>
+        	  	</label>
+        
+        		<input type="text" value="" class="form-control" id="" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
+			</div>
+			<div class="mb-3 tab-content" id="community_tabContent">
+				<label for="lecture_sum" class="label input_label" style="margin-top: 40px;">
+	        		<span>강의영상 미리보기</span>
+	        	</label>
+				<div class="lec_video">
+					<video class="lectureVideo" src="" id="lvideo" controls="controls"></video>
+				</div>
+			</div>
+			<div class="mb-3">
+				<label for="thumb_nail" class="label input_label">	
+					<span style="font-size: 15px;">강의영상 올리기</span>
+					<br>
+					<small style="color: #A6A6A6;">확장자: mkv, avi, mp4</small>
+				</label>
+					
+				<input type="file" name="selectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
+			</div>
+			<div class="mb-3">
+				<label for="lecture_sum" class="label input_label">
+	        		<span>영상 재생시간</span>
+	        	</label>
+	        	<input type="text" class="form-control" id="filetotaltime" name="filetotaltime" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
+			</div>
+			<div class="mt-5 mb-3">
+				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+					<input type="hidden" name="content2">
+					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">취소</button>
+					<button class="btn btn-outline-secondary" type="button" onclick="">저장</button>
+				</div>
+			</div>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+​</form>
 	
+	<!-- ck에디터 -->
+	<script type="text/javascript">
+		ClassicEditor
+		   .create( document.querySelector( '#lectureContent' ), {
+		      fontFamily: {
+		            options: [
+		                'default',
+		                '맑은 고딕, Malgun Gothic, 돋움, sans-serif',
+		                '나눔고딕, NanumGothic, Arial'
+		            ]
+		        },
+		        fontSize: {
+		            options: [
+		                9, 11, 13, 'default', 17, 19, 21
+		            ]
+		        },
+		      toolbar: {
+		         items: [
+		            'heading','|',
+		            'fontFamily','fontSize','bold','italic','fontColor','|',
+		            'alignment','bulletedList','numberedList','|',
+		            'imageUpload','insertTable','sourceEditing','blockQuote','mediaEmbed','|',
+		            'undo','redo','|',
+		            'link','outdent','indent','|',
+		         ]
+		      },
+		      image: {
+		            toolbar: [
+		                'imageStyle:full',
+		                'imageStyle:side',
+		                '|',
+		                'imageTextAlternative'
+		            ],
+		
+		            // The default value.
+		            styles: [
+		                'full',
+		                'side'
+		            ]
+		        },
+		      language: 'ko',
+		      ckfinder: {
+		           uploadUrl: '${pageContext.request.contextPath}/image/upload' // 업로드 url (post로 요청 감)
+		       }
+		   })
+		   .then( editor => {
+		      window.editor = editor;
+		   })
+		   .catch( err => {
+		      console.error( err.stack );
+		   });
 	
+	</script>
 
 </div>
 </main>
-
 </body>
-</html>
+</html>	

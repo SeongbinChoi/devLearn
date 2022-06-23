@@ -144,6 +144,35 @@ img {
 }
 </style>
 <script type="text/javascript">
+function login() {
+	location.href="${pageContext.request.contextPath}/dev";
+}
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+			}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
 function categoryChange(e) {
 	var sel = ["--선택--"];
 	var dev = ["웹 개발", "프론트엔드", "백엔드", "풀스택"];
@@ -174,9 +203,9 @@ function categoryChange(e) {
 }
 
 $(function() {
-	var img = "${dto.Thumbnail}";
+	var img = "${dto.thumbNail}";
 	if( img ) { 
-		img = "${pageContext.request.contextPath}/uploads/Thumbnail/" + img;
+		img = "${pageContext.request.contextPath}/uploads/thumbNail/" + img;
 		$(".lec_img").empty();
 		$(".lec_img").css("background-image", "url("+img+")");
 	}
@@ -190,7 +219,7 @@ $(function() {
 		if(! file) {
 			$(".lec_img").empty();
 			if( img ) {
-				img = "${pageContext.request.contextPath}/uploads/Thumbnail/" + img;
+				img = "${pageContext.request.contextPath}/uploads/thumbNail/" + img;
 				$(".lec_img").css("background-image", "url("+img+")");
 			} else {
 				img = "${pageContext.request.contextPath}/resources/no_image.gif";
@@ -216,7 +245,6 @@ $(function() {
 function sendOk() {
     var f = document.lectureForm;
 	var str;
-	
     str = f.lectureTitle.value.trim();
     if(!str) {
         alert("제목을 입력하세요. ");
@@ -265,6 +293,7 @@ function onDisplay() {
 function offDisplay() {
 	$('#lectureDuration').hide();
 	$('#lectureDuration2').hide();
+	document.getElementById("#lectureDuration2").value = null ;
 }
 
 $(function(){
@@ -272,6 +301,32 @@ $(function(){
 		alert("썸네일 업로드");
 	});
 })
+
+$(function(){
+	$("form select[name=mainCategory]").change(function(){
+		$("form select[name=categoryCode]").empty();
+		$("form select[name=categoryCode]").append("<option value=''>--선택--</option>");
+		
+		var mainCategory = $(this).val();
+		if(! mainCategory) {
+			return false;
+		}
+		
+		var url = "${pageContext.request.contextPath}/instructorPage/subCategory";
+		var query = "mainCategory="+mainCategory;
+		const fn = function(data){
+			$(data.listSubCategory).each(function(index, item){
+				var categoryCode = item.categoryCode;
+				var categoryName = item.categoryName;
+				
+				var s = "<option value='"+categoryCode+"'>"+categoryName+"</option>";
+				$("form select[name=categoryCode]").append(s);		
+			});
+		};
+		
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
 </script>
 </head>
 <body>
@@ -289,7 +344,7 @@ $(function(){
         	<span>강의 제목</span>
         </label>
         
-        <input type="text" value="${dto.lectureSubject}" class="form-control" id="lectureTitle" placeholder="ex) 인프런 사용법"  style="margin-top: 10px;">
+        <input type="text" name="lectureSubject" value="${dto.lectureSubject}" class="form-control" id="lectureTitle" placeholder="ex) 인프런 사용법"  style="margin-top: 10px;">
         
         
 		<div class="wrapper">
@@ -303,25 +358,35 @@ $(function(){
     	</div>
     	
     	<div class="wrapper">
+			<label for="lecture_sum" class="label input_label">
+	        	<span>강사</span>
+	        </label>
+	        
+	        <input type="email" class="form-control" id="memberEmail" name="memberEmail" readonly="readonly" value="${sessionScope.member.memberEmail}">
+    	</div>
+    	
+    	<div class="wrapper">
 	    	<label for="lecture_sum" class="label input_label">
 	        	<span>카테고리</span>
 	        </label>
-	        
-	        <select class="form-select" id="mainCategory" onchange="categoryChange(this)" style="margin-top: 10px;">
-				  <option selected value="1">--선택--</option>
-				  <option value="2">개발</option>
-				  <option value="3">보안</option>
-				  <option value="4">데이터 사이언스</option>
-				  <option value="5">기타</option>
+			
+			<select class="form-select" name="mainCategory" style="margin-top: 10px;">
+				  <option value="">:: 선택 ::</option>
+				  <c:forEach items="${listCategory}" var="vo">
+				  	<option value="${vo.categoryCode}" <c:if test="${vo.categoryCode eq dto.categoryCode}"> selected="selected</c:if>>${vo.categoryName}</option>
+				  </c:forEach>
 			</select>
     	</div>
     
     	<label for="lecture_sum" class="label input_label" style="margin-top: 20px;">
         	<span>카테고리 상세</span>
         </label>
-        
-    	<select class="form-select" id="subCategory" style="margin-top: 10px;">
-			  <option selected value="1">--선택--</option>
+		
+		<select class="form-select" name="categoryCode" style="margin-top: 10px;">
+			  <option value="">:: 선택 ::</option>
+			  <c:forEach var="vo" items="${listSubCategory}">
+			  		<option value="${vo.categoryCode}" ${vo.categoryCode==dto.categoryCode ? "selected='selected'":""}>${vo.categoryName}</option>
+			  </c:forEach>
 		</select>
 			
     	<section style="background: #eaeaea; text-align: center; padding: 60px 0 67px; margin-top: 50px; margin-bottom: 50px;">
@@ -338,14 +403,14 @@ $(function(){
 				</div>
 			</div>
 		</section>    
-        
+
         <label for="lecture_sum" class="label input_label">
         	<span>강의 상세 내용</span>
         	<small>(해당내용은 강의소개에서 보여집니다.)</small>
         </label>
         
-        <textarea class="form-control" id="lectureContent" rows="3" 
-        placeholder=" - 강의소개는 최소 10줄 이상 작성해 주세요!" style="height: 150px; margin-top: 10px;">${dto.subject}</textarea>
+        <textarea class="form-control" name="lectureContent" id="lectureContent" rows="3" 
+        placeholder=" - 강의소개는 최소 10줄 이상 작성해 주세요!" style="height: 150px; margin-top: 10px;">${dto.lectureContent}</textarea>
     	
 		
     	<div class="wrapper">
@@ -353,7 +418,7 @@ $(function(){
 	        	<span>가격 설정</span>
 	        </label>
 	        
-	        <input type="text" class="form-control" id="lecturePrice" placeholder="" value="${dto.price}" style="margin-top: 10px; width: 30%;">
+	        <input type="text" class="form-control" name="lecturePrice" id="lecturePrice" placeholder="" value="${dto.lecturePrice}" style="margin-top: 10px; width: 30%;">
      	</div>
      	
      	<div class="wrapper">
@@ -361,7 +426,7 @@ $(function(){
 	        	<span>강의 할인율</span>
 	        </label>
 	        
-	        <input type="text" class="form-control" id="lecturePrice" placeholder="" value="${dto.dcPercent}" style="margin-top: 10px; width: 30%;">
+	        <input type="text" class="form-control" name="dcPercent" id="dcPercent" placeholder="" value="${dto.dcPercent}" style="margin-top: 10px; width: 30%;">
      	</div>
      	
      	<div class="wrapper">
@@ -377,12 +442,12 @@ $(function(){
 				</div>
 				<div class="duration">
 					<select class="form-select" id="lectureDuration" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width:100px; height : 50px;">
-					  <option selected value="1">기간</option>
-					  <option value="2">년</option>
-					  <option value="3">월</option>
-					  <option value="4">일</option>
+					  <option value="0">기간</option>
+					  <option value="1">년</option>
+					  <option value="2">월</option>
+					  <option value="3">일</option>
 					</select>
-					<input type="text" class="form-control" id="lectureDuration2" placeholder="기간을 입력해주세요" value="" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width: 200px; height: 50px;">
+					<input type="text" class="form-control" name="lectureDuration" id="lectureDuration2" placeholder="기간을 입력해주세요" value="${dto.lectureDuration}" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width: 200px; height: 50px;">
 				</div>
 			</div>
 		</div>
@@ -404,7 +469,6 @@ $(function(){
 					<input type="file" name="selectFile" class="form-control" accept="image/*" style="width: 500px; margin-top: 15px;">
 	         		
 	         		<div class="justify-content-md-end btn-group" style="float : right; margin-top: 50px; margin-right: 10px;">
-						<button type="button" class="btn btn-secondary" id="thumbupload">업로드</button>
 					</div>
 	         	</div>
 	         </div>
@@ -415,7 +479,7 @@ $(function(){
         
      
      <div class="button_container">   
-    	<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageNewLecture2';">저장 후 다음이동</button>
+    	<button type="button" class="btn btn-outline-secondary" onclick="sendOk();">저장 후 다음이동</button>
 	 </div>
 	
 	<!-- ck에디터 -->
