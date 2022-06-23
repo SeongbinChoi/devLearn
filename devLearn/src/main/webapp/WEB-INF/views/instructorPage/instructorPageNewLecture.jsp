@@ -242,7 +242,6 @@ $(function() {
 	});
 });
 
-
 function sendOk() {
     var f = document.lectureForm;
 	var str;
