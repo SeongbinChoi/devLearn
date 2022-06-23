@@ -256,4 +256,24 @@
 		VALUES(#{memberEmail}, #{saveFileName}, #{intro}, #{businessEmail}, #{phoneNum})
 	</insert>
 	
+	
+	<!-- 프로필 불러오기 -->
+	<select id="readProfile" parameterType="map" resultType="com.sp.dev.mypage.profile.Profile">
+		SELECT p.memberEmail, saveFileName, intro, businessEmail, phoneNum, memberNickname
+		FROM memberProfile p
+		JOIN member m ON p.memberEmail = m.memberEmail
+		WHERE p.memberEmail=#{memberEmail}
+	</select>
+	
+	<!-- 프로필 수정하기 -->
+	<update id="updateProfile" parameterType="com.sp.dev.mypage.profile.Profile">
+		UPDATE memberProfile SET saveFileName=#{saveFileName}, intro=#{intro}, 
+				businessEmail=#{businessEmail}, phoneNum=#{phoneNum}
+		WHERE memberEmail=#{memberEmail}
+	</update>
+	
+	<update id="updateNickname" parameterType="com.sp.dev.mypage.profile.Profile">
+		UPDATE member SET memberNickname=#{memberNickname} WHERE memberEmail=#{memberEmail}
+	</update>
+	
 </mapper>

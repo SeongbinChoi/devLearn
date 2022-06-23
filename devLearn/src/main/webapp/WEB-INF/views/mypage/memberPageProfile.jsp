@@ -64,11 +64,13 @@
 
 .profile-img {
 	text-align: center;
-}
-
-.profile-img .is-rounded {
 	border-radius: 50%;
 	width: 300px;
+	height: 300px;
+	background-image: url("https://cdn.inflearn.com/public/main/profile/default_profile.png");
+	cursor: pointer;
+	z-index: 9999;
+	margin: 24px auto;
 }
 
 
@@ -116,91 +118,113 @@ label {
 		<div class="introduce">
 			<div class="introduce-title d-flex justify-content-between align-items-center py-5 px-3">
 				<span>프로필 설정</span>
+				<!-- 
 				<button class="btn btn-primary" id="edit-modal" data-bs-toggle="modal" data-bs-target="#editModal">개인정보수정</button>
+				 -->
 			</div>
 			<div class="introdus-content my-4 mx-3">
-				<form name="my-info" class="my-info px-5">
+				<form name="myInfo" class="myInfo px-5" method="post" enctype="multipart/form-data">
+					<!-- 
 					<div class="user-pictuer-edit-div">
-						<button class="user-pictuer-edit" data-bs-toggle="modal" data-bs-target="#editProfilePic"><i class="fa-solid fa-pen"></i></button>
+						<button class="user-pictuer-edit"><i class="fa-solid fa-pen"></i></button>
 					</div>
+					 -->
 					<div class="profile-img my-4">
-						<img alt="profile" src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded">
 					</div>
+					<input type="file" class="img" name="selectFile" accept="image/*" style="display: none;">
 					
 					<div class="nick my-4">
 						<label class="form-label">닉네임</label>
-						<input type="text" class="form-control">
+						<input type="text" class="form-control" name="memberNickname" value="${sessionScope.member.memberNickname}">
 					</div>
 					<div class="my-introduce">
 						<label class="form-label">자기소개</label>
-						<div class="editor"></div>
+						<div class="editor">${dto.intro}</div>
+						<input type="hidden" name="intro">
 					</div>
 					
 					<div class="mail my-4">
 						<label class="form-label">비지니스 메일</label>
-						<input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+						<input type="email" name="businessEmail" class="form-control" id="exampleFormControlInput1" value="${dto.businessEmail}" placeholder="name@example.com">
 					</div>
 					
 					<div class="phone my-4">
 						<label class="form-label">휴대폰</label>
-						<input type="text" class="form-control" placeholder="010-0000-0000">
+						<input type="text" class="form-control" name="phoneNum" value="${dto.phoneNum}" placeholder="010-0000-0000">
 					</div>
 					
 					<p class="save1 my-5">
-						<button type="button" class="btn btn-primary px-5">저장하기</button>
+						<input type="hidden" name="saveFileName" value="${dto.saveFileName}">
+						<button type="button" class="btn btn-primary px-5" onclick="profileSave();">저장하기</button>
 					</p>
 				</form>
 			</div>
 		</div>
 	</div>
 	
-	<!-- 프로필사진 Modal -->
-	<div class="modal fade" id="editProfilePic" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">프로필사진 편집</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	        ckeditor..
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-	        <button type="button" class="btn btn-primary">저장</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
 	
-	<!-- 자기소개 Modal -->
-	<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">내 소개 편집</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	        ckeditor..
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-	        <button type="button" class="btn btn-primary">저장</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-
 
 <script type="text/javascript">
-	let edit-modal = document.getElementById('edit-modal');
-	let edit-input = document.getElementById('edit-input');
+$(function() {
+	var img = "${dto.saveFileName}";
+	if( img ) { // 수정인 경우
+		img = "${pageContext.request.contextPath}/uploads/profile/" + img;
+		$(".profile-img").empty();
+		$(".profile-img").css("background-image", "url("+img+")");
+	}
 	
-	edit-modal.addEventListener('shown.bs.modal', function(){
-		edit-input.focus();
-		
+	$(".profile-img").click(function(){
+		$("form[name=myInfo] input[name=selectFile]").trigger("click"); 
 	});
+	
+	$("form[name=myInfo] input[name=selectFile]").change(function(){
+		var file=this.files[0];
+		if(! file) {
+			$(".profile-img").empty();
+			if( img ) {
+				img = "${pageContext.request.contextPath}/uploads/profile/" + img;
+				$(".profile-img").css("background-image", "url("+img+")");
+			} else {
+				img = "https://cdn.inflearn.com/public/main/profile/default_profile.png";
+				$(".profile-img").css("background-image", "url("+img+")");
+			}
+			return false;
+		}
+		
+		if(! file.type.match("image.*")) {
+			this.focus();
+			return false;
+		}
+		
+		var reader = new FileReader();
+		reader.onload = function(e) {
+			$(".profile-img").empty();
+			$(".profile-img").css("background-image", "url("+e.target.result+")");
+		}
+		reader.readAsDataURL(file);
+	});
+});
+
+
+
+function profileSave() {
+	const f = document.myInfo;
+	
+	let url = "${pageContext.request.contextPath}/mypage/profile/submit";
+	let str;
+	
+	str = window.editor.getData().trim();
+    if(! str) {
+        alert("내용을 입력하세요. ");
+        window.editor.focus();
+        return;
+    }
+    f.intro.value = str;
+	
+	f.action = url;
+	f.submit();
+	
+}
 	
 </script>
 <script type="text/javascript">

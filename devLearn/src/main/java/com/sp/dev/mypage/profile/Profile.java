@@ -1,11 +1,16 @@
 package com.sp.dev.mypage.profile;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class Profile {
 	private String memberEmail;
 	private String saveFileName;
 	private String intro;
 	private String businessEmail;
 	private String phoneNum;
+	private String memberNickname;
+	
+	private MultipartFile selectFile;
 	
 	public String getMemberEmail() {
 		return memberEmail;
@@ -36,6 +41,19 @@ public class Profile {
 	}
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
+	}
+	public String getMemberNickname() {
+		return memberNickname;
+	}
+	public void setMemberNickname(String memberNickname) {
+		this.memberNickname = memberNickname;
+	}
+
+	public MultipartFile getSelectFile() {
+		return selectFile;
+	}
+	public void setSelectFile(MultipartFile selectFile) {
+		this.selectFile = selectFile;
 	}
 	
 	
