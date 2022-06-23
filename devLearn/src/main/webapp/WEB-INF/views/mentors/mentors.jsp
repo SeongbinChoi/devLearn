@@ -230,7 +230,6 @@ $(function() {
 		ajaxFun(url, "get", query, "json", fn);
 	})
 });
-
 </script>
 
 	<div class="banner mb-5">
