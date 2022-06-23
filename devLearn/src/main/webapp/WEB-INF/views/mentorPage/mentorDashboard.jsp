@@ -8,7 +8,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
 <script type="text/javascript">
 $(function(){
-	const chartDom = document.getElementById('hchart');
+	let arr = new Array();
+		arr.push(parseInt("${revenueList.get(0).VALUE}"));
+		arr.push(parseInt("${revenueList.get(1).VALUE}"));
+		arr.push(parseInt("${revenueList.get(2).VALUE}"));
+		arr.push(parseInt("${revenueList.get(3).VALUE}"));
+		arr.push(parseInt("${revenueList.get(4).VALUE}"));
+		arr.push(parseInt("${revenueList.get(5).VALUE}"));
+		arr.push(parseInt("${revenueList.get(6).VALUE}"));
+		arr.push(parseInt("${revenueList.get(7).VALUE}"));
+		arr.push(parseInt("${revenueList.get(8).VALUE}"));
+		arr.push(parseInt("${revenueList.get(9).VALUE}"));
+		arr.push(parseInt("${revenueList.get(10).VALUE}"));
+		arr.push(parseInt("${revenueList.get(11).VALUE}"));
+	console.log(arr);
+	const chartDom = document.getElementById('echart');
 	let myChart = echarts.init(chartDom);
 	let option;
 
@@ -25,7 +39,7 @@ $(function(){
 		},
 		series: [
 		    {
-		      data: [100, 200, 300, 100, 200, 300, 100, 200, 300, 100, 200, 300],
+		      data: arr,
 		      type: 'bar'
 		    }
 		  ]
@@ -36,21 +50,23 @@ $(function(){
 </script>
 <jsp:include page="mentorPage.jsp"/>
 	<div class="chart-section">
-		<div class="chart-months" id="hchart">
+		<div class="chart-months" id="echart">
 			<p>월별 수익 차트</p>
 		</div>
 		<div class="chart-boxes">
 			<div class="mentee">
 				<p>함께한 멘티</p>
-				<p>1,309명</p>
+				<p>${dataMap['MENTEECNT']} 명</p>
+
 			</div>
 			<div class="grade">
 				<p>평점</p>
-				<p>5.0</p>
+				<p>${dataMap['AVG']} / 5.0</p>
 			</div>
 			<div class="total-rev">
 				<p>총 수익</p>
-				<p>20,000,000</p>
+				<p><fmt:formatNumber value="${dataMap['REVENUE']}" pattern="#,###"/>원</p>
+				<small style="color:#ccc;">승인 완료 통계이므로 데이터가 차이날 수 있습니다.</small>
 			</div> 	
 		</div>
 	</div>

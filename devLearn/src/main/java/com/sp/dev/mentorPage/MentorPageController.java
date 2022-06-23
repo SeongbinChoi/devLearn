@@ -27,7 +27,25 @@ public class MentorPageController {
 	private MentorPageService service;
 	
 	@RequestMapping(value = "dashboard")
-	public String mentorPage() throws Exception {
+	public String mentorPage(
+			HttpSession session,
+			Model model
+			) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		List<Object> revenueList = new ArrayList<Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		LocalDateTime now = LocalDateTime.now();
+		String year = now.toString().substring(0, 4);
+		map.put("year", year);
+		map.put("memberEmail", info.getMemberEmail());
+		
+		revenueList = service.mentoringRevenueList(map);
+		dataMap = service.dashbardDataList(info.getMemberEmail());
+		
+		model.addAttribute("dataMap", dataMap);
+		model.addAttribute("revenueList", revenueList);
 		
 		return ".mentorPage.mentorDashboard";
 	}
