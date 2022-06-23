@@ -5,7 +5,35 @@
 <!DOCTYPE html>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mentorDashboard.css" type="text/css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	const chartDom = document.getElementById('hchart');
+	let myChart = echarts.init(chartDom);
+	let option;
 
+	option = {
+		title: {
+			text: '멘토링 수익 현황'
+		},					
+		xAxis: {
+			type: 'category',
+			data: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
+		},
+		yAxis: {
+			type: 'value'
+		},
+		series: [
+		    {
+		      data: [100, 200, 300, 100, 200, 300, 100, 200, 300, 100, 200, 300],
+		      type: 'bar'
+		    }
+		  ]
+	};
+
+	option && myChart.setOption(option);		
+});
+</script>
 <jsp:include page="mentorPage.jsp"/>
 	<div class="chart-section">
 		<div class="chart-months" id="hchart">

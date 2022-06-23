@@ -174,4 +174,26 @@ public class MentorPageServiceImpl implements MentorPageService {
 		}
 		return list;
 	}
+
+	@Override
+	public int allRevenueCount(String memberEmail) {
+		int result = 0;
+		try {
+			result = dao.selectOne("mentorPage.allRevenueCount", memberEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public int monthRevenueCount(Map<String, Object> map) {
+		int result = 0;
+		try {
+			result = dao.selectOne("mentorPage.monthRevenueCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

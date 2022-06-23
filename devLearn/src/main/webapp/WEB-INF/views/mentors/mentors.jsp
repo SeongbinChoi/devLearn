@@ -119,16 +119,23 @@ function printDetailModal(data) {
 }
 
 // 멘토링 신청 모달에 데이터 뿌리는 함수
+// 오늘부터 3주 후 까지만 활성화
 function printApplyModal(data) {
+	let maxDate = dateFormat(new Date()).replace(/-/gi, "/");
 	$("#datetimepicker").datetimepicker("destroy");
 	$("#datetimepicker").val("");
+	
 	$("#datetimepicker").datetimepicker({ 
 		datapicker:false,
+		lang:'ko',
 		allowTimes:allowTime(data),
-		minDate: 0,
+		minDate: '0',
+		maxDate: maxDate,
 		disabledWeekDays:disableDay(data)
 	});
+	console.log(maxDate);
 };
+
 
 // 멘토링 신청 확인 모달에 데이터 뿌리는 함수
 function printApplyInfoModal(data) {
@@ -167,6 +174,20 @@ function disableDay(data) {
 		}
 	}
 	return disableDayArr;
+}
+
+//데이터 형식 변경 함수
+function dateFormat(date) {
+	convertDate = new Date(date);
+	convertDate.setDate(date.getDate() + 21);
+	// console.log(convertDate);
+ let month = convertDate.getMonth() + 1;
+ let day = convertDate.getDate();
+
+ month = month >= 10 ? month : '0' + month;
+ day = day >= 10 ? day : '0' + day;
+
+ return convertDate.getFullYear() + '-' + month + '-' + day;
 }
 
 // 카테고리 설정 함수

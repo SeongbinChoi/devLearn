@@ -1,5 +1,6 @@
 package com.sp.dev.mentorPage;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -207,38 +208,35 @@ public class MentorPageController {
 		List<Object> revenueList = new ArrayList<Object>();
 		List<Mentors> mentoringDetailList = new ArrayList<Mentors>();
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		LocalDateTime now = LocalDateTime.now();
+		String nowYearMonth = now.toString().substring(0, 7).replaceAll("-", "/");
+		int mentoringPrice = 0;
 		map.put("year", year);
 		map.put("memberEmail", info.getMemberEmail());
 		
+		map2.put("nowYearMonth", nowYearMonth);
+		map2.put("memberEmail", info.getMemberEmail());
+		
 		revenueList = service.mentoringRevenueList(map);
 		mentoringDetailList = service.mentoringDetailList(map);
-		System.out.println("----------------------------" + revenueList);
+		for(Mentors item : mentoringDetailList) {
+			mentoringPrice += item.getMentoringPrice();
+		}
+		
+		//System.out.println("========================" + mentoringPrice);
+		
+		//System.out.println("----------------------------" + revenueList);
+		model.addAttribute("allRevenue", service.allRevenueCount(info.getMemberEmail()));
+		model.addAttribute("monthRevenue", service.monthRevenueCount(map2));
 		model.addAttribute("revenueList", revenueList);
 		model.addAttribute("mentoringDetailList", mentoringDetailList);
+		model.addAttribute("mentoringPrice", mentoringPrice);
 		model.addAttribute("mentoringYearList", service.mentoringYearList(info.getMemberEmail()));
 		model.addAttribute("year", year);
 		
 		return ".mentorPage.mentorRevenueManage";
 	}
 	
-	// 사용 안함 json
-	@RequestMapping(value = "mentoringRevenueList")
-	@ResponseBody
-	public Map<String, Object> mentoringRevenueList(
-			@RequestParam String year,
-			HttpSession session
-			) throws Exception {
-		Map<String, Object> model = new HashMap<String, Object>();
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("year", year);
-		map.put("memberEmail", info.getMemberEmail());
-		
-		model.put("revenueList", service.mentoringRevenueList(map));
-		model.put("mentoringYearList", service.mentoringYearList(info.getMemberEmail()));
-		model.put("year", year);
-		
-		return model;
-	}
 	
 }

@@ -6,30 +6,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mentorRevenue.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.2.2/echarts.min.js"></script>
 <script type="text/javascript">
-function ajaxFun(url, method, query, dataType, fn) {
-	$.ajax({
-		type:method,
-		url:url,
-		data:query,
-		dataType:dataType,
-		success:function(data) {
-			fn(data);
-		},
-		beforeSend:function(jqXHR) {
-			jqXHR.setRequestHeader("AJAX", true);
-		},
-		error:function(jqXHR) {
-			if(jqXHR.status===403) {
-				login();
-				return false;
-			}
-	    	
-			console.log(jqXHR.responseText);
-		},
-	});
-}
-
 $(function(){
+	let revenue;
+	for(let i = 0; i < ${mentoringDetailList.size()}; i++) {
+		revenue += "${mentoringDetailList[i].mentoringPrice}";
+	}
+	console.log(revenue);
 	let arr = new Array();
 		arr.push(parseInt("${revenueList.get(0).VALUE}"));
 		arr.push(parseInt("${revenueList.get(1).VALUE}"));
@@ -87,10 +69,48 @@ function selectFn() {
 		</c:forEach>
 	</select>
 </div>
-<div class="chart pt-2" id="chart" style="clear: both;">
+<div class="contents py-3" style="clear: both;">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="card widget-flat">
+				<div class="card-body">
+					<div class="float-end">
+					<i class="mdi mdi-account-multiple widget-icon"></i>
+					</div>
+					<h5 class="text-muted fw-normal mt-0" title="Number of Customers">총 수익</h5>
+					<h3 class="mt-3 mb-3"><fmt:formatNumber value="${allRevenue}" pattern="#,###"/>원</h3>
+				</div> <!-- end card-body-->
+			</div> <!-- end card-->
+		</div> <!-- end col-->
+		<div class="col-sm-4">
+			<div class="card widget-flat">
+				<div class="card-body">
+					<div class="float-end">
+					<i class="mdi mdi-account-multiple widget-icon"></i>
+					</div>
+					<h5 class="text-muted fw-normal mt-0" title="Number of Customers">이번달 수익</h5>
+					<h3 class="mt-3 mb-3"><fmt:formatNumber value="${monthRevenue}" pattern="#,###"/>원</h3>
+				</div> <!-- end card-body-->
+			</div> <!-- end card-->
+		</div> <!-- end col-->
+		<div class="col-sm-4">
+			<div class="card widget-flat">
+				<div class="card-body">
+					<div class="float-end">
+					<i class="mdi mdi-account-multiple widget-icon"></i>
+					</div>
+					<h5 class="text-muted fw-normal mt-0" title="Number of Customers">년도별 수익</h5>
+					<h3 class="mt-3 mb-3"><fmt:formatNumber value="${mentoringPrice}" pattern="#,###"/>원</h3>
+				</div> <!-- end card-body-->
+			</div> <!-- end card-->
+		</div> <!-- end col-->
+	</div><!-- end row -->
+</div>
+
+<div class="chart my-2" id="chart">
 
 </div>
-<div class="table-responsive" style="overflow-y: scroll; height: 600px; border:1px solid #eee;">
+<div class="table-responsive" style="overflow-y: scroll; height: 400px; border:1px solid #eee;">
 	<table class="table table-striped rev-table">
 		<thead>
 			<tr>
@@ -112,10 +132,6 @@ function selectFn() {
 				</tr>
 			</c:forEach>
 		</tbody>
-		<tr style="border-bottom: 2px solid #000;">
-			<td colspan="4"  style="text-align: right; font-weight: 800; " >누계액</td>
-			<td  style="text-align: right">100,000,000 원</td>
-		</tr>
 	</table>
 	</div>
 	<div class="btnDIV pt-5">
