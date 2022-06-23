@@ -61,7 +61,7 @@ $(function() {
 
 function listPage(page) {
 	let url = "${pageContext.request.contextPath}/lectureInquiry/list";
-	let query = "pageNo=" + page;
+	let query = "pageNo=" + page + "&lectureNum=${lectureNum}";
 	
 	const fn = function(data) {
 		printInquiry(data);
@@ -73,15 +73,15 @@ function printInquiry(data) {
 	const uid = "${sessionScope.member.memberEmail}";
 	let permission = "${sessionScope.member.memberRole == 99 ? 'true' : 'false'}"; 
 	
-	let dataCoutn = data.dataCount;
+	let dataCount = data.dataCount;
 	let pageNo = data.pageNo;
 	let total_page = data.total_page;
 	
 	$(".inquiry-count").attr("data-pageNo", pageNo);
 	$(".inquiry-count").attr("data-totalPage", total_page);
 	
-	$("#listInquiry").show();
-	$(".inquiry-count").html("수강 전 문의 " + dataCount + "개");
+	$("#listLecInq").show();
+	$(".inquiry-count").html("문의 " + dataCount + "개");
 	
 	$(".more-box").hide();
 	if(parseInt(dataCount) === 0) {
@@ -96,22 +96,22 @@ function printInquiry(data) {
 	let out = "";
 	for(let idx=0; idx < data.list.length; idx++) {
 		let inquiryNum = data.list[idx].inquiryNum;
-		let memberEmail = data.list[idx].memberEmail;
-		let nickname = data.list[idx].memberNickname;
+		let qmember = data.list[idx].qmember;
 		let question = data.list[idx].question;
 		let q_regDate = data.list[idx].q_regDate;
-		
+
 		out += "<tr>";
-		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + memberEmail + "</span></td>";
-		out += "	<td width='50%' align='right'>" + reg_date;
-		if(uid === memberEmail || permission === "true") {
+		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + qmember + "</span></td>";
+		out += "	<td width='50%' align='right'>" + q_regDate;
+		if(uid === qmember || permission === "true") {
 			out += "	| <span class='deleteInquiry' data-inquiryNum='" + inquiryNum + "'>삭제</span>";
 		}
 		out += "    </td>";
 		out += "</tr>";
 		out += "<tr>";
 		out += "    <td colspan='2' valign='top'>" + question + "</td>"; 
-		out += "</tr>";		
+		out += "</tr>";	
+		
 	}
 	
 	$(".inquiry-list-body").append(out);
@@ -126,7 +126,7 @@ $(function() {
 		}
 		
 		let url = "${pageContext.request.contextPath}/lectureInquiry/insert";
-		let query = "question=" + encodeURIComponent(question);
+		let query = "question=" + encodeURIComponent(question) + "&lectureNum=${lectureNum}";
 		
 		const fn = function(data) {
 			$("#question").val("");
@@ -147,7 +147,7 @@ $(function() {
 		
 		let inquiryNum = $(this).attr("data-inquiryNum");
 		let url = "${pageContext.request.contextPath}/lectureInquiry/delete";
-		let query = "inquiryNum=" + inquiryNum;
+		let query = "inquiryNum=" + inquiryNum + "&lectureNum=${lectureNum}";
 		const fn = function(data) {
 			$(".inquiry-list-body").empty();
 			listPage(1);
@@ -199,13 +199,13 @@ $(function() {
 	<nav id="navbar-example2" class="navbar navbar-light px-3">
 		<ul class="nav">
 			<li class="nav-item">
-				<a class="nav-link" onclick="location.href='/dev/lectures/detail#scrollspyHeading1';">강의소개</a>
+				<a class="nav-link" onclick="location.href='/dev/lectures/detail?lectureNum=${lectureNum}#scrollspyHeading1';">강의소개</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" onclick="location.href='/dev/lectures/detail#scrollspyHeading2';">커리큘럼</a>
+				<a class="nav-link" onclick="location.href='/dev/lectures/detail?lectureNum=${lectureNum}#scrollspyHeading2';">커리큘럼</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" onclick="location.href='/dev/lectures/detail#scrollspyHeading3';">수강평</a>
+				<a class="nav-link" onclick="location.href='/dev/lectures/detail?lectureNum=${lectureNum}#scrollspyHeading3';">수강평</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="#">수강 전 문의</a>
@@ -235,19 +235,21 @@ $(function() {
 						<textarea name="question" id="question" class="form-control" placeholder="${empty sessionScope.member ? '로그인 후 등록 가능합니다.':''}"></textarea>
 					</div>
 					<div class="p-1 text-end">
-						<!-- <input type="hidden" name="lectureNum" value="${lectureNum}"> -->
+						<input type="hidden" name="lectureNum" value="${lectureNum}">
 						<button type="button" class="btnSend btn" style="background: #0D6EFD; color: white;" ${empty sessionScope.member ? "disabled='disabled'":""}>등록 <i class="bi bi-check2"></i></button>
 					</div>
 				</div>
 			</form>
 			
-			<div id="listInquiry">
+			<div id="listLecInq">
 				<div class="mt-4 mb-1">
-					<span class="inquiry-count fw-bold text-primary" data-pageNo="1" data-totalPage="1"> 문의 0개 </span>
+					<span class="inquiry-count fw-bold text-primary" data-pageNo="1" data-totalPage="1"></span>
 				</div>
 				
 				<table class="inquiry-list table table-borderless">
-					<tbody class="inquiry-list-body"></tbody>
+					<tbody class="inquiry-list-body">
+						
+					</tbody>
 				</table>
 				
 				<div class="more-box mt-2 text-end">

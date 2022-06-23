@@ -51,37 +51,26 @@ public class LecInqServiceImpl implements LecInqService {
 	}
 
 	@Override
-	public LecInq readInq(int inquirynum) {
-		LecInq dto = null;
-		
-		try {
-			dto = dao.selectOne("lectureInquiry.readInq", inquirynum);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return dto;
-	}
-
-	@Override
 	public void insertAnswer(LecInq dto) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void deleteInquiry(Map<String, Object> map) throws Exception {
 		try {
-			dao.insertData("lectureInquiry.insertAnswer", dto);
+			dao.deleteData("lectureInquiry.deleteInquiry", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-	}
-
-	@Override
-	public void deleteAns(int inquirynum) throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteInq(int inquirynum) throws Exception {
+	public void deleteAnswer(int inquirynum) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
 }
