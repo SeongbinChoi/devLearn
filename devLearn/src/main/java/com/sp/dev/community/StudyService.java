@@ -20,4 +20,6 @@ public interface StudyService {
 	public int replyCount(int studyNum) throws Exception;
 	public void deleteStudy(int studyNum) throws Exception;
 	
+	public void updateReplyCount(int studyNum) throws Exception;
+	public void updateReplyCountDelete(Map<String, Object> map) throws Exception;
 }

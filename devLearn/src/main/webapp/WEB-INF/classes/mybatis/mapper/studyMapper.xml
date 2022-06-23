@@ -94,7 +94,13 @@
 						</when>
 					</choose>
 				</where>
-				ORDER BY studyNum DESC
+				
+				<if test="detailNum == 0">
+					ORDER BY studyNum DESC
+				</if>
+				<if test="detailNum == 1">
+					ORDER BY replyCount DESC, studyNum DESC
+				</if>
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
@@ -178,7 +184,14 @@
     		VALUES(studyReply_seq.NEXTVAL, #{studyNum}, #{memberEmail}, #{content}, SYSDATE, #{parent})
 	</insert>
 	
-	<!-- 댓글 입력 시 게시글의 댓글개수 추가하기 -->
+	<!-- 댓글 입력 시 게시글의 댓글개수 추가 및 삭제 -->
+	<update id="updateReplyCount" parameterType="Integer">
+		UPDATE study SET replyCount = replyCount+1 WHERE studyNum = #{studyNum}
+	</update>
+	<update id="updateReplyCountDelete" parameterType="map">
+		UPDATE study SET replyCount = replyCount-1 WHERE studyNum = #{studyNum}
+	</update>
+	
 	
 	<!-- 댓글 갯수세기 -->
 	<select id="replyCount" parameterType="Integer" resultType="Integer">
@@ -208,8 +221,8 @@
 	<delete id="deleteReply" parameterType="map">
 		DELETE FROM studyReply
 			WHERE replyNum = #{replyNum}
-			<if test="mode == 'reply' ">
-				OR answer = #{replyNum}
+			<if test="mode != 'reply' ">
+				OR parent = #{replyNum}
 			</if>
 	</delete>
 	
