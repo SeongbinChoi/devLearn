@@ -142,6 +142,7 @@ $(function(){
 			
 			const fn = function(data){
 				$(selector).html(data);
+				location.href="${pageContext.request.contextPath}/mypage/myWrite/myStudyWrite?status=2";
 			};
 
 			ajaxFun(url, "get", query, "html", fn);
