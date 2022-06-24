@@ -92,10 +92,10 @@ function sendOk(param) {
 	<div class="status-section d-flex align-items-center">
 		<span>STATUS</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| 
 		<ul class="filter-menu">
-			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=all" id="all" class="is-active">전체</a></li>
-			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=wait" id="wait">승인대기</a></li>
-			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=accept" id="accept">예약확정</a></li>
-			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=cancel" id="cancel">취소/환불</a></li>
+			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=all" id="all" class='<c:if test="${status == -1}">is-active</c:if>'>전체</a></li>
+			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=wait" id="wait" class='<c:if test="${status == 0}">is-active</c:if>'>승인대기</a></li>
+			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=accept" id="accept" class='<c:if test="${status == 1}">is-active</c:if>'>예약확정</a></li>
+			<li><a href="${pageContext.request.contextPath}/mentorPage/applyManage?status=cancel" id="cancel" class='<c:if test="${status == 4}">is-active</c:if>'>취소/환불</a></li>
 		</ul>
 	</div>
 	<div class="mentor-content">
@@ -116,7 +116,7 @@ function sendOk(param) {
 							<td>${status.count}</td>
 							<td>${dto.mentorSubject}</td>
 							<td>${dto.mentoringDate}</td>
-							<td>${dto.mentoringPrice}</td>		
+							<td><fmt:formatNumber value="${dto.mentoringPrice}" pattern="#,###"/></td>		
 							<td>
 								<c:choose>
 									<c:when test="${dto.status eq 0}">승인 대기</c:when>

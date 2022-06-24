@@ -115,6 +115,7 @@ public class MentorPageController {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("status", status);
+		System.out.println("===============================" + status);
 		
 		return ".mentorPage.mentoringApplyManage";
 	}
