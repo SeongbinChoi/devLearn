@@ -24,12 +24,6 @@ public class MypageController {
 	}
 	
 	
-	@RequestMapping(value = "myInquiry", method = RequestMethod.GET)
-	public String myInquiry() throws Exception {
-		
-		return ".mypage.memberPageInquiry";
-	}
-
 	
 	@RequestMapping(value = "coupon", method = RequestMethod.GET)
 	public String coupon() throws Exception {

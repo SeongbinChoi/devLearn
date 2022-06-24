@@ -276,4 +276,72 @@
 		UPDATE member SET memberNickname=#{memberNickname} WHERE memberEmail=#{memberEmail}
 	</update>
 	
+	
+	
+	<sql id="where-list">
+		<if test="condition=='title' ">
+			INSTR(lectureSubject, #{keyword}) &gt; 0
+		</if>
+		<if test="condition=='content' ">
+			DBMS_LOB.INSTR(question, #{keyword}) &gt; 0
+		</if>
+	</sql>
+	
+	<!-- 수강 전 문의 개수 -->
+	<select id="inquiryDataCount" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM lectureInquiry i
+		JOIN lecture l ON i.lectureNum=l.lectureNum
+		<where>
+			qMember=#{memberEmail}
+			<if test="keyword!=null and keyword != '' ">
+				AND
+				<include refid="where-list"/>
+			</if>
+			<choose>
+				<when test="status == 0">
+					AND aMember IS NULL
+				</when>
+				<when test="status == 1">
+					AND aMember IS NOT NULL
+				</when>
+			</choose>
+		</where>
+	</select>
+	
+	<!-- 수강 전 문의 리스트 -->
+	<select id="inquiryList" parameterType="map" resultType="com.sp.dev.mypage.inquiry.Inquiry">
+		SELECT * FROM (
+			SELECT ROWNUM rnum, tb.* FROM (
+				SELECT lectureSubject, inquiryNum,i.lectureNum,qMember,
+						question,q_regDate,aMember,answer,a_regDate, memberNickname, saveFileName
+				FROM lectureInquiry i
+				JOIN lecture l ON i.lectureNum=l.lectureNum
+				JOIN member m ON m.memberEmail=l.memberEmail
+				LEFT OUTER JOIN memberProfile p ON p.memberEmail=m.memberEmail 
+				<where>
+					qMember=#{memberEmail}
+					<if test="keyword!=null and keyword != '' ">
+						AND
+						<include refid="where-list"/>
+					</if>
+					<choose>
+						<when test="status == 0">
+							AND aMember IS NULL
+						</when>
+						<when test="status == 1">
+							AND aMember IS NOT NULL
+						</when>
+					</choose>
+				</where>
+				ORDER BY q_regDate DESC
+			) tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<!-- 수강 전 문의 삭제 -->
+	<delete id="deleteInquiry" parameterType="Integer">
+		DELETE FROM lectureInquiry WHERE inquiryNum=#{inquiryNum}
+	</delete>
+	
 </mapper>
