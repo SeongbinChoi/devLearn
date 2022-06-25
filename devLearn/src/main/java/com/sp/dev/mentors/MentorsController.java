@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
-import com.sp.dev.member.SessionInfo;
 
 @Controller("mentors.mentorsController")
 @RequestMapping("/mentors/*")
@@ -156,26 +155,64 @@ public class MentorsController {
 		return model;
 	}
 	
+	@RequestMapping("mentoringPayment")
+	@ResponseBody
+	public Map<String, Object> mentoringPayment(
+			@RequestParam int mentorNum,
+			@RequestParam String mentoringDate,
+			@RequestParam String phoneNum,
+			@RequestParam String applyMessage,
+			HttpSession session 
+			) throws Exception {
+		Map<String, Object> model = new HashMap<String, Object>();
+		Mentors dto = service.readMentors(mentorNum);
+		
+		model.put("mentorNum", mentorNum);
+		model.put("mentoringDate", mentoringDate);
+		model.put("phoneNum", phoneNum);
+		model.put("applyMessage", applyMessage);
+		model.put("paymentSeq", service.readMentoringPaymentSeq());
+		model.put("dto", dto);
+		
+		return model;
+	}
+	
 	// 멘토링 신청 폼 (결제는 체크 안함, 결제 api 반환 형식 후 수정 예정)
 	// mentoringPrice가 결제 금액이지만 결제 연결이 안되어 있으므로, 멘토링 가격인 mentorPrice로 값 전송했음. 나중에 수정할 것
 	@PostMapping(value = "mentoringApply")
-	public String mentoringApplySubmit(Mentors dto, HttpSession session) throws Exception {
-		SessionInfo info = (SessionInfo) session.getAttribute("member");
+	@ResponseBody
+	public Map<String, Object> mentoringApplySubmit(
+			@RequestParam String paymentCode,
+			@RequestParam String payState,
+			@RequestParam String approveNum,
+			Mentors dto
+			) throws Exception {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		String state = "false";
 		// 2022/07/15 14:00
 		// String mentoringDate = dto.getMentoringDate().replace("/", "-").concat(":00");
 		// dto.setMentoringDate(mentoringDate);
 		try {
-			dto.setMemberEmail(info.getMemberEmail());
 			map.put("dto", dto);
+			map.put("paymentCode", paymentCode);
+			map.put("payState", payState);
+			map.put("approveNum", approveNum);
 			
 			service.insertMentoringApply(map);
 			
+			/*
+			 * System.out.println("###########################################");
+			 * map.put("lastIndex", lastIndex); service.insertMentoringPayment(map);
+			 */
+			state = "true";
 		} catch (Exception e) {
 		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
 		
-		return "redirect:/mentors/mentor";
-	}
+		return model;
+	}	
 	
 	@GetMapping(value = "mentorReviewList")
 	@ResponseBody
