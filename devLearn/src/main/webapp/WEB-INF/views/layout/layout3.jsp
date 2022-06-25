@@ -6,7 +6,7 @@
 
 <!DOCTYPE html>
 <html>
-<head>
+<head>	
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title><tiles:insertAttribute name="title"/></title>
@@ -55,30 +55,45 @@
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/bootstrap5/js/bootstrap.bundle.min.js"></script>
 
-<!-- Login Modal -->
+
 <script type="text/javascript">
+// 모달 정보 넘기기
+function sendModalLogin() {
+    let f = document.modalLoginForm;
+	let str;
 	
-	function sendModalLogin() {
-	    let f = document.modalLoginForm;
-		let str;
-		
-		str = f.memberEmail.value;
-	    if(!str) {
-	        f.memberEmail.focus();
-	        return;
-	    }
-	
-	    str = f.memberPwd.value;
-	    if(!str) {
-	        f.memberPwd.focus();
-	        return;
-	    }
-	
-	    f.action = "${pageContext.request.contextPath}/member/login";
-	    f.submit();
-	}
+	str = f.memberEmail.value;
+    if(!str) {
+        f.memberEmail.focus();
+        return;
+    }
+
+    str = f.memberPwd.value;
+    if(!str) {
+        f.memberPwd.focus();
+        return;
+    }
+
+    f.action = "${pageContext.request.contextPath}/member/login";
+    f.submit();
+}
+
+
+// 비밀번호 찾기
+function findPwd() {
+	location.href = "${pageContext.request.contextPath}/member/pwdFind";
+}
+
+
+// 회원가입 창으로 이동
+function signUp() {
+	location.href = "${pageContext.request.contextPath}/member/signUp";
+}
 </script>
-<!-- Modal -->
+
+
+
+<!-- Login Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content rounded-5 shadow">
@@ -97,7 +112,7 @@
 					<label for="floatingPassword">Password</label>
 				</div>
 				<button class="w-100 mb-2 btn btn-lg rounded-4" type="button" style="background-color:#87CE00; color:#fff; font-weight:600;" onclick="sendModalLogin();">Log In</button>
-				<small class="text-muted text-center"><span>비밀번호 찾기</span> | <span>회원가입</span></small>
+				<small class="text-muted text-center"><span onclick="findPwd();" style="cursor: pointer;">비밀번호 찾기</span> | <span onclick="signUp();" style="cursor: pointer;">회원가입</span></small>
 				<hr class="mt-3">
 				<small class="fw-bold mb-3 text-secondary text-center">간편 로그인</small>
 				<div>&nbsp;</div>

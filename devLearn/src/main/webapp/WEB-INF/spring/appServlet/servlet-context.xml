@@ -73,6 +73,10 @@
 			<exclude-mapping path="/member/login"/>
 			<exclude-mapping path="/member/logout"/>			
 			<exclude-mapping path="/member/signUp"/>
+			<exclude-mapping path="/member/complete"/>
+			<exclude-mapping path="/member/emailOverlapCheck"/>
+			<exclude-mapping path="/member/emailCertification"/>
+			<exclude-mapping path="/member/pwdFind"/>
 			
 			<exclude-mapping path="/mentors/mentor"/>
 			<exclude-mapping path="/mentors/mentorDetail"/>
@@ -81,7 +85,6 @@
 			
 			<exclude-mapping path="/community/qnaList"/>
 			<exclude-mapping path="/community/studyList"/>
-						
 			
 		<beans:bean class="com.sp.dev.member.LoginCheckInterceptor"/>
 		</interceptor>

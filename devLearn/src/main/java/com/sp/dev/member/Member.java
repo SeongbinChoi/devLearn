@@ -9,7 +9,7 @@ public class Member {
 	private int pwdFail;		// 비밀번호 실패 횟수
 	private String regDate;		// 회원가입 날짜
 	private int emailCheck;		// 이메일 수신 여부
-	private String enabled;		// 로그인 가능 여부
+	private int enabled;		// 로그인 가능 여부
 	private String infoUpdate;	// 정보 수정일
 	private String lastLogin;	// 마지막 로그인 날짜
 	
@@ -66,10 +66,10 @@ public class Member {
 	public void setEmailCheck(int emailCheck) {
 		this.emailCheck = emailCheck;
 	}
-	public String getEnabled() {
+	public int getEnabled() {
 		return enabled;
 	}
-	public void setEnabled(String enabled) {
+	public void setEnabled(int enabled) {
 		this.enabled = enabled;
 	}
 	public String getInfoUpdate() {

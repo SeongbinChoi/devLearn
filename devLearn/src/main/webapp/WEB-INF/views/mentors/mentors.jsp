@@ -4,9 +4,17 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/mentors.css" type="text/css">
- <!-- iamport.payment.js -->
-<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script type="text/javascript">
+
+/* $(function(){
+	$("#datetimepicker").datetimepicker({
+		datapicker:false,
+		allowTimes:[
+			'12:00', '13:00', '15:00'
+		]
+	});
+	
+}); */
 
 $(function(){
 	$(".applyBtn").click(function(){
@@ -137,7 +145,11 @@ function printApplyInfoModal(data) {
 	$("#menteePhoneNum").html(data.phoneNum);
 	$("#applyMsg").html(data.applyMessage);
 	$(".priceInfo").html(data.dto.mentorPrice);
-	$("#iamportPayment").attr("data-num", data.dto.mentorNum);
+	$("input[name=mentorNum]").val(data.dto.mentorNum);
+	$("input[name=mentorPrice]").val(data.dto.mentorPrice);
+	$("input[name=mentoringDate]").val(data.mentoringDate);
+	$("input[name=phoneNum]").val(data.phoneNum);
+	$("input[name=applyMessage]").val(data.applyMessage);
 }
 
 // 가능 시간 반환 함수
@@ -378,6 +390,7 @@ $(function() {
 	</div>
 
 		<!-- 멘토링 신청 정보 확인 모달 -->
+	<form name="applyForm" method="post" action="${pageContext.request.contextPath}/mentors/mentoringApply">
 	<div class="modal" id="applyCheckModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
@@ -387,9 +400,9 @@ $(function() {
 	      </div>
 	      <div class="modal-body check px-4">
 			<div class="applyInfo">
-				<table class="applyInfo table table-bordered">
+				<table class="applyInfo">
 					<tr>
-						<td style="width:20%;">멘토링 명</td>
+						<td>멘토링 명</td>
 						<td id="mentoringSubject"></td>
 					</tr>
 					<tr>
@@ -429,76 +442,17 @@ $(function() {
 	      </div>
 	      <div class="modal-footer">
 	      		<a class="btn btn-outline-primary" data-bs-toggle="modal" href="#applyMentoringModal" role="button">이전으로</a>
-      	 	 <!-- <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">확인</button> -->
-      	 	 <button type="button" id="iamportPayment" class="btn btn-primary" data-bs-dismiss="modal" data-num="">결제하기</button>
+      	 	 <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
           </div>
 	    </div>
 	  </div>
 	</div>
-<script type="text/javascript">
-$(function() {
-	$("#iamportPayment").click(function() {
-		let url = "${pageContext.request.contextPath}/mentors/mentoringPayment";
-		let mentorNum = $(this).attr("data-num");
-		let mentoringDate = $("input[name=mentoringDate]").val().trim();
-		let memberEmail = $("input[name=memberEmail]").val().trim();
-		let phoneNum = $("input[name=phoneNum]").val().trim();
-		let applyMessage = $("textarea[name=applyMessage]").val().trim();
-		
-		let query = "mentorNum=" + mentorNum + "&mentoringDate=" + mentoringDate + "&phoneNum=" + phoneNum + "&applyMessage=" + applyMessage;
-		
-		const fn = function(data) {
-			requestPay(data);
-		};
-		
-		ajaxFun(url, "get", query, "json", fn);
-	});
-});
-	
-//결제 스크립트 아임포트
-var IMP = window.IMP;
-IMP.init("{가맹점 식별코드 넣기}");
+	<input type="hidden" name="mentorNum" value="">
+	<input type="hidden" name="mentorPrice" value="">
+	<input type="hidden" name="mentoringDate" value="">
+	<input type="hidden" name="phoneNum" value="">
+	<input type="hidden" name="applyMessage" value="">
+	</form>
 
-function requestPay(data) {
-	IMP.request_pay (
-		{ // param
-			pg: "kakaopay.TC0ONETIME", //pg사명.CID
-			pay_method: "card",
-			merchant_uid: "mentoring-" + data.dto.mentorNum + data.paymentSeq, // 중복되지 않게
-			name: data.dto.mentorSubject,
-			amount: data.dto.mentorPrice,
-			buyer_email: "${sessionScope.member.memberEmail}",
-			buyer_name: "${sessionScope.member.memberName}",
-		buyer_tel: data.phoneNum
-		},
-		function (rsp) { // callback
-			console.log(rsp);
-			if (rsp.success) {
-				let url = "${pageContext.request.contextPath}/mentors/mentoringApply";
-				let mentorNum = data.mentorNum;
-				let memberEmail = rsp.buyer_email;
-				let mentoringPrice = rsp.paid_amount;
-				let mentoringDate = data.mentoringDate;
-				let phoneNum = rsp.buyer_tel;
-				let applyMessage = data.applyMessage;
-				let paymentCode = rsp.merchant_uid;
-				console.log(mentoringPrice);
-				let query = "mentorNum=" + mentorNum + "&memberEmail=" + memberEmail + "&mentoringPrice=" + mentoringPrice;
-					query += "&mentoringDate=" + mentoringDate + "&phoneNum=" + phoneNum + "&applyMessage=" + applyMessage;
-					query += "&paymentCode=" + paymentCode + "&payState=" + rsp.pay_method + "&approveNum=" + rsp.pg_tid;	
-				console.log(query);
-				
-				const fn = function(data) {
-					window.location.href="${pageContext.request.contextPath}/mentors/mentor";
-				};			
-				ajaxFun(url, "post", query, "json", fn);
-			} else {
-				alert("실패 : 코드(" + rsp.error_code + ") / 메세지(" + rsp.error_msg + " :: 결제 실패..)");
-			}
-		}
-	);
-};
-
-</script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquery.datetimepicker.css" />
 <script src="${pageContext.request.contextPath}/resources/js/jquery.datetimepicker.full.min.js"></script>

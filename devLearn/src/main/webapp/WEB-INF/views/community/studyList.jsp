@@ -296,28 +296,6 @@ function list_gido() {
 }
 
 
-// 공공api데이터 받아서 카카오멥api에 카테고리로 데이터 추가하고싶은데 안된다.. 왜 안될까 반나절해서 안되서 일단 포기
-$(function(){
-		var url="${pageContext.request.contextPath}/community/lib";
-		
-		var query = "";
-		var fn = function(data) {
-			printCovid(data);
-		};
-		ajaxFun(url, "get", query, "json", fn);
-	
-	function printCovid(data) {
-		var out = "<h3>항목 확인 : </h3>";
-		$.each(data.response.body.items.item, function(index, item) {
-			out += "도서관명 : " + item.lbrryNm + ", 위도 : " + item.latitude + ", 경도 : " + item.longitude + 
-			", 도로명주소 : " + item.rdnmadr + ", 운영시작 : " + item.satOperOperOpenHhmm + ", 운영종료 : " + item.satOperCloseHhmm + "<br>";
-		});
-		
-		// console.log(data);
-	}
-});
-
-
 // 글쓰기 함수
 function sendOk() {
 	var f = document.boardForm;

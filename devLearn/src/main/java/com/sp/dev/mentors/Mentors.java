@@ -1,8 +1,6 @@
 package com.sp.dev.mentors;
 
 public class Mentors {
-	private int mentoringApplylastIdx;
-	
 	private int mentorNum;
 	private String memberEmail;
 	private String memberNickname;
@@ -33,13 +31,7 @@ public class Mentors {
 	private String phoneNum;
 	private String applyMessage;
 	private String applyDate;
-		
-	public int getMentoringApplylastIdx() {
-		return mentoringApplylastIdx;
-	}
-	public void setMentoringApplylastIdx(int mentoringApplylastIdx) {
-		this.mentoringApplylastIdx = mentoringApplylastIdx;
-	}
+	
 	public int getMentorNum() {
 		return mentorNum;
 	}

@@ -28,6 +28,10 @@ a#top_btn {
 </style>
 
 <script type="text/javascript">
+function login() {
+	location.href="${pageContext.request.contextPath}/member/login";
+}
+
 function ajaxFun(url, method, query, dataType, fn) {
 	$.ajax({
 		type:method,
@@ -45,7 +49,7 @@ function ajaxFun(url, method, query, dataType, fn) {
 				login();
 				return false;
 			} else if(jqXHR.status === 400) {
-				alert("요청 처리가 실패했습니다.");
+				alert("요청 처리가 실패 했습니다.");
 				return false;
 			}
 	    	

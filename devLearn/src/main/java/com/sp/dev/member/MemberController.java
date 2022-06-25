@@ -1,5 +1,8 @@
 package com.sp.dev.member;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller("member.memberController")
@@ -21,7 +25,7 @@ class MemberController {
 	
 	@RequestMapping(value = "signUp", method = RequestMethod.GET)
 	public String memberForm(Model model) {
-		model.addAttribute("visuable", "hidden");
+		model.addAttribute("mode", "signUp");
 		return ".member.signUp";
 	}
 	
@@ -30,12 +34,11 @@ class MemberController {
 			Member dto,
 			final RedirectAttributes reAttr,
 			Model model) {
-		
 		try {
 			service.insertMember(dto);
 		} catch (DuplicateKeyException e) {
 			// 기본키 중복에 의한 제약 조건 위반
-			model.addAttribute("message", "아이디 중복으로 회원가입이 실패했습니다.");
+			model.addAttribute("message", "이메일 중복으로 회원가입에 실패했습니다.");
 			return ".member.signUp";
 		} catch (DataIntegrityViolationException e) {
 			// 데이터형식 오류, 참조키, NOT NULL 등의 제약조건 위반
@@ -47,13 +50,15 @@ class MemberController {
 		}
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(dto.getMemberEmail() + "님의 회원 가입이 정상적으로 처리되었습니다.<br>");
+		sb.append("<b>" + dto.getMemberName() + "</b> 님의 <br>회원 가입이 정상적으로 처리되었습니다.<br><br>");
 		sb.append("메인 화면으로 이동하여 로그인 하시기 바랍니다.<br>");
 		
+		reAttr.addFlashAttribute("title", "회원가입");
 		reAttr.addFlashAttribute("message", sb.toString());
 		
-		return ".redirect:/member/complete";
+		return "redirect:/member/complete";
 	}
+	
 	
 	@RequestMapping(value = "complete")
 	public String complete(@ModelAttribute("message") String message) throws Exception {
@@ -122,4 +127,110 @@ class MemberController {
 		
 		return ".member.infoShare";
 	}
+	
+	
+	// 비밀번호 찾기 폼(GET)
+	@RequestMapping(value="pwdFind", method=RequestMethod.GET)
+	public String pwdFindForm(HttpSession session) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info != null) {
+			return "redirect:/";
+		}
+		
+		return ".member.pwdFind";
+	}
+	
+	
+	// 비밀번호 찾기 (POST)
+	@RequestMapping(value="pwdFind", method=RequestMethod.POST)
+	public String pwdFindSubmit(
+			@RequestParam String memberEmail,
+			RedirectAttributes reAttr,
+			Model model) throws Exception {
+		int res = service.readMemberCount(memberEmail);
+		// 이메일이 존재하지 않으면 -> 실패
+		if(res == 0) {
+			model.addAttribute("message", "등록된 아이디가 아닙니다.");
+			return ".member.pwdFind";
+		} else {
+			Member dto = service.readMember(memberEmail);
+			
+			// 비활성화 계정이라면 -> 실패
+			if(dto.getEnabled() == 99) {
+				model.addAttribute("message", "비활성화 된 계정입니다.");
+				return ".member.pwdFind";
+			} else {	// 정상 회원이라면 -> 이메일로 임시 비밀번호 전송
+				try {
+					Mail mDto = new Mail();
+					mDto.setSenderEmail("limchae157@naver.com");
+					mDto.setSenderName("관리자");
+					mDto.setReceiverEmail(memberEmail);
+					
+					service.generatePwd(mDto);
+				} catch (Exception e) {
+					model.addAttribute("message", "임시비밀번호 전송이 실패했습니다.");
+					return ".member.pwdFind";
+				}
+					
+			}
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("<b>" + memberEmail + "</b>님의 이메일로 <br>임시 패스워드를 전송했습니다.<br><br>");
+		sb.append("로그인 후 패스워드를 변경 하시기 바랍니다.<br>");
+		
+		reAttr.addFlashAttribute("title", "비밀번호 찾기");
+		reAttr.addFlashAttribute("message", sb.toString());
+		
+		return "redirect:/member/complete";
+	}
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// ajax
+	// 이메일 중복확인을 위한 ajax-json
+	@RequestMapping(value = "emailOverlapCheck", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> emailOverlapCheck(@RequestParam String email) throws Exception {
+		String p = "true";
+		int result = service.readMemberCount(email);
+		
+		if(result != 0) {
+			p = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("passed", p);
+		
+		return model;
+	}
+	
+	
+	// 이메일로 인증코드 보내기 ajax-json
+	@RequestMapping(value = "emailCertification", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> emailCertification(@RequestParam String email) {
+		
+		String p = "true";
+		
+		Mail dto = new Mail();
+		
+		dto.setSenderEmail("limchae157@naver.com");
+		dto.setSenderName("관리자");
+		dto.setReceiverEmail(email);
+		
+		try {
+			dto = service.generateEmail(dto);
+		} catch (Exception e) {
+			p = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("passed", p);
+		model.put("Certification", dto.getCertification());
+		
+		return model;
+	}
+	
 }
