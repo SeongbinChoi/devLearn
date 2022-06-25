@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="infoShare">
+	<select id="readProfile" parameterType="String" resultType="String">
+		SELECT memberEmail FROM memberProfile WHERE memberEmail = #{eMail} 		
+	</select>
+	
+	<insert id="insertKnowledgeApply" parameterType="com.sp.dev.member.InfoShare"> 
+		INSERT INTO knowledgeApply (applyNum, memberEmail, categoryCode, applyRole, regDate, status) 
+			VALUES (knowledgeApply_seq.NEXTVAL, #{eMail}, #{category}, #{applyRole}, SYSDATE, 0)
+	</insert>
+	
+	<insert id="insertMemberProfile" parameterType="com.sp.dev.member.InfoShare">
+		INSERT INTO memberProfile (memberEmail, intro, businessEmail, phoneNum) VALUES (#{eMail}, #{intro}, #{bMail}, #{phone})
+	</insert>
+	
+	<update id="updateMemberProfile" parameterType="com.sp.dev.member.InfoShare"> 
+		UPDATE memberProfile SET businessEmail = #{bMail}, intro = #{intro}, phoneNum = #{phone} WHERE memberEmail = #{eMail}
+	</update>
+	
+	<select id="countKnowledgeApply" parameterType="String" resultType="Integer">
+		SELECT COUNT(*) FROM knowledgeApply WHERE memberEmail = #{eMail} AND status = 0
+	</select>
+	
+	<select id="readKnowledgeApply" parameterType="String" resultType="com.sp.dev.member.InfoShare">
+		SELECT * FROM knowledgeApply WHERE memberEmail = #{eMail} AND status = 0
+	</select>
+</mapper>
