@@ -22,7 +22,8 @@
 
 
 .carousel-item img {
-	height: 500px;
+	height: 320px;
+	margin: 0 auto;
 }
 
 
@@ -113,4 +114,8 @@
 	color: tomato;
 	font-weight: 300;
 	font-size: 13px;
+}
+
+.carousel-content-text {
+	padding-left: 80px;
 }
