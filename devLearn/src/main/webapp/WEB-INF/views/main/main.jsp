@@ -4,7 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" type="text/css">
-</head>
+<style type="text/css">
+
+</style>
 <body>
 	<div class="banner">
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -143,48 +145,53 @@
 	</form>
 </div>	
 
-<!-- 최근 수강 -->
-<div class="current-course mt-5 pt-5">
-	<div class="container">
-		<h3>최근 수강 강의</h3>
-		<div class="row">
-			<div class="col-6">
-				<div class="current-card d-flex" id="current-card" >
-					<img src="https://cdn.inflearn.com/public/courses/325630/cover/56f635a3-3a44-4096-a16b-453ea1696b1a/325630-eng.png" style="height: 100%;" class="" alt="...">
-					<div class="current-card-content flex-grow-1 d-flex align-content-center">
-						<div class="card-body row d-flex align-items-center">
-							<p class="card-title">스프링 입문 - 코드로 배우는 스프링 부트</p>
-							<div class="card-txt col-8 text-align-center">
-								<span class="card-text progress-rate">진행률 : 46.80% </span>
-								<span class= "card-text">기한 : 무제한</span>
-								<p><progress class="progress mt-2" value="46.8" max="100" style="width: 100% ; height: 5px;"></progress><p>
+<!-- 로그인 해야만 최근 수강 보이게 -->
+<c:if test="${sessionScope.member.memberEmail != null}">
+	<!-- 최근 수강 -->
+	<div class="current-course mt-5 pt-5">
+		<div class="container">
+			<h3>최근 수강 강의</h3>
+			<div class="row">
+				<div class="col-6">
+					<div class="current-card d-flex" id="current-card" >
+						<img src="https://cdn.inflearn.com/public/courses/325630/cover/56f635a3-3a44-4096-a16b-453ea1696b1a/325630-eng.png" style="height: 100%;" class="" alt="...">
+						<div class="current-card-content flex-grow-1 d-flex align-content-center">
+							<div class="card-body row d-flex align-items-center">
+								<p class="card-title">스프링 입문 - 코드로 배우는 스프링 부트</p>
+								<div class="card-txt col-8 text-align-center">
+									<span class="card-text progress-rate">진행률 : 46.80% </span>
+									<span class= "card-text">기한 : 무제한</span>
+									<p><progress class="progress mt-2" value="46.8" max="100" style="width: 100% ; height: 5px;"></progress><p>
+								</div>
+								<p class="col d-flex justify-content-end "><a href="#" class="btn btn-primary d-flex align-items-center"><span style="font-size: 12px; font-weight: 700;">이어듣기 &nbsp;<i class="fa-solid fa-play"></i></span></a></p>
 							</div>
-							<p class="col d-flex justify-content-end "><a href="#" class="btn btn-primary d-flex align-items-center"><span style="font-size: 12px; font-weight: 700;">이어듣기 &nbsp;<i class="fa-solid fa-play"></i></span></a></p>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-6">
-				<div class="current-card d-flex" id="current-card" >
-					<img src="https://cdn.inflearn.com/public/courses/325969/cover/2868c757-5886-4508-a140-7cb68a83dfd8/325969-eng.png" style="height: 100%;" class="" alt="...">
-					<div class="current-card-content flex-grow-1 d-flex align-content-center">
-						<div class="card-body row d-flex align-items-center">
-							<p class="card-title">스프링 핵심 원리 - 기본편</p>
-							<div class="card-txt col-8 text-align-center">
-								<span class="card-text progress-rate">진행률 : 12.80% </span>
-								<span class= "card-text">기한 : 무제한</span>
-								<p><progress class="progress mt-2" value="12.8" max="100" style="width: 100% ; height: 5px;"></progress><p>
+				<div class="col-6">
+					<div class="current-card d-flex" id="current-card" >
+						<img src="https://cdn.inflearn.com/public/courses/325969/cover/2868c757-5886-4508-a140-7cb68a83dfd8/325969-eng.png" style="height: 100%;" class="" alt="...">
+						<div class="current-card-content flex-grow-1 d-flex align-content-center">
+							<div class="card-body row d-flex align-items-center">
+								<p class="card-title">스프링 핵심 원리 - 기본편</p>
+								<div class="card-txt col-8 text-align-center">
+									<span class="card-text progress-rate">진행률 : 12.80% </span>
+									<span class= "card-text">기한 : 무제한</span>
+									<p><progress class="progress mt-2" value="12.8" max="100" style="width: 100% ; height: 5px;"></progress><p>
+								</div>
+								<p class="col d-flex justify-content-end "><a href="#" class="btn btn-primary d-flex align-items-center"><span style="font-size: 12px; font-weight: 700;">이어듣기 &nbsp;<i class="fa-solid fa-play"></i></span></a></p>
 							</div>
-							<p class="col d-flex justify-content-end "><a href="#" class="btn btn-primary d-flex align-items-center"><span style="font-size: 12px; font-weight: 700;">이어듣기 &nbsp;<i class="fa-solid fa-play"></i></span></a></p>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+
+</c:if>	
 
 
+<!-- 인기강의 -->
 <div class="course-section mt-5">
 	<div class="container">
 		<h3>인기 강의</h3>
@@ -201,7 +208,7 @@
 						<span class="course_review-cnt">(102)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent == 0}">
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
@@ -211,9 +218,32 @@
 							</c:choose>
 						</div>
 					</div>
-					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+					<div class="courseCardBlack ">
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">스프링 핵심 원리 - 기본편</p>
+								<p class="courseDesc"></p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 백엔드, 웹개발</p>
+									<p><i class="fa-solid fa-cubes"></i> MVC, Spring, Back-End</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -230,7 +260,7 @@
 						<span class="course_review-cnt">(45)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent != 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent != 0}">
 									<p class="card-text course-price">￦70000</p>
 								</c:when>
 								<c:otherwise>
@@ -241,8 +271,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">모든 개발자를 위한 HTTP 웹 기본 지식</p>
+								<p class="courseDesc">실무에 꼭 필요한 HTTP 핵심 기능과 올바른 HTTP API 설계 방법을 학습합니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i>웹개발</p>
+									<p><i class="fa-solid fa-cubes"></i> 네트워크, 웹개발 , Back-End</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -260,7 +313,7 @@
 						<span class="course_review-cnt">(453)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent == 0}">
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
@@ -271,8 +324,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">스프링 DB 1편</p>
+								<p class="courseDesc">백엔드 개발에 필요한 DB 데이터 접근 기술을 기초부터 이해하고, 완성할 수 있습니다. </p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i>백엔드, 웹개발</p>
+									<p><i class="fa-solid fa-cubes"></i> Spring, 데이터 베이스 , Back-End</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -290,7 +366,7 @@
 						<span class="course_review-cnt">(78)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent != 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent != 0}">
 									<p class="card-text course-price">￦40000</p>
 								</c:when>
 								<c:otherwise>
@@ -301,8 +377,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">비전공자를 위한 풀스택 맛집지도 만들기 프로젝트!</p>
+								<p class="courseDesc">내가 좋아하는 유튜버의 맛집지도를 만들면서 프론트엔드, 백엔드, 카카오맵 API 사용법, 배포까지 한번에 배울 수 있습니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 풀스택, 프론트 엔드, 백엔드</p>
+									<p><i class="fa-solid fa-cubes"></i> Full-Stack, Front-End, Back-End</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -319,7 +418,7 @@
 						<span class="course_review-cnt">(40)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent == 0}">
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
@@ -330,8 +429,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">자바 개발자를 위한 코틀린 입문</p>
+								<p class="courseDesc">이 강의를 통해 Kotlin 언어의 특성과 배경, 문법과 동작 원리 등을 배울 수 있습니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 프로그래밍 언어, 백엔드</p>
+									<p><i class="fa-solid fa-cubes"></i> Kotlin, Java, 객체 지향</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -356,7 +478,7 @@
 						<span class="course_review-cnt">(2)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent == 0}">
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
@@ -367,8 +489,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">퍼블리셔 취업하는 훌륭한 이력서 작성 가이드</p>
+								<p class="courseDesc">퍼블리셔 취업을 위해 채용 담당자에게 어필할 수 있는 이력서 작성방법을 상세히 알려드립니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 입문</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 취업, 이직, 웹 퍼블리싱</p>
+									<p><i class="fa-solid fa-cubes"></i> 웹 퍼블리싱, 이력서, 취업</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -396,8 +541,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">자바(Java) 알고리즘 문제풀이 : 코딩테스트 대비</p>
+								<p class="courseDesc">자바(Java)로 코딩테스트를 준비하시는 분을 위한 강좌입니다. </p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 알고리즘, 자료구조</p>
+									<p><i class="fa-solid fa-cubes"></i> 알고리즘, Java, 코딩 테스트</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -426,8 +594,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">스프링 부트와 JPA 활용2 - API 개발과 성능 최적화</p>
+								<p class="courseDesc">스프링 부트와 JPA를 활용해서 API를 개발합니다. 그리고 JPA 극한의 성능 최적화 방법을 학습할 수 있습니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 중급이상</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 백엔드, 웹개발</p>
+									<p><i class="fa-solid fa-cubes"></i> Back-End, Java, Spring</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -456,8 +647,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">블렌더 처음 시작부터 로우폴리 3D 애니메이션 까지</p>
+								<p class="courseDesc">블렌더 완전 기초부터 로우폴리 3D 애니메이션 까지 만들 수 있는 강의</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 입문</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> CAD, 3D 모델링, 디자인 툴</p>
+									<p><i class="fa-solid fa-cubes"></i> 블렌더, 3D 모델링</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -474,7 +688,7 @@
 						<span class="course_review-cnt">(15)</span>
 						<div class="course-Prices">
 							<c:choose>
-								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
+								<c:when test="${lectureDcPercent == 0}">
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
@@ -485,8 +699,31 @@
 						</div>
 					</div>
 					<div class="courseCardBlack">
-						<p>강의를 설명해요</p>
-						
+						<div class="d-flex flex-column" style="height: 100%;">
+							<div>
+								<p class="courseTitle">만들면서 배우는 프론트엔드 DO IT 코딩</p>
+								<p class="courseDesc">겉만 멋진 서비스 말고 사용자를 만나서 피드백받을 수 있는 서비스를 만들 수 있습니다.</p>
+								<div class="iconDesc">
+									<p style="color : c5ebf8;"><i class="fa-solid fa-stairs"></i> 초급</p>
+									<p><i class="fa-regular fa-rectangle-list"></i> 프론트엔드, 웹개발</p>
+									<p><i class="fa-solid fa-cubes"></i> Front-End, Next.js</p>
+								</div>
+							</div>
+							<div class="flex-grow-1  "  style="position: relative;">
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 30px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">장바구니에 담기</p>
+									</div>
+									<p class="overP d-flex">&nbsp;&nbsp;<i class="fa-solid fa-cart-plus"></i><p>
+								</div>
+								<div class="blackAdd d-flex" style="position: absolute; right: 0 ; bottom: 0px;">
+									<div class="showP d-flex">
+										<p class="d-inline-block">찜하기</p>
+									</div>
+									<p class="overP">&nbsp;&nbsp;<i class="fa-regular fa-heart"></i></p>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -500,5 +737,14 @@ $(".courseCard").mouseover(function (){
 });
 $(".courseCard").mouseout(function (){
 	$(this).find(".courseCardBlack").css("display","none");		
+});
+
+$(".overP").mouseover(function (){
+	$(this).css("color", "tomato");
+	$(this).prev(".showP").css("opacity", "1");
+});
+$(".overP").mouseout(function (){
+	$(this).css("color", "#fff");
+	$(this).prev(".showP").css("opacity", "0");
 });
 </script>

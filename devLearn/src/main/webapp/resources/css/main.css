@@ -185,3 +185,48 @@
 	color: tomato;
 }
 
+.courseCardBlack {
+	padding: 12px;
+	color : #fff;
+}
+
+.courseCardBlack > .courseTitle {
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.courseDesc {
+	font-size: 14px;
+	max-height: 66px;
+	text-overflow: ellipsis;
+}
+
+.iconDesc > p {
+	margin-bottom: 2px;
+	font-size: 14px;
+	color : c5ebf8;
+}
+
+.blackAdd p {
+	text-align: right;
+}
+
+.showP {
+	font-size : 12px;
+	opacity: 0;
+}
+
+.showP p {
+	background: tomato; 
+	border-radius: 3px;
+	padding: 2px 4px;
+	
+}
+
+.overP:hover {
+	cursor: pointer;
+}
+
+.overP:hover +  .showP p {
+	display: block;
+}
