@@ -69,8 +69,13 @@ public class MemberServiceImpl implements MemberService {
 	// 회원 정보 수정
 	@Override
 	public void updateMember(Member dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.updateData("member.updateMember", dto);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 
 	

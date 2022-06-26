@@ -62,6 +62,8 @@
 								<button class="btn btn-outline-primary" type="button" onclick="location.href='${pageContext.request.contextPath}/member/logout';">로그아웃</button>
 								&nbsp;
 								<button class="btn btn-outline-danger" type="button" onclick="location.href='${pageContext.request.contextPath}/mypage/mypage';">마이페이지</button>
+								&nbsp;
+								<button class="btn btn-outline-success" type="button" onclick="location.href='${pageContext.request.contextPath}/member/pwdCheck';">정보수정</button>
 							</c:otherwise>
 						</c:choose>
 				</div>

@@ -23,12 +23,21 @@ class MemberController {
 	@Autowired
 	private MemberService service;
 	
+	@RequestMapping(value = "goMain")
+	public String goMain() {
+		
+		return "redirect:/";
+	}
+	
+	// 회원가입 폼 (GET)
 	@RequestMapping(value = "signUp", method = RequestMethod.GET)
 	public String memberForm(Model model) {
 		model.addAttribute("mode", "signUp");
-		return ".member.signUp";
+		
+		return ".member.member";
 	}
 	
+	// 회원가입 (POST)
 	@RequestMapping(value = "signUp", method = RequestMethod.POST)
 	public String memberSubmit(
 			Member dto,
@@ -39,14 +48,14 @@ class MemberController {
 		} catch (DuplicateKeyException e) {
 			// 기본키 중복에 의한 제약 조건 위반
 			model.addAttribute("message", "이메일 중복으로 회원가입에 실패했습니다.");
-			return ".member.signUp";
+			return ".member.member";
 		} catch (DataIntegrityViolationException e) {
 			// 데이터형식 오류, 참조키, NOT NULL 등의 제약조건 위반
 			model.addAttribute("message", "제약 조건 위반으로 회원가입이 실패했습니다.");
-			return ".member.signUp";
+			return ".member.member";
 		} catch (Exception e) {
 			model.addAttribute("message", "회원가입이 실패했습니다.");
-			return ".member.signUp";
+			return ".member.member";
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -60,6 +69,7 @@ class MemberController {
 	}
 	
 	
+	// 확인문구
 	@RequestMapping(value = "complete")
 	public String complete(@ModelAttribute("message") String message) throws Exception {
 		if(message == null || message.length() == 0) {
@@ -69,12 +79,15 @@ class MemberController {
 		return ".member.complete";
 	}
 	
+	
+	// 로그인 (GET)
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String loginForm() {
 		
 		return ".member.login";
 	}
 	
+	// 로그인 (POST)
 	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public String loginSubmit(
 			@RequestParam String memberEmail,
@@ -111,6 +124,8 @@ class MemberController {
 		return uri;
 	}
 	
+	
+	// 로그아웃
 	@RequestMapping(value = "logout")
 	public String logout(HttpSession session) {
 		// 세션 정보 삭제
@@ -122,6 +137,7 @@ class MemberController {
 	}
 	
 	
+	// 
 	@RequestMapping(value = "infoShare", method = RequestMethod.GET)
 	public String infoShare() {
 		
@@ -185,6 +201,57 @@ class MemberController {
 		return "redirect:/member/complete";
 	}
 	
+	
+	// 정보수정 전 패스워드 재확인
+	@RequestMapping(value = "pwdCheck")
+	public String pwdCheck(HttpSession session, Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info == null) {
+			return "redirect:/";
+		}
+		Member dto = service.readMember(info.getMemberEmail());
+		
+		model.addAttribute("dto", dto);
+		
+		return ".member.pwdCheck";
+	}
+	
+	// 정보수정(GET)
+	@RequestMapping(value = "update", method=RequestMethod.GET)
+	public String updateForm(
+			@RequestParam String memberEmail,
+			HttpSession session,
+			Model model) throws Exception {
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		Member dto = service.readMember(info.getMemberEmail());
+		
+		model.addAttribute("dto", dto);
+		model.addAttribute("mode", "update");
+		
+		return ".member.member";
+	}
+	
+	// 정보수정(POST)
+	@RequestMapping(value = "update", method=RequestMethod.POST)
+	public String updateSubmit(
+			Member dto,
+			final RedirectAttributes reAttr,
+			Model model) throws Exception {
+		
+		try {
+			service.updateMember(dto);
+		} catch (Exception e) {
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(dto.getMemberName() + "님의 회원정보가 정상적으로 변경되었습니다.<br>");
+		sb.append("메인화면으로 이동 하시기 바랍니다.<br>");
+
+		reAttr.addFlashAttribute("title", "회원 정보 수정");
+		reAttr.addFlashAttribute("message", sb.toString());
+
+		return "redirect:/member/complete";
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////

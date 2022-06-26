@@ -11,6 +11,15 @@
     WHERE m.memberEmail = #{memberEmail}
 	</select>
 	
+	<!-- 로그인 성공 시 비밀번호 틀릿횟수 초기화-->
+	<update id="resetPwdFail">
+		
+	</update>
+	
+	<!-- 로그인 실패 시 비밀번호 틀린횟수 증가 -->
+	
+	<!-- 비밀번호 틀린횟수 5회 누적 시 계정 비활성화 -->
+	
 	
 	<!-- 회원가입 -->
 	<insert id="insertMember" parameterType="com.sp.dev.member.Member">
@@ -36,9 +45,18 @@
 	
 	
 	<!-- 임시 비밀번호로 회원비번 수정 -->
-	<update id="updateMembership">
+	<!-- <update id="updateMembership">
 		UPDATE member SET memberPwd = #{memberPwd}
 			WHERE memberEmail = #{memberEmail}
+	</update> -->
+	
+	
+	<!-- 회원정보수정 -->
+	<update id="updateMember" parameterType="com.sp.dev.member.Member">
+		UPDATE member SET memberName = #{memberName}, 
+			memberPwd = #{memberPwd}, infoUpdate = SYSDATE
+		WHERE memberEmail = #{memberEmail}
 	</update>
+	
 	
 </mapper>

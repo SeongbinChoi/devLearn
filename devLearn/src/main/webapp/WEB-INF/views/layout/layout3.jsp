@@ -116,13 +116,13 @@ function signUp() {
 				<hr class="mt-3">
 				<small class="fw-bold mb-3 text-secondary text-center">간편 로그인</small>
 				<div>&nbsp;</div>
-				<button class="w-100 py-2 mb-2 btn btn-outline-warning rounded-4" type="submit">
+				<button class="w-100 py-2 mb-2 btn btn-outline-warning rounded-4" type="button">
 					Sign up with Kakao
 				</button>
-				<button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="submit">
+				<button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-4" type="button">
 					Sign up with Facebook
 				</button>
-				<button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-4" type="submit">
+				<button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-4" type="button">
 					Sign up with GitHub
 				</button>
 				</form>

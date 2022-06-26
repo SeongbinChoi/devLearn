@@ -10,25 +10,28 @@ function memberOk() {
 	const f = document.memberForm;
 	let str;
 	
-	// 이메일 입력확인
 	str = f.memberEmail.value;
-	if(!str) {
-		str = "이메일을 입력해주세요.";
-        $(".emailOC").css("color","red"); 
-		$(".emailOC").html(str);
-		f.memberEmail.focus();
-		return;
-	}
-	
-	// 이메일 인증확인
 	let mode = "${mode}";
-	str = f.mCertification.value;
-	if(mode === "signUp" && !str) {
-		str = "이메일 인증을 해주세요.";
-        $(".codeCheck").css("color","red"); 
-		$(".codeCheck").html(str);
-		f.mCertification.focus();
-		return;
+	
+	if(mode == "signUp") {
+		// 이메일 입력확인
+		if(!str) {
+			str = "이메일을 입력해주세요.";
+	        $(".emailOC").css("color","red"); 
+			$(".emailOC").html(str);
+			f.memberEmail.focus();
+			return;
+		}
+		
+		// 이메일 인증확인
+		str = f.mCertification.value;
+		if(!str) {
+			str = "이메일 인증을 해주세요.";
+	        $(".codeCheck").css("color","red"); 
+			$(".codeCheck").html(str);
+			f.mCertification.focus();
+			return;
+		}
 	}
 	
 	// 이름확인
@@ -73,7 +76,7 @@ function memberOk() {
 	}
 	
 	
-	f.action = "${pageContext.request.contextPath}/member/signUp";
+	f.action = "${pageContext.request.contextPath}/member/${mode}";
 	f.submit();
 }
 
@@ -180,27 +183,58 @@ function certificationCheck() {
 <!-- 메인 -->
 <div class="container" style="width:400px;">	
 	<form name="memberForm" method="post" class="mt-5 pt-5">
-		<h2 class="h3 mb-4 fw-normal">회원 가입</h2>
+		<h2 class="h3 mb-4 fw-normal">${mode == "signUp" ? "회원가입" : "정보수정"}</h2>
 		<div class="row gy-4">
-			<div class="col-8">
-				<input type="email" class="form-control form-control-lg" name="memberEmail" id="mEmail" placeholder="name@example.com">
-			</div>
-			<div class="col-4">
-				<button id="buttonOne" type="button" class="btn btn-primary form-control-lg" style="width:100%; height:100%;" onclick="emailOverlapCheck();">중복확인</button>
-			</div>
-			<p class="emailOC" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px; color:red;"></p>
-			<div class="col-8 certification_chk">
-				<input type="text" class="form-control form-control-lg" name = "mCertification" id="mCertification" placeholder="인증번호">
-				<input id="Certification" type="hidden">
-			</div>
-			<div class="col-4 certification_chk">
-				<button id="buttonOne1" type="button" class="btn btn-primary form-control-lg" style="width:100%; height:100%;" onclick="certificationCheck();">확인</button>
-			</div>
-			<p class="codeCheck" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px; color:red;"></p>
-			<div class="col-12">
-				<input type="text" class="form-control form-control-lg" name = "memberName" id="memberName" placeholder="이름">
-			</div>
+			<c:choose>
+				<c:when test="${mode == 'signUp'}">
+					<div class="col-8">
+						<input type="email" class="form-control form-control-lg" name="memberEmail" id="mEmail" placeholder="name@example.com">
+					</div>
+					<div class="col-4">
+						<button id="buttonOne" type="button" class="btn btn-primary form-control-lg" style="width:100%; height:100%;" onclick="emailOverlapCheck();">중복확인</button>
+					</div>
+					<p class="emailOC" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px; color:red;"></p>
+				</c:when>
+				<c:otherwise>
+					<div class="col-2" style="font-size: 20px; line-height: 40px; padding: 0; text-align: center;">
+						<p>이메일</p>
+					</div>
+					<div class="col-10">
+						<input type="email" class="form-control form-control-lg" name="memberEmail" id="mEmail" value="${dto.memberEmail}" readonly="readonly">
+					</div>
+				</c:otherwise>
+			</c:choose>
+			
+			<c:if test="${mode == 'signUp' }">
+				<div class="col-8 certification_chk">
+					<input type="text" class="form-control form-control-lg" name = "mCertification" id="mCertification" placeholder="인증번호">
+					<input id="Certification" type="hidden">
+				</div>
+				<div class="col-4 certification_chk">
+					<button id="buttonOne1" type="button" class="btn btn-primary form-control-lg" style="width:100%; height:100%;" onclick="certificationCheck();">확인</button>
+				</div>
+				<p class="codeCheck" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px; color:red;"></p>
+			</c:if>
+			
+			<c:choose>
+				<c:when test="${mode == 'signUp' }">
+					<div class="col-12">
+						<input type="text" class="form-control form-control-lg" name = "memberName" id="memberName" placeholder="이름">
+					</div>
+					
+				</c:when>
+				
+				<c:otherwise>
+					<div class="col-2" style="font-size: 20px; line-height: 40px; padding: 0; text-align: center;">
+						<p>이름</p>
+					</div>
+					<div class="col-10">
+						<input type="text" class="form-control form-control-lg" name = "memberName" id="memberName" placeholder="이름" value="${dto.memberName}">
+					</div>
+				</c:otherwise>
+			</c:choose>
 			<p class="nameCheck" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px;"></p>
+			
 			<div class="col-12">
 				<input type="password" class="form-control form-control-lg" name="memberPwd" id="floatingPassword" placeholder="패스워드">
 			</div>
@@ -210,11 +244,13 @@ function certificationCheck() {
 			</div>
 			<p class="pwdReCheck" style="margin-bottom: 0px; margin-top: 8px; margin-left: 5px;"></p>
 			<div class="form-footer col-12 checkbox mb-3">
-				<span><small>가입 시, 데브런의 <a href="#" style="color:red">이용약관</a>, <a href="#" style="color:red">개인정보취급방침</a> 에 동의합니다.</small></span>
-				<label><small class="me-2">통합회원 할인 혜택 및 유용한 채용 소식을 받아볼래요</small><input type="checkbox" name="emailCheck" id="emailCheck"></label>
+				<c:if test="${mode == 'signUp' }">
+					<span><small>가입 시, 데브런의 <a href="#" style="color:red">이용약관</a>, <a href="#" style="color:red">개인정보취급방침</a> 에 동의합니다.</small></span>
+				</c:if>
+				<label><small class="me-2">통합회원 할인 혜택 및 유용한 채용 소식을 받아볼래요</small><input type="checkbox" name="emailCheck" id="emailCheck" ${dto.emailCheck == 1 ? "checked" : ""}></label>
 			</div>    
 		</div>
-		<button type="button" class="w-100 btn btn-lg btn-primary" onclick="memberOk();">Sign Up</button>
+		<button type="button" class="w-100 btn btn-lg btn-primary" onclick="memberOk();">${mode == 'signUp' ? 'Sign Up' : 'Sign modify' }</button>
 		<div>
 			<p class="form-control-plaintext text-center">${message}</p>
 		</div>
