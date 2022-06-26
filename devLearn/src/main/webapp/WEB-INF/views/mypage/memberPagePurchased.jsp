@@ -2,12 +2,7 @@
 <%@ page trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
 <style type="text/css">
 .receiptTable {
 	width: 100%;
@@ -61,40 +56,42 @@ td a:hover {
 	color: #0d6edf;
 	font-weight: 600;
 }
+
+.scroll {
+	overflow-y:scroll; height:600px;
+}
 </style>
-</head>
-<body>
+
+
 <jsp:include page="memberPage.jsp"/>
 	<h2>내 구매내역</h2>
-	
-	<table class="receiptTable">
-		<thead>
-			<tr>
-				<th>주문번호</th>
-				<th>주문날짜</th>
-				<th>상태</th>
-				<th>주문명</th>
-				<th>금액</th>
-				<th>거래명세서</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach begin="1" end="5">
+	<div class="scroll">
+		<table class="receiptTable">
+			<thead>
 				<tr>
-					<td>1234565</td>
-					<td>2022-05-05</td>
-					<td>결제완료</td>
-					<td>강의명강의명강의명강의명강의명</td>
-					<td>
-						<p>￦30,000</p>
-						<p>- ￦3,000</p>
-						<p>￦27,000</p>
-					<td><a href="#">보기</a></td>
+					<th>주문번호</th>
+					<th>주문날짜</th>
+					<th>상태</th>
+					<th>주문명</th>
+					<th>금액</th>
+					<th>거래명세서</th>
 				</tr>
-			</c:forEach>
-		</tbody>
-	
-	</table>
-</main>
-</body>
-</html>
+			</thead>
+			<tbody>
+				<c:forEach var="dto" items="${list}">
+					<tr>
+						<td>${dto.sugangNum}</td>
+						<td>${dto.lectureSdate}</td>
+						<td>결제완료</td>
+						<td>${dto.lectureSubject}</td>
+						<td>
+							<p>${dto.totalPay - dto.totalDiscount}</p>
+							<p>- ${dto.totalDiscount}</p>
+							<p>${dto.totalPay}</p>
+						<td><a href="#">보기</a></td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		
+		</table>
+	</div>

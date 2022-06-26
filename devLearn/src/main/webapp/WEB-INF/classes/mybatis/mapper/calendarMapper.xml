@@ -37,6 +37,7 @@
 		WHERE planNum = #{planNum}
 	</select>
 	
+	
 	<delete id="deleteCalendar" parameterType="map">
 		DELETE FROM planManagement WHERE memberEmail = #{memberEmail} AND planNum = #{planNum}
 	</delete>

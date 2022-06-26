@@ -5,27 +5,69 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/memberPageDashboard.css" type="text/css">	
 
+<style type="text/css">
+
+.chart-section .profile .profile-small-title {
+	padding-top: 10px;
+	padding-left: 20px;
+	font-size: 15px;
+	font-weight: bold;
+	color: gray;
+}
+
+.profile-small-title i {
+	margin-right: 5px;
+}
+
+.profile-title {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 0;
+	margin-left: 8px;
+}
+
+
+.profile-title span {
+	font-size: 23px;
+	color: #0d6efd;
+}
+
+.profile-img img {
+	width: 65px;
+	height: 65px;
+}
+
+.chart-section .profile .content {
+	display: flex;
+	align-items: center;
+	height: 65px;
+	margin-top: 15px;
+}
+
+</style>
+
 <jsp:include page="memberPage.jsp"/>
 	
 	<div class="chart-section">
 		<div class="profile">
-			<p>${sessionScope.member.memberNickname}님 프로필</p>
+			<p class="profile-small-title"><i class="fa-regular fa-user"></i>${sessionScope.member.memberNickname}님 프로필</p>
 			<div class="content">
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
-				<p>프로필 내용 출력</p>
+				<div class="profile-img">
+					<c:choose>
+						<c:when test="${dto.saveFileName != null }">
+							<img src="${pageContext.request.contextPath}/uploads/profile/${dto.saveFileName}" class="is-rounded rounded-circle" alt="" >
+						</c:when>
+						<c:otherwise>
+							<img src="https://cdn.inflearn.com/public/main/profile/default_profile.png" class="is-rounded rounded-circle" alt="" >
+						</c:otherwise>
+					</c:choose>
+				</div>
+				<p class="profile-title"><span>${sessionScope.member.memberNickname}</span>님 안녕하세요 ^.^</p>
 			</div>
 			<div class="cardEnd">
 				<a href="${pageContext.request.contextPath}/mypage/profile">프로필 전체 보기</a>
 			</div>
-		</div >
+		</div>
 		<div class="recent-lecture">
 			<p>최근 학습 강의</p>
 			<div class="curr-content">
@@ -87,14 +129,6 @@
 				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
 				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
 				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>				
 			</div>
 			<div class="cardEnd">
 				<a href="myPage-member-lectures.jsp">내 강의 전체 보기</a>

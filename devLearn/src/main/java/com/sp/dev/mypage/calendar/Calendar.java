@@ -13,6 +13,7 @@ public class Calendar {
 	private String memo;
 	private String regDate;
 	
+	
 	public int getPlanNum() {
 		return planNum;
 	}

@@ -41,7 +41,7 @@
 	cursor: pointer;
 }
 
-.chart-section p:first-of-type:not(.content p, .curr-content p, .statistics-num p) {
+.chart-section p:first-of-type:not(.profile-small-title, .content p, .curr-content p, .statistics-num p) {
 	padding-top: 10px;
 	padding-left: 20px;
 	font-size: 20px;

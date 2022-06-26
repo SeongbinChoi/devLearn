@@ -71,6 +71,9 @@
 	cursor: pointer;
 	z-index: 9999;
 	margin: 24px auto;
+	background-repeat : no-repeat;
+	background-size: 150%;
+	background-position: center;
 }
 
 
