@@ -4,9 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <div class="tableTop my-2 ml-2 d-flex">
-	<span>${notifyCount}개의 신고</span>
+	<span  style="line-height: 38px;"> ${notifyCount}개의 신고</span>
 	<form name="notifyForm"  class="ms-auto" style="display: block">
-		<select name="state" onchange="notifyStateChange();">
+		<select name="state" class="form-select d-block ms-auto " style="width: 130px;"  onchange="notifyStateChange();">
 			<option value="">전체</option>
 			<option value="0" ${state == 0 ? 'selected="selected"' : ""}>처리중</option>
 			<option value="1" ${state == 1 ? 'selected="selected"' : ""}>처리완료</option>

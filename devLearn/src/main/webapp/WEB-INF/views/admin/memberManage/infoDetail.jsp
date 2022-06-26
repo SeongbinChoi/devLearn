@@ -3,7 +3,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-		<form name="infoDetailForm" id="infoDetailForm">
+<!-- Modal -->
+
+  <div class="modal-dialog modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">회원 상세 정보</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="searchMember();"></button>
+      </div>
+      <div class="modal-body">
+        <form name="infoDetailForm" id="infoDetailForm">
 	      	<table class="table td-border my-10" style="border: 1px border-collpase;">
 	      		<tr>
 	      			<td style="width:15%;">E-mail</td>
@@ -32,7 +41,7 @@
 	      		<tr>
 	      			<td style="width:15%;">회원 등급</td>
 	      			<td >
-	      				<select id="mRole" name="mRole" style="width: 100%;">
+	      				<select id="mRole" name="mRole" style="width: 100%;" class="form-select">
 	      					<option value="1"  ${dto.mRole == 1  ? 'selected="selected"' : ''}>회원</option>
 	      					<option value="10" ${dto.mRole == 10 ? 'selected="selected"' : ''}>멘토</option>
 	      					<option value="20" ${dto.mRole == 20 ? 'selected="selected"' : ''}>강사</option>
@@ -52,7 +61,7 @@
 	      		<tr>
 	      			<td>로그인 가능</td>
 	      			<td colspan="2">
-	      				<select name="enabled" id="enabled">
+	      				<select name="enabled" id="enabled" class="form-select">
 	      					<option value="1" ${dto.enabled == 1 ? 'selected="selected"' : ''}>가능</option>
 	      					<option value="99" ${dto.enabled == 99 ? 'selected="selected"' : ''}>불가능</option>
 	      				</select>
@@ -61,7 +70,7 @@
       			<tr>
 	      			<td style="width: 15%;">상태</td>
 	      			<td >
-	      				<select name="stateCode" style="width: 100%;" >
+	      				<select name="stateCode" style="width: 100%;" class="form-select" >
 	      					<option value=""  ${dto.stateCode == 11 ? 'selected="selected"' : '' }> :: 상태 :: </option>
 	      					<option value="1" ${dto.stateCode == 1 ? 'selected="selected"' : '' }>불법적인 방법으로 로그인</option>
 	      					<option value="2" ${dto.stateCode == 2 ? 'selected="selected"' : '' }>불건전 게시물 등록</option>
@@ -89,64 +98,82 @@
 				<tr>
 					<td>메모</td>
 					<td>
-						<input type="text" name="memo" style="width: 100%;" placeholder="${dto.memo}">
-						<input type="text" style="display: none;" value="${dto.eMail}" name="eMail">					
+						<input type="text" name="memo" class="form-control" >
+						<input type="hidden" value="${dto.eMail}" name="eMail">					
 					</td>
-					<td><button type="button" class="btn btn-primary" onclick="stateUpdate();" style="width: 100%;">변경하기</button> </td>
+					<td>
+						<button type="button" class="btn btn-primary" onclick="stateUpdate();" style="width: 100%;">변경하기</button>
+					</td>
 				</tr>	      			
 	      	</table>
 		</form>
-<div id="stateDetail" style="display: none;">
-	<table class="table td-border my-10" style="border: 1px border-collpase;">
-		<thead>
-			<tr>
-				<th>내용</th>
-				<th>메모</th>
-				<th>변경일</th>
-				<th>변경한 관리자</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="vo" items="${stateList}">
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		</div>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="stateDetailModal" aria-hidden="true" aria-labelledby="stateDetailModalToggleLabel" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stateDetailModalToggleLabel">상태 변경 기록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+       	<table class="table td-border my-10" style="border: 1px border-collpase;">
+			<thead>
 				<tr>
-					<td>
-						<c:choose>
-							<c:when test="${vo.stateCode == 1}">
-								불법적인 방법으로 로그인
-							</c:when>
-							<c:when test="${vo.stateCode == 2}">
-								불건전 게시물 등록
-							</c:when>
-							<c:when test="${vo.stateCode == 3}">
-								다른 유저 비방
-							</c:when>
-							<c:when test="${vo.stateCode == 4}">
-								타 계정 도용
-							</c:when>
-							<c:when test="${vo.stateCode == 5}">
-								기타 약관 위반
-							</c:when>
-							<c:when test="${vo.stateCode == 6}">
-								1년이상 로그인 하지 않음
-							</c:when>
-							<c:when test="${vo.stateCode == 9}">
-								패스워드 6회 이상 실패
-							</c:when>
-							<c:when test="${vo.stateCode == 10}">
-								퇴사
-							</c:when>
-							<c:when test="${vo.stateCode == 11}">
-								해제
-							</c:when>
-						</c:choose>
-					(${vo.stateCode})
-					<td>${vo.memo}</td>
-					<td>${vo.stateDate}</td>
-					<td>${vo.adminId}</td>
+					<th>내용</th>
+					<th>메모</th>
+					<th>변경일</th>
+					<th>변경한 관리자</th>
 				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
-	<p style="text-align: right; font-size: 12px;">최근 5건의 변경만 조회 됩니다.</p>
+			</thead>
+			<tbody>
+				<c:forEach var="vo" items="${stateList}">
+					<tr>
+						<td>
+							<c:choose>
+								<c:when test="${vo.stateCode == 1}">
+									불법적인 방법으로 로그인
+								</c:when>
+								<c:when test="${vo.stateCode == 2}">
+									불건전 게시물 등록
+								</c:when>
+								<c:when test="${vo.stateCode == 3}">
+									다른 유저 비방
+								</c:when>
+								<c:when test="${vo.stateCode == 4}">
+									타 계정 도용
+								</c:when>
+								<c:when test="${vo.stateCode == 5}">
+									기타 약관 위반
+								</c:when>
+								<c:when test="${vo.stateCode == 6}">
+									1년이상 로그인 하지 않음
+								</c:when>
+								<c:when test="${vo.stateCode == 9}">
+									패스워드 6회 이상 실패
+								</c:when>
+								<c:when test="${vo.stateCode == 10}">
+									퇴사
+								</c:when>
+								<c:when test="${vo.stateCode == 11}">
+									해제
+								</c:when>
+							</c:choose>
+						(${vo.stateCode})
+						<td>${vo.memo}</td>
+						<td>${vo.stateDate}</td>
+						<td>${vo.adminId}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<p style="text-align: right; font-size: 12px;">최근 5건의 변경만 조회 됩니다.</p>
+      </div>
+    </div>
+  </div>
 </div>
-	

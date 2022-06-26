@@ -4,19 +4,21 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <div class="tableTop my-2 ml-2 d-flex">
-	<span>총 ${applyCount}건</span>
+	<span style="line-height: 38px;"> 총 ${applyCount}건</span>
 	<form name="applyRoleForm" class="ms-auto" style="display: block" method="post">
-		<select name="status" onChange="applyStatusChange();">
-			<option value="">처리상태</option>
-			<option value="0" ${status == 0 ? "selected='selected'" : "" }>처리중</option>
-			<option value="1" ${status == 1 ? "selected='selected'" : "" }>처리완료</option>
-		</select>
-		<select name="applyRole" onchange="applyRollChange();">
-			<option value="">지원 등급</option>
-			<option value="30" ${applyRole == 30 ? "selected='selected'" : "" }>강사 &amp; 멘토</option>
-			<option value="20" ${applyRole == 20 ? "selected='selected'" : "" }>강사</option>
-			<option value="10" ${applyRole == 10 ? "selected='selected'" : "" }>멘토</option>
-		</select>
+		<div class="d-flex justify-content-end">
+			<select name="status" class="form-select mr-2" style="width: 130px;" onChange="applyStatusChange();">
+				<option value="">처리상태</option>
+				<option value="0" ${status == 0 ? "selected='selected'" : "" }>처리중</option>
+				<option value="1" ${status == 1 ? "selected='selected'" : "" }>처리완료</option>
+			</select>
+			<select name="applyRole" class="form-select " style="width: 130px;" onchange="applyRollChange();">
+				<option value="">지원 등급</option>
+				<option value="30" ${applyRole == 30 ? "selected='selected'" : "" }>강사 &amp; 멘토</option>
+				<option value="20" ${applyRole == 20 ? "selected='selected'" : "" }>강사</option>
+				<option value="10" ${applyRole == 10 ? "selected='selected'" : "" }>멘토</option>
+			</select>
+		</div>
 	</form>
 </div>							
 <div class="table-responsive ">

@@ -42,13 +42,16 @@
 
 
 <script type="text/javascript">
-	let angle = document.querySelectorAll(".fa-angle-down");
-	for(let i = 0; i < angle.length; i++) {
-		angle[i].addEventListener("click", (e) => {
-			let angleParent = e.target.parentElement.parentElement;
-			angleParent.classList.toggle("showMenu");
-		});
-	}
+	$(".icon-link").click(function () {
+		$(this).next("ul").toggle();
+		if ($(this).find(".angle").hasClass("fa-angle-down")) {
+			$(this).find(".angle").removeClass("fa-angle-down");
+			$(this).find(".angle").addClass("fa-angle-up");
+		} else {
+			$(this).find(".angle").removeClass("fa-angle-up");
+			$(this).find(".angle").addClass("fa-angle-down");
+		}
+	});
 </script>
 
 
