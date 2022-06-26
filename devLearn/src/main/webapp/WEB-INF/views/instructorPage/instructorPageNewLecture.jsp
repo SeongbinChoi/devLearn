@@ -293,7 +293,7 @@ function onDisplay() {
 function offDisplay() {
 	$('#lectureDuration').hide();
 	$('#lectureDuration2').hide();
-	document.getElementById("#lectureDuration2").value = null ;
+	document.getElementById('lectureDuration2').value = null;
 }
 
 $(function(){
@@ -339,7 +339,7 @@ $(function(){
 	</div>
 
 	<div class="lecture_def">
-	<form name="lectureForm" method="post" enctype="multipart/form-data">
+	<form name="lectureForm" method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/instructorPage/instructorPageNewLecture3">
 		<label for="lecture_sum" class="label input_label">
         	<span>강의 제목</span>
         </label>
@@ -472,7 +472,7 @@ $(function(){
 					</div>
 	         	</div>
 	         </div>
-			
+						
 		</div>
       </form>
      </div>

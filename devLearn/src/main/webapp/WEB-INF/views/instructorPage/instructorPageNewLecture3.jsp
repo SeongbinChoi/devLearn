@@ -168,10 +168,10 @@ $(function() {
 	}
 	
 	$(".lectureVideo").click(function(){
-		$("form[name=lectureForm] input[name=selectFile]").trigger("click"); 
+		$("form[name=lectureForm] input[name=videoSelectFile]").trigger("click"); 
 	});
 	
-	$("form[name=lectureForm] input[name=selectFile]").change(function(){
+	$("form[name=lectureForm] input[name=videoSelectFile]").change(function(){
 		var file=this.files[0];
 		if(! file) {
 			$("lectureVideo").empty();
@@ -206,8 +206,8 @@ $(function(){
 })
 
 window.addEventListener("load", function(){
-	const inputFileEl = document.querySelector("form input[name=selectFile]");
-	const inputTimeEl = document.querySelector("form input[name=filetotaltime]");
+	const inputFileEl = document.querySelector("form input[name=videoSelectFile]");
+	const inputTimeEl = document.querySelector("form input[name=fileTotalTime]");
 	const videoEl = document.getElementById("lvideo");
 	
 	inputFileEl.addEventListener("change", function(){
@@ -228,6 +228,15 @@ window.addEventListener("load", function(){
 		};
 	});
 });
+
+function sendOk() {
+    var f = document.lectureForm;
+	   
+	let query = $("form[name=lectureForm]").serialize();
+	console.log(query);
+    //f.action = "${pageContext.request.contextPath}/instructorPage/instructorPageLectureList";
+    //f.submit();
+}
 </script>
 </head>
 <body>
@@ -243,10 +252,16 @@ window.addEventListener("load", function(){
 	<form name="lectureForm" method="post" enctype="multipart/form-data">
         
         <label for="lecture_sum" class="label input_label">
+	        	<span>챕터</span>
+	    </label>
+	    
+	    <input type="text" class="form-control" name="chapter" id="chapter" placeholder="" value="${dto.chapter}" style="margin-top: 10px; margin-bottom: 20px;  width: 30%;">
+        
+        <label for="lecture_sum" class="label input_label">
         	<span>강의 명</span>
         </label>
         
-        <input type="text" value="" class="form-control" id="" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
+        <input type="text" value="${dto.videoTitle}" name="videoTitle" class="form-control" id="" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
 		
 		<label for="lecture_sum" class="label input_label" style="margin-top: 40px;">
         	<span>강의영상 미리보기</span>
@@ -262,21 +277,22 @@ window.addEventListener("load", function(){
 						<small style="color: #A6A6A6;">확장자: mkv, avi, mp4</small>
 					</label>
 					
-					<input type="file" name="selectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
+					<input type="file" name="videoSelectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
 	         		
 	         		<label for="lecture_sum" class="label input_label">
         				<span>영상 재생시간</span>
         			</label>
-        			<input type="text" class="form-control" id="filetotaltime" name="filetotaltime" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
+        			<input type="text" class="form-control" id="fileTotalTime" name="fileTotalTime" value="${dto.fileTotalTime}" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
 	     </div>  
     	
+    	<input type="hidden" name="lectureNum" value="${dto.lectureNum}">
     	
       </form>
      </div>
         
      
      <div class="button_container">   
-    	<button class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의 제작완료</button>
+    	<button class="btn btn-outline-secondary" onclick="sendOk();">강의 제작완료</button>
 	 </div>
 	
 	

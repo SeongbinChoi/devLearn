@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sp.dev.admin.contentManage.ContentManage;
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
 
@@ -75,7 +78,8 @@ public class InstructorPageController {
 	
 	@RequestMapping(value = "instructorPageNewLecture2", method = RequestMethod.POST)
 	public String instructorPageNewLecture2(
-			Lectures dto, HttpSession session
+			Lectures dto, HttpSession session,
+			RedirectAttributes ra
 			) throws Exception {
 		// 테이블애 자장하고 비디오 등록 화면으로 이동
 		
@@ -86,19 +90,35 @@ public class InstructorPageController {
 		dto.setMemberEmail(info.getMemberEmail());
 		
 		try {
-			service.insertLecture(dto, pathname);
+			dto=service.insertLecture(dto, pathname);
 		} catch (Exception e) {
 		}
+		
+		ra.addFlashAttribute("dto", dto);
 		
 		return "redirect:/instructorPage/instructorPageNewLecture2";
 	}
 
 
 	
-	@RequestMapping(value = "instructorPageNewLecture3", method = RequestMethod.GET)
-	public String instructorPageNewLecture3() throws Exception {
+	@RequestMapping(value = "instructorPageLectureList", method = RequestMethod.POST)
+	public String instructorPageLectureList(
+			Lectures dto, HttpSession session
+			) throws Exception {
+		// 테이블애 저장하고 비디오 리스트 화면으로 이동
 		
-		return ".instructorPage.instructorPageNewLecture3";
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + File.separator + "uploads" + File.separator + "video";
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		dto.setMemberEmail(info.getMemberEmail());
+		
+		try {
+			service.insertVideo(dto, pathname);
+		} catch (Exception e) {
+		}
+		
+		return "redirect:/instructorPage/instructorPageLectureList";
 	}
 	
 	@RequestMapping(value = "instructorPageNewLecture2", method = RequestMethod.GET)
@@ -108,11 +128,22 @@ public class InstructorPageController {
 	}
 	
 	@RequestMapping(value = "instructorPageLectureList", method = RequestMethod.GET)
-	public String instructorPageNewLecture4() throws Exception {
+	public String instructorPageLectureList() throws Exception {
 		
 		return ".instructorPage.instructorPageLectureList";
 	}
 	
+	@RequestMapping(value = "instructorPageNewLecture4", method = RequestMethod.GET)
+	public String instructorPageNewLecture4() throws Exception {
+		
+		return ".instructorPage.instructorPageNewLecture4";
+	}
+	
+	@RequestMapping(value = "instructorPageNewLecture3", method = RequestMethod.GET)
+	public String instructorPageNewLecture3() throws Exception {
+		
+		return ".instructorPage.instructorPageNewLecture3";
+	}
 	
 	@RequestMapping(value = "instructorPage", method = RequestMethod.GET)
 	public String instructorPage() throws Exception {
@@ -120,11 +151,8 @@ public class InstructorPageController {
 		return ".instructorPage.instructorPage";
 	}
 	
-	@RequestMapping(value = "instructorPage2", method = RequestMethod.GET)
-	public String instructorPage2() throws Exception {
-		
-		return ".instructorPage.instructorPage2";
-	}
+	
+	
 	
 	@RequestMapping(value = "instructorPageDashBoard", method = RequestMethod.GET)
 	public String instructorPageDashBoard() throws Exception {
@@ -137,6 +165,14 @@ public class InstructorPageController {
 		
 		return ".instructorPage.instructorPageRev";
 	}
+	
+	@RequestMapping(value = "instructorPageQnaList", method = RequestMethod.GET)
+	public String instructorPageQnaList() throws Exception {
+		
+		return ".instructorPage.instructorPageQnaList";
+	}
+	
+	
 	
 }
 

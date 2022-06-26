@@ -165,7 +165,7 @@
 					<p class="menu-label">강의 관리</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="myPage-instructor-qList.jsp">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/instructorPage/instructorPageQnaList">
 								<span>질문 리스트</span>
 							</a>
 						</li>	

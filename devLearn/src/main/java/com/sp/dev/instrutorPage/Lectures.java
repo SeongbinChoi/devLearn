@@ -24,7 +24,7 @@ public class Lectures {
 	private String videoFileName;
 	
 	private MultipartFile selectFile;
-	private List<MultipartFile> videoSelectFile;
+	private MultipartFile videoSelectFile;
 	
 	private String mainCategory;
 	private String categoryName;
@@ -348,10 +348,10 @@ public class Lectures {
 	public void setReviewAnswer(String reviewAnswer) {
 		this.reviewAnswer = reviewAnswer;
 	}
-	public List<MultipartFile> getVideoSelectFile() {
+	public MultipartFile getVideoSelectFile() {
 		return videoSelectFile;
 	}
-	public void setVideoSelectFile(List<MultipartFile> videoSelectFile) {
+	public void setVideoSelectFile(MultipartFile videoSelectFile) {
 		this.videoSelectFile = videoSelectFile;
 	}
 	public String getLectureDuration() {

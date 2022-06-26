@@ -35,10 +35,10 @@ th, td {
     <tr>
       <th scope="col">강의 이미지</th>
       <th scope="col">강의명</th>
-      <th scope="col">평점</th>
-      <th scope="col">총 수강생</th>
-      <th scope="col">질문</th>
-      <th scope="col">총 수입</th>
+      <th scope="col">카테고리</th>
+      <th scope="col">가격</th>
+      <th scope="col">할인율</th>
+      <th scope="col">등록날짜</th>
       <th scope="col">상태</th>
       
     </tr>

@@ -30,8 +30,11 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 	}
 
 	@Override
-	public void insertLecture(Lectures dto, String pathname) throws Exception {
+	public Lectures insertLecture(Lectures dto, String pathname) throws Exception {
 		try {
+			int seq = dao.selectOne("instructorPage.seq");
+			
+			dto.setLectureNum(seq);
 			
 			if(! dto.getSelectFile().isEmpty()) {
 				String thumbNail = fileManager.doFileUpload(dto.getSelectFile(), pathname);
@@ -44,6 +47,8 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 			e.printStackTrace();
 			throw e;
 		}
+		
+		return dto;
 
 	}
 
@@ -79,6 +84,24 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 		}
 		
 		return list;
+	}
+
+	@Override
+	public void insertVideo(Lectures dto, String pathname) throws Exception {
+		try {
+			
+			if(! dto.getVideoSelectFile().isEmpty()) {
+				String videoFileName = fileManager.doFileUpload(dto.getVideoSelectFile(), pathname);
+				dto.setVideoFileName(videoFileName);
+			}
+			
+			dao.insertData("instructorPage.insertVideo", dto);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
 	}
 
 }
