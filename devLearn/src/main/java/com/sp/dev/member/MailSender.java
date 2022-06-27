@@ -36,6 +36,7 @@ public class MailSender {
 	}
 
 	
+	
 	// 네이버를 이용하여 메일을 보내는 경우 보내는사람의 이메일이 아래 계정(SMTP 권한 계정)과 다르면 메일 전송이 안된다.
 	// SMTP 권한
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
