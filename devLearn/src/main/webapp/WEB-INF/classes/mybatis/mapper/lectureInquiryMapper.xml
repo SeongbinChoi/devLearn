@@ -16,7 +16,8 @@
 	<select id="listLecInq" parameterType="map" resultType="com.sp.dev.lectureInquiry.LecInq">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate, aMember, answer, a_regDate
+				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate,
+				aMember, answer, TO_CHAR(a_regDate, 'YYYY-MM-DD')a_regDate
 				FROM lectureInquiry l
 				WHERE lectureNum = #{lectureNum}
 				ORDER BY inquiryNum DESC
@@ -25,10 +26,7 @@
 	</select>
 	
 	<delete id="deleteInquiry" parameterType="map">
-		DELETE from lectureinquiry WHERE inquirynum = #{inquirynum}
-			<if test="memberRole != 99">
-				AND qMember = #{qMember}
-			</if>
+		DELETE from lectureinquiry WHERE inquiryNum = #{inquiryNum}
 	</delete>
 	
 </mapper>

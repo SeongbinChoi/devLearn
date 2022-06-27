@@ -64,12 +64,13 @@ public class LecturesController {
 		
 		List<Lectures> list = service.listLecture(map);
 		
-		int lectureNum, n = 0;
-		for(Lectures dto : list) {
-			lectureNum = dataCount - (start + n - 1);
-			dto.setLectureNum(lectureNum);
-			n++;
-		}
+		// 이 부분 없어야 함
+//		int lectureNum, n = 0;
+//		for(Lectures dto : list) {
+//			lectureNum = dataCount - (start + n - 1);
+//			dto.setLectureNum(lectureNum);
+//			n++;
+//		}
 		
 		String query = "";
 		String listUrl = cp + "/lectures/lectures";

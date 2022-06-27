@@ -47,8 +47,7 @@
 					<a class="nav-link" href="#">커뮤니티</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#">새소식</a>
-					<!-- <a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lecturenews/article?lectureNum=${dto.lectureNum}';">수강 전 문의</a> -->
+					<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lecturenews/news?lectureNum=${dto.lectureNum}';">새 소식</a>
 				</li>
 			</ul>
 		</nav>
