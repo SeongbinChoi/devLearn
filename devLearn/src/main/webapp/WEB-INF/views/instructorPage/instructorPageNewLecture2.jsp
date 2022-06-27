@@ -169,10 +169,20 @@ img {
 }
 </style>
 <script>
+function sendOk() {
+    var f = document.videoForm;
+	   
+
+    f.action = "${pageContext.request.contextPath}/instructorPage/instructorPageLectureList";
+    f.submit();
+}
+
 const add_textbox = () => {
 	const box = document.getElementById("box");
 	const newP = document.createElement('p');
-	newP.innerHTML = "<input type='text' readonly='readonly' class='form-control' placeholder='영상 추가하기 (강의명[영상 이름]이 들어갈 예정)' style='margin-top: 10px; margin-right: 30px; margin-left: 30px;'> <input type='button' class='btn btn-secondary' value='영상삭제' onclick='remove(this)' style='margin-top: 10px; margin-right: 20px;'> <input type='button' class='btn btn-secondary' value='영상추가' data-bs-toggle='modal' data-bs-target='#videoModal' style='margin-top: 10px;'>";
+	newP.innerHTML = "<input type='text' readonly='readonly' class='form-control' placeholder='영상 추가하기 (강의명[영상 이름]이 들어갈 예정)' style='margin-top: 10px; margin-right: 30px; margin-left: 30px;'>"+
+	" <input type='button' class='btn btn-secondary' value='영상삭제' onclick='remove(this)' style='margin-top: 10px; margin-right: 20px;'>"+
+	" <input type='button' class='btn btn-secondary' value='영상추가' data-bs-toggle='modal' data-bs-target='#videoModal' style='margin-top: 10px;'>";
 	box.appendChild(newP);
 }
 const remove = (obj) => {
@@ -188,10 +198,10 @@ $(function() {
 	}
 	
 	$(".lectureVideo").click(function(){
-		$("form[name=videoForm] input[name=selectFile]").trigger("click"); 
+		$("form[name=videoForm] input[name=videoSelectFile]").trigger("click"); 
 	});
 	
-	$("form[name=videoForm] input[name=selectFile]").change(function(){
+	$("form[name=videoForm] input[name=videoSelectFile]").change(function(){
 		var file=this.files[0];
 		if(! file) {
 			$("lectureVideo").empty();
@@ -226,7 +236,7 @@ $(function(){
 })
 
 window.addEventListener("load", function(){
-	const inputFileEl = document.querySelector("form input[name=selectFile]");
+	const inputFileEl = document.querySelector("form input[name=videoSelectFile]");
 	const inputTimeEl = document.querySelector("form input[name=filetotaltime]");
 	const videoEl = document.getElementById("lvideo");
 	
@@ -291,11 +301,18 @@ window.addEventListener("load", function(){
 	      </div>
 	      <div class="modal-body">
 	      	<div class="mb-3">
+		      <label for="lecture_sum" class="label input_label">
+		        	<span>챕터</span>
+		      </label>
+		    
+		      <input type="text" class="form-control" name="chapter" id="chapter" placeholder="챕터를 입력하시오" value="${dto.chapter}" style="margin-top: 10px; margin-bottom: 20px;  width: 30%;">
+	     	</div>
+	      	<div class="mb-3">
 				<label for="lecture_sum" class="label input_label">
         			<span>강의 명</span>
         	  	</label>
         
-        		<input type="text" value="" class="form-control" id="" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
+        		<input type="text" value="${dto.videoTitle}" name="videoTitle" class="form-control" id="videoTitle" placeholder="ex) 강의명을 입력해주세요."  style="margin-top: 10px;">
 			</div>
 			<div class="mb-3 tab-content" id="community_tabContent">
 				<label for="lecture_sum" class="label input_label" style="margin-top: 40px;">
@@ -312,19 +329,20 @@ window.addEventListener("load", function(){
 					<small style="color: #A6A6A6;">확장자: mkv, avi, mp4</small>
 				</label>
 					
-				<input type="file" name="selectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
+				<input type="file" name="videoSelectFile" class="form-control" accept="video/*" style="width: 500px; margin-top: 15px; margin-bottom: 30px;">
 			</div>
 			<div class="mb-3">
 				<label for="lecture_sum" class="label input_label">
 	        		<span>영상 재생시간</span>
 	        	</label>
-	        	<input type="text" class="form-control" id="filetotaltime" name="filetotaltime" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
+	        	<input type="text" class="form-control" id="fileTotalTime" name="fileTotalTime" value="${dto.fileTotalTime}" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
 			</div>
+			<input type="hidden" name="lectureNum" value="${dto.lectureNum}">
 			<div class="mt-5 mb-3">
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 					<input type="hidden" name="content2">
 					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">취소</button>
-					<button class="btn btn-outline-secondary" type="button" onclick="">저장</button>
+					<button class="btn btn-outline-secondary" type="button" onclick="sendOk();">저장</button>
 				</div>
 			</div>
 	      </div>

@@ -7,7 +7,7 @@
 		INSERT INTO lecture(lectureNum, memberEmail, categoryCode, lectureSubject, 
 			lectureContent, lecturePrice, regDate, dcPercent, 
 			lectureDuration, thumbNail, lectureState)
-		VALUES(lecture_seq.NEXTVAL, #{memberEmail}, #{categoryCode}, #{lectureSubject},
+		VALUES(#{lectureNum}, #{memberEmail}, #{categoryCode}, #{lectureSubject},
 			#{lectureContent}, #{lecturePrice}, SYSDATE, #{dcPercent}, 
 			#{lectureDuration}, #{thumbNail}, 0)
 	</insert>
@@ -36,5 +36,42 @@
 		SELECT categoryCode, mainCategory, categoryName  FROM category
 		WHERE mainCategory = #{categoryCode}
 	</select>
+	
+	<insert id="insertVideo" parameterType="com.sp.dev.instrutorPage.Lectures">
+		INSERT INTO lectureVideoFile(lectureNum, videoNum, fileTotalTime, videoTitle, chapter, 
+			videoFileName)
+		VALUES(#{lectureNum}, lectureVideoFile_seq.NEXTVAL, #{fileTotalTime}, #{videoTitle}, #{chapter},
+			#{videoFileName})
+	</insert>
+	
+	<select id="seq" resultType="Integer">
+		SELECT lecture_seq.NEXTVAL FROM dual
+	</select>
+	
+	<select id="listLecture" parameterType="java.util.Map" resultType="com.sp.dev.instrutorPage.Lectures">
+		SELECT * FROM(
+		    SELECT ROWNUM rnum, tb.* FROM(
+		        select l.lectureNum, l.memberEmail instMail, m.membername instName , lectureSubject subject, lecturePrice price, l.regDate, dcpercent , 
+		            lectureDuration duration, categoryCode category, lectureContent content, lecturestate state
+		        FROM lecture l
+		        JOIN member m on l.memberEmail = m.memberEmail
+		        <where>
+					<if test="state != '30'">
+						lectureState = #{state}
+					</if>
+				</where>
+		    )tb WHERE ROWNUM &lt;= #{end}
+		) WHERE rnum &gt;= #{start}
+	</select>
+	
+	<select id="countLecture" parameterType="java.util.Map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) FROM LECTURE
+		<where>
+			<if test="state != '30'">
+				lectureState = #{state}
+			</if>
+		</where>
+	</select>
+	
 	
 </mapper>
