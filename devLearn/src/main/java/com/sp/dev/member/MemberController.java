@@ -98,15 +98,13 @@ class MemberController {
 			RedirectAttributes rea,
 			Model model) throws Exception {
 		
-		int res = service.readMemberCount(memberEmail);
-		// 이메일이 존재하지 않으면 -> 실패
-		if(res == 0) {
+		int res = service.readMemberCount(memberEmail); // 이메일이 존재하지 않으면 -> 실패 
+		if(res== 0) { 
 			StringBuilder mes = new StringBuilder();
 			mes.append("등록된 아이디가 아닙니다.");
-			
+		 
 			rea.addFlashAttribute("message", mes.toString());
-			rea.addFlashAttribute("mode", "enabled");
-			return "redirect:/";
+			rea.addFlashAttribute("mode", "enabled"); return "redirect:/"; 
 		}
 		
 		Member dto = service.loginMember(memberEmail);
@@ -141,11 +139,12 @@ class MemberController {
 				rea.addFlashAttribute("mode","enabled");
 				return "redirect:/";
 			}
-				
+			
 			// 틀린횟수 5회 미만시 -> pwdFail 카운트 증가
 			else if(dto.getPwdFail() < 5) {
 				model.addAttribute("message", "패스워드가 일치하지 않습니다.");
 				service.updatePwdFailUp(memberEmail);
+				return ".member.login";
 			}
 		}
 		
