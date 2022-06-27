@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.sp.dev.admin.memberManage.MemberManage;
+
 @Controller("member.memberController")
 @RequestMapping(value = "/member/*")
 class MemberController {
@@ -28,6 +30,7 @@ class MemberController {
 		
 		return "redirect:/";
 	}
+	
 	
 	// 회원가입 폼 (GET)
 	@RequestMapping(value = "signUp", method = RequestMethod.GET)
@@ -79,7 +82,6 @@ class MemberController {
 		return ".member.complete";
 	}
 	
-	
 	// 로그인 (GET)
 	@RequestMapping(value = "login", method = RequestMethod.GET)
 	public String loginForm() {
@@ -93,13 +95,67 @@ class MemberController {
 			@RequestParam String memberEmail,
 			@RequestParam String memberPwd,
 			HttpSession session,
-			Model model) {
+			RedirectAttributes rea,
+			Model model) throws Exception {
+		
+		int res = service.readMemberCount(memberEmail);
+		// 이메일이 존재하지 않으면 -> 실패
+		if(res == 0) {
+			StringBuilder mes = new StringBuilder();
+			mes.append("등록된 아이디가 아닙니다.");
+			
+			rea.addFlashAttribute("message", mes.toString());
+			rea.addFlashAttribute("mode", "enabled");
+			return "redirect:/";
+		}
 		
 		Member dto = service.loginMember(memberEmail);
+		
+		// 로그인 실패시 -> 비번 틀린경우
 		if(dto == null || !memberPwd.equals(dto.getMemberPwd())) {
-			model.addAttribute("message", "아이디 또는 패스워드가 일치하지 않습니다.");
-			return ".member.login";
+			// 틀린횟수 5회 일때 -> 상태 비활성화로 변경 후 메인으로 이동하면서 비활성화 됬다고 알리기
+			if(dto.getPwdFail() == 5) {
+				MemberManage Mdto = new MemberManage();
+				Mdto.setAdminId("admin");
+				Mdto.seteMail(memberEmail);
+				Mdto.setStateCode(9);
+				Mdto.setMemo("비밀번호 잘못입력 횟수 초과");
+				
+				service.updatePwdEnabled(Mdto ,memberEmail);
+				service.updatePwdFailUp(memberEmail);
+				
+				StringBuilder mes = new StringBuilder();
+				mes.append("패스워드 5회 이상 실패로 비활성화 되었습니다.\\n관리자에게 문의해주세요.");
+				
+				rea.addFlashAttribute("message", mes.toString());
+				rea.addFlashAttribute("mode", "enabled");
+				return "redirect:/";
+			}
+			
+			// 틀린횟수 5회 이상 -> 메인으로 이동하면서 비활성화 계정이라고 알려줌
+			else if(dto.getPwdFail() > 5) {
+				StringBuilder mes = new StringBuilder();
+				mes.append("패스워드 5회 이상 실패로 비활성화 되었습니다.\\n관리자에게 문의해주세요.");
+				
+				rea.addFlashAttribute("message", mes.toString());
+				rea.addFlashAttribute("mode","enabled");
+				return "redirect:/";
+			}
+				
+			// 틀린횟수 5회 미만시 -> pwdFail 카운트 증가
+			else if(dto.getPwdFail() < 5) {
+				model.addAttribute("message", "패스워드가 일치하지 않습니다.");
+				service.updatePwdFailUp(memberEmail);
+			}
 		}
+		
+		// 로그인 성공했는데 비활성화 계정인 경우
+		if(dto.getEnabled() == 99) {
+			rea.addFlashAttribute("message","비활성 된 계정입니다. 관리자에게 문의해주세요.");
+			rea.addFlashAttribute("mode","enabled");
+			return "redirect:/";
+		}
+		
 		// 세션에 로그인 정보 저장
 		SessionInfo info = new SessionInfo();
 		info.setMemberEmail(dto.getMemberEmail());
@@ -110,6 +166,14 @@ class MemberController {
 		
 		session.setMaxInactiveInterval(30 * 60);
 		session.setAttribute("member", info);
+		
+		
+		// 6개월이상 정보수정안한사람 -> 관리자문의
+		
+		// 1년이상 미접속자 -> 관리자 문의  (보류)
+		
+		// 로그인 성공 시 변경사항들 업데이트
+		service.updateMemberState(info.getMemberEmail());
 		
 		// 로그인 이전 URI 이동
 		String uri = (String) session.getAttribute("preLoginURI");

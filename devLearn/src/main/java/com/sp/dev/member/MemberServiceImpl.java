@@ -7,6 +7,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sp.dev.admin.memberManage.MemberManage;
 import com.sp.dev.common.dao.CommonDAO;
 
 @Service("member.memberService")
@@ -44,21 +45,51 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 	}
-
-	
-	// 마지막 로그인일시 변경
-	@Override
-	public void updateLastLogin(String email) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 	// 임시비밀번호로 수정 
 	@Override
 	public void updateMemberPwd(Map<String, Object> map) throws Exception {
 		try {
-			dao.updateData("member.updateMembership", map);
+			dao.updateData("member.updateMemberPwd", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	// 로그인 실패 -> 패스워드 오류
+	// 패스워드가 5번 이하인경우 = 카운트 증가
+	@Override
+	public void updatePwdFailUp(String memberEmail) throws Exception {
+		try {
+			dao.updateData("member.updatePwdFail", memberEmail);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	// 패스워드 5회 이상 틀림 = 비활성화로 변경
+	@Override
+	public void updatePwdEnabled(MemberManage dto, String memberEmail) throws Exception {
+		try {
+			dao.updateData("member.updateEnabled", memberEmail);
+			dao.insertData("memberManage.insertMemberState", dto); //memberState 에 로그 찍기
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}		
+	}
+	
+	
+	// 로그인 성공 시 변경사항들 업데이트
+	@Override
+	public void updateMemberState(String memberEmail) throws Exception {
+		try {
+			dao.updateData("member.updateMemberState", memberEmail);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -108,14 +139,6 @@ public class MemberServiceImpl implements MemberService {
 		return dto;
 	}
 	
-	
-	// 회원삭제(삭제가 아닌 비활성화)
-	@Override
-	public void deleteMember(Map<String, Object> map) throws Exception {
-		
-		
-	}
-
 	
 	// 10 자리 임시 인증코드(이메일 확인)
 	@Override

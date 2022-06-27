@@ -42,8 +42,8 @@ public class MailSender {
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
 			// 네이버 : 메일 아래부분 환경설정 클릭후 POP3등을 허용
-			String username = "limchae157@naver.com"; 	// 네이버 사용자;
-			String password = "devlearn!"; 				// 패스워드;
+			String username = ""; 	// 네이버 사용자;
+			String password = ""; 				// 패스워드;
 			return new PasswordAuthentication(username, password);
 		}
 	}

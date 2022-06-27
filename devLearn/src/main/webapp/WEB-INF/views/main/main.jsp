@@ -4,6 +4,18 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css" type="text/css">
+
+<script type="text/javascript">
+$(function() {
+	let mode = "${mode}";
+	let message = "${message}";
+	
+	if(mode == "enabled") {
+		alert(message);
+	}
+});
+</script>
+
 <body>
 	<div class="banner">
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -746,4 +758,5 @@ $(".overP").mouseout(function (){
 	$(this).css("color", "#fff");
 	$(this).prev(".showP").css("opacity", "0");
 });
+
 </script>

@@ -6,7 +6,7 @@
 
 <script type="text/javascript">
 $(function() {
-	alert("아이디와 비밀번호를 잘못 입력했습니다. 다시 입력해주세요.");
+	alert("${message}");
 	$("#floatingInput").focus();
 });
 

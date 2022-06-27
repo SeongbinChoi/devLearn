@@ -109,7 +109,4 @@ public class Member {
 		this.phoneNum = phoneNum;
 	}
 	
-	
-	
-	
 }
