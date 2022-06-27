@@ -728,6 +728,7 @@
 	</div>
 </div>
 
+
 <script type="text/javascript">
 $(".courseCard").mouseover(function (){
 	$(this).find(".courseCardBlack").css("display","block");	
