@@ -1,5 +1,6 @@
 package com.sp.dev.mypage;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,28 @@ public class MypageServiceImpl implements MypageService {
 		}
 		
 		return dto;
+	}
+
+	@Override
+	public DashLecture dashLectureCount(Map<String, Object> map) {
+		DashLecture dto = null;
+		try {
+			dto = dao.selectOne("my.dashLectureCount", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public List<DashLecture> dashRecentLecture(Map<String, Object> map) {
+		List<DashLecture> list = null;
+		try {
+			list = dao.selectList("my.dashRecentLecture", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 
 }

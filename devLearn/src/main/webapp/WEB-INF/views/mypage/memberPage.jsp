@@ -59,7 +59,7 @@
 					<p class="menu-label">학습관리</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myStudy">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/mypage/myLecture">
 								<span>내 학습</span>
 							</a>
 						</li>	

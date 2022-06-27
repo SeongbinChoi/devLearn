@@ -1,5 +1,7 @@
-package com.sp.dev.mypage.like;
+package com.sp.dev.mypage.myLecture;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,27 +18,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sp.dev.common.MyUtil;
 import com.sp.dev.member.SessionInfo;
 
-@Controller("mypage.like.likeController")
+@Controller("mypage.myLecture.myLectureController")
 @RequestMapping("/mypage/*")
-public class LikeController {
+public class MyLectureController {
 	
 	@Autowired
-	private LikeService service;
+	private MyLectureService service;
 	
 	@Autowired
 	private MyUtil myUtil;
 	
-	@RequestMapping(value = "like")
-	public String list(
-			  @RequestParam(value = "page", defaultValue = "1") int current_page,
-			  @RequestParam(value = "free", defaultValue = "2") int free,
-			  @RequestParam(value = "order", defaultValue = "2") int order,
-			  HttpServletRequest req,
-			  HttpSession session,
-			  Model model
-			  ) throws Exception {
+	@RequestMapping(value = "myLecture")
+	public String myLecture(@RequestParam(value = "page", defaultValue = "1") int current_page,
+						  @RequestParam(defaultValue = "") String keyword,
+						  @RequestParam(value = "order", defaultValue = "2") int order,
+						  HttpServletRequest req,
+						  HttpSession session,
+						  Model model) throws Exception {
 		
 		String cp = req.getContextPath();
+		
+		if (req.getMethod().equalsIgnoreCase("GET")) {
+			keyword = URLDecoder.decode(keyword, "UTF-8");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("keyword", keyword);
+		map.put("order", order);
 		
 		int rows = 6;
 		int total_page = 0;
@@ -45,12 +53,9 @@ public class LikeController {
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
 		String id = info.getMemberEmail();
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("memberEmail", id);
-		map.put("free", free);
-		map.put("order", order);
 		
-		dataCount = service.likeDataCount(map);
+		dataCount = service.myLectureDataCount(map);
 		
 		if(dataCount != 0) {
 			total_page = myUtil.pageCount(rows, dataCount);
@@ -66,10 +71,15 @@ public class LikeController {
 		map.put("end", end);
 
 		
-		List<Like> list = service.likeList(map);
+		List<MyLecture> list = service.myLectureList(map);
+		String listUrl = cp + "/mypage/myLecture";
+		String articleUrl = cp + "/lectures/lectures/lectureNum=";
 		
-		String listUrl = cp + "/mypage/like";
-		String articleUrl = cp + "/community/qnaList_article?page=1&rows=10";
+		String query = "rows=" + rows;
+		if (keyword.length() != 0) {
+			query += "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		}
+		listUrl += "?" + query;
 		
 		String paging = myUtil.paging(current_page, total_page, listUrl);
 		
@@ -82,9 +92,10 @@ public class LikeController {
 		model.addAttribute("total_page", total_page);
 		model.addAttribute("paging", paging);
 		
-		model.addAttribute("free", free);
+		model.addAttribute("rows", rows);
+		model.addAttribute("keyword", keyword);
 		model.addAttribute("order", order);
 		
-		return ".mypage.memberPageLike";
+		return ".mypage.memberPageMyLecture";
 	}
 }

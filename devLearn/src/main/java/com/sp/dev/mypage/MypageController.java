@@ -1,6 +1,7 @@
 package com.sp.dev.mypage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -30,17 +31,14 @@ public class MypageController {
 		map.put("memberEmail", id);
 		
 		DashBoard dto = service.readDash(map);
+		DashLecture lec = service.dashLectureCount(map);
+		List<DashLecture> recentList = service.dashRecentLecture(map);
 		
 		model.addAttribute("dto", dto);
+		model.addAttribute("lecture", lec);
+		model.addAttribute("recentList", recentList);
 		
 		return ".mypage.memberPageDashboard";
-	}
-	
-	
-	@RequestMapping(value = "myStudy", method = RequestMethod.GET)
-	public String myStudy() throws Exception {
-		
-		return ".mypage.memberPageMyStudy";
 	}
 	
 	

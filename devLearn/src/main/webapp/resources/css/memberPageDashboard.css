@@ -86,12 +86,11 @@
 .myLectureTable {
 	margin: 0 auto;
 	width: 95%;
-	height: 200px;
 	table-layout: fixed;
 }
 
 .myLectureTable td:first-child {
-	width: 85%;
+	width: 75%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;

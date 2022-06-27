@@ -13,6 +13,8 @@ public class Purchased {
 	private int coupon;
 	private String lectureSubject;
 	private String lectureSdate;
+	private int totalCount;
+	
 	public int getSugangNum() {
 		return sugangNum;
 	}
@@ -84,6 +86,12 @@ public class Purchased {
 	}
 	public void setLectureSdate(String lectureSdate) {
 		this.lectureSdate = lectureSdate;
+	}
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 	
 	

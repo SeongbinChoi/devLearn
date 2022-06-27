@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sp.dev.member.SessionInfo;
 
@@ -36,6 +37,17 @@ public class PurchasedController {
 		model.addAttribute("list", list);
 		
 		return ".mypage.memberPagePurchased";
+	}
+	
+	// 구매내역 리스트 AJAX-Text
+	@RequestMapping(value = "purchased/detailList", method = RequestMethod.GET)
+	public String applyList(@RequestParam int sugangNum, Model model) throws Exception {
+		
+		List<Purchased> list = service.detailList(sugangNum);
+
+		model.addAttribute("detailList", list);
+		
+		return "mypage/purchasedList";
 	}
 	
 }

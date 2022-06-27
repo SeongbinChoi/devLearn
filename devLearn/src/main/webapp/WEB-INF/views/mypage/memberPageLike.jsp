@@ -10,6 +10,10 @@
 	align-items: baseline;
 }
 
+.topSelect {
+	display: flex;
+}
+
 p span {
 	color: #0d6efd;
 	font-weight: 800;
@@ -27,12 +31,7 @@ p span {
 	border-radius: 5px;
 }
 
-.lecture-section {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-		
-}
+
 
 .cards {
 	width: 300px;
@@ -137,21 +136,37 @@ p span {
 
 </style>
 
+<script>
+function freeList() {
+	const f = document.filter;
+	f.submit();
+}
+function filterList() {
+	const f = document.filter;
+	f.submit();
+}
+
+</script>
+
 <jsp:include page="memberPage.jsp"/>
 	<div class="topSection">
 		<p>전체 <span>${dataCount}</span></p>
 		<div class="topSelect">
-			<select class="free">
-				<option>유료/무료</option>
-				<option>유료</option>
-				<option>무료</option>
-			</select>
-			<select class="order">
-				<option>최신순</option>
-				<option>제목순</option>
-				<option>평점순</option>
-				<option>학생 수 순</option>
-			</select>
+			<button type="button" class="btn btn-primary mx-2" onclick="location.href='${pageContext.request.contextPath}/mypage/like';">새로고침</button>
+			<form name="filter" method="post" action="${pageContext.request.contextPath}/mypage/like">
+				<select class="free" name="free" onchange="freeList();">
+					<option value="2" ${free==2 ? "selected='selected' ":""}>유료/무료</option>
+					<option value="0" ${free==0 ? "selected='selected' ":""}>유료</option>
+					<option value="1" ${free==1 ? "selected='selected' ":""}>무료</option>
+				</select>
+				<select class="order" name="order" onchange="filterList();">
+					<option value="2" ${order=="2"?"selected='selected'":""}>최신순</option>
+					<option value="0" ${order=="0"?"selected='selected'":""}>제목순</option>
+					<!-- 
+					<option value="1" ${order=="1"?"selected='selected'":""}>평점순</option>
+					 -->
+				</select>
+			</form>
 		</div>
 	</div>
 	
@@ -179,4 +194,8 @@ p span {
 					</div>
 				</div>
 			</c:forEach>
+	</div>
+	
+	<div class="question px-3 py-1">
+		${dataCount == 0 ? "등록된 게시글이 없습니다." : paging}
 	</div>

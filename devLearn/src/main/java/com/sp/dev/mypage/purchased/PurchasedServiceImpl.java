@@ -26,5 +26,18 @@ public class PurchasedServiceImpl implements PurchasedService {
 		
 		return list;
 	}
+
+	@Override
+	public List<Purchased> detailList(int sugangNum) {
+		List<Purchased> list = null;
+		
+		try {
+			list = dao.selectList("my.purchasedDetailList", sugangNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
+	}
 	
 }

@@ -44,6 +44,10 @@
 	margin-top: 15px;
 }
 
+.click {
+	height: 40px;
+}
+
 </style>
 
 <jsp:include page="memberPage.jsp"/>
@@ -78,24 +82,24 @@
 				</div>
 			</div>
 			<div class="cardEnd">
-				<button type="button" class="btn ">내 모든 강의</button>
+				<button type="button" class="btn" onclick="location.href='${pageContext.request.contextPath}/mypage/myStudy'">내 모든 강의</button>
 				<button type="button" class="btn">이어서 학습하기</button>
 			</div>
 		</div>
 		<div class="my-lectuer">
-			<p>최근 학습중인 강의</p>
+			<p>최근 구매한 강의</p>
 			<div class="content">
 				<table class="myLectureTable">
-					<c:forEach var="i" begin="1" end="5">
+					<c:forEach var="rec" begin="1" end="5" items="${recentList}">
 						<tr class="click" style="cursor: pointer;" onclick="강의 이어보기">
-							<td>스프링 마스터 스프링 마스터 스프링 마스터 스프링 마스터 스프링 마스터 스프링 마스터 스프링 마스</td>
-							<td>3일전</td>
+							<td>${rec.lectureSubject}</td>
+							<td>${rec.lectureSdate}</td>
 						</tr>
 					</c:forEach>
 				</table>
 			</div>
 			<div class="cardEnd">
-				<a href="myPage-member-lectures.jsp">내 강의 전체 보기</a>
+				<a href="${pageContext.request.contextPath}/mypage/myStudy">내 강의 전체 보기</a>
 			</div>
 		</div>
 		<div class="statistics">
@@ -103,13 +107,13 @@
 			<div class="statistics-card d-flex justify-content-evenly align-items-center">
 				<div class="cards">
 					<div class="statistics-num">
-						<p>12</p>
+						<p>${lecture.totalLectureNum}</p>
 					</div>
 					<p>구매한 강의</p>
 				</div>
 				<div class="cards">
 					<div class="statistics-num">
-						<p>123</p>
+						<p>${lecture.finishLectureNum}</p>
 					</div>
 					<p>완료한 수업</p>
 				</div>
@@ -131,7 +135,7 @@
 				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
 			</div>
 			<div class="cardEnd">
-				<a href="myPage-member-lectures.jsp">내 강의 전체 보기</a>
+				<a href="${pageContext.request.contextPath}/mypage/myStudy">내 강의 전체 보기</a>
 			</div>
 		</div>
 	</div>
