@@ -235,9 +235,11 @@ $(function(){
 	});
 })
 
+
+
 window.addEventListener("load", function(){
 	const inputFileEl = document.querySelector("form input[name=videoSelectFile]");
-	const inputTimeEl = document.querySelector("form input[name=filetotaltime]");
+	const inputTimeEl = document.querySelector("form input[name=fileTotalTime]");
 	const videoEl = document.getElementById("lvideo");
 	
 	inputFileEl.addEventListener("change", function(){
@@ -337,10 +339,9 @@ window.addEventListener("load", function(){
 	        	</label>
 	        	<input type="text" class="form-control" id="fileTotalTime" name="fileTotalTime" value="${dto.fileTotalTime}" readonly="readonly" placeholder=" 재생시간이 들어갈 예정"  style="margin-top: 10px;">
 			</div>
-			<input type="hidden" name="lectureNum" value="${dto.lectureNum}">
+			<input type="hidden" name="lectureNum" id="lectureNum" value="${dto.lectureNum}">
 			<div class="mt-5 mb-3">
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
-					<input type="hidden" name="content2">
 					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">취소</button>
 					<button class="btn btn-outline-secondary" type="button" onclick="sendOk();">저장</button>
 				</div>
@@ -351,59 +352,7 @@ window.addEventListener("load", function(){
 	</div>
 ​</form>
 	
-	<!-- ck에디터 -->
-	<script type="text/javascript">
-		ClassicEditor
-		   .create( document.querySelector( '#lectureContent' ), {
-		      fontFamily: {
-		            options: [
-		                'default',
-		                '맑은 고딕, Malgun Gothic, 돋움, sans-serif',
-		                '나눔고딕, NanumGothic, Arial'
-		            ]
-		        },
-		        fontSize: {
-		            options: [
-		                9, 11, 13, 'default', 17, 19, 21
-		            ]
-		        },
-		      toolbar: {
-		         items: [
-		            'heading','|',
-		            'fontFamily','fontSize','bold','italic','fontColor','|',
-		            'alignment','bulletedList','numberedList','|',
-		            'imageUpload','insertTable','sourceEditing','blockQuote','mediaEmbed','|',
-		            'undo','redo','|',
-		            'link','outdent','indent','|',
-		         ]
-		      },
-		      image: {
-		            toolbar: [
-		                'imageStyle:full',
-		                'imageStyle:side',
-		                '|',
-		                'imageTextAlternative'
-		            ],
-		
-		            // The default value.
-		            styles: [
-		                'full',
-		                'side'
-		            ]
-		        },
-		      language: 'ko',
-		      ckfinder: {
-		           uploadUrl: '${pageContext.request.contextPath}/image/upload' // 업로드 url (post로 요청 감)
-		       }
-		   })
-		   .then( editor => {
-		      window.editor = editor;
-		   })
-		   .catch( err => {
-		      console.error( err.stack );
-		   });
 	
-	</script>
 
 </div>
 </main>

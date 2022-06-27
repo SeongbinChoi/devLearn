@@ -38,7 +38,7 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 			
 			if(! dto.getSelectFile().isEmpty()) {
 				String thumbNail = fileManager.doFileUpload(dto.getSelectFile(), pathname);
-				dto.setthumbNail(thumbNail);
+				dto.setThumbNail(thumbNail);
 			}
 			
 			dao.insertData("instructorPage.insertLecture", dto);
@@ -89,7 +89,6 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 	@Override
 	public void insertVideo(Lectures dto, String pathname) throws Exception {
 		try {
-			
 			if(! dto.getVideoSelectFile().isEmpty()) {
 				String videoFileName = fileManager.doFileUpload(dto.getVideoSelectFile(), pathname);
 				dto.setVideoFileName(videoFileName);

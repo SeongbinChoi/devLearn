@@ -1,7 +1,5 @@
 package com.sp.dev.instrutorPage;
 
-import java.util.List;
-
 import org.springframework.web.multipart.MultipartFile;
 
 public class Lectures {
@@ -66,6 +64,7 @@ public class Lectures {
 	private String reviewRegDate;
 	private double lectureRate;
 	private String reviewAnswer;
+	
 	public String getMemberEmail() {
 		return memberEmail;
 	}
@@ -96,11 +95,11 @@ public class Lectures {
 	public void setLectureContent(String lectureContent) {
 		this.lectureContent = lectureContent;
 	}
-	public int getlecturePrice() {
+	public int getLecturePrice() {
 		return lecturePrice;
 	}
-	public void setPrice(int price) {
-		this.lecturePrice = price;
+	public void setLecturePrice(int lecturePrice) {
+		this.lecturePrice = lecturePrice;
 	}
 	public int getDcPercent() {
 		return dcPercent;
@@ -114,11 +113,65 @@ public class Lectures {
 	public void setMemberNickname(String memberNickname) {
 		this.memberNickname = memberNickname;
 	}
+	public String getLectureDuration() {
+		return lectureDuration;
+	}
+	public void setLectureDuration(String lectureDuration) {
+		this.lectureDuration = lectureDuration;
+	}
+	public String getLectureRegDate() {
+		return lectureRegDate;
+	}
+	public void setLectureRegDate(String lectureRegDate) {
+		this.lectureRegDate = lectureRegDate;
+	}
+	public String getThumbNail() {
+		return thumbNail;
+	}
+	public void setThumbNail(String thumbNail) {
+		this.thumbNail = thumbNail;
+	}
+	public int getVideoNum() {
+		return videoNum;
+	}
+	public void setVideoNum(int videoNum) {
+		this.videoNum = videoNum;
+	}
+	public double getFileTotalTime() {
+		return fileTotalTime;
+	}
+	public void setFileTotalTime(double fileTotalTime) {
+		this.fileTotalTime = fileTotalTime;
+	}
+	public String getVideoTitle() {
+		return videoTitle;
+	}
+	public void setVideoTitle(String videoTitle) {
+		this.videoTitle = videoTitle;
+	}
+	public int getChapter() {
+		return chapter;
+	}
+	public void setChapter(int chapter) {
+		this.chapter = chapter;
+	}
+	public String getVideoFileName() {
+		return videoFileName;
+	}
+	public void setVideoFileName(String videoFileName) {
+		this.videoFileName = videoFileName;
+	}
 	public MultipartFile getSelectFile() {
 		return selectFile;
 	}
 	public void setSelectFile(MultipartFile selectFile) {
 		this.selectFile = selectFile;
+	}
+	public MultipartFile getVideoSelectFile() {
+		return videoSelectFile;
+	}
+	public void setVideoSelectFile(MultipartFile videoSelectFile) {
+		this.videoSelectFile = videoSelectFile;
 	}
 	public String getMainCategory() {
 		return mainCategory;
@@ -258,42 +311,6 @@ public class Lectures {
 	public void setQnaAnswerRegDate(String qnaAnswerRegDate) {
 		this.qnaAnswerRegDate = qnaAnswerRegDate;
 	}
-	public int getVideoNum() {
-		return videoNum;
-	}
-	public void setVideoNum(int videoNum) {
-		this.videoNum = videoNum;
-	}
-	public String getthumbNail() {
-		return thumbNail;
-	}
-	public void setthumbNail(String thumbNail) {
-		this.thumbNail = thumbNail;
-	}
-	public double getFileTotalTime() {
-		return fileTotalTime;
-	}
-	public void setFileTotalTime(double fileTotalTime) {
-		this.fileTotalTime = fileTotalTime;
-	}
-	public String getVideoTitle() {
-		return videoTitle;
-	}
-	public void setVideoTitle(String videoTitle) {
-		this.videoTitle = videoTitle;
-	}
-	public int getChapter() {
-		return chapter;
-	}
-	public void setChapter(int chapter) {
-		this.chapter = chapter;
-	}
-	public String getVideoFileName() {
-		return videoFileName;
-	}
-	public void setVideoFileName(String videoFileName) {
-		this.videoFileName = videoFileName;
-	}
 	public int getPauseSaveNum() {
 		return pauseSaveNum;
 	}
@@ -348,24 +365,8 @@ public class Lectures {
 	public void setReviewAnswer(String reviewAnswer) {
 		this.reviewAnswer = reviewAnswer;
 	}
-	public MultipartFile getVideoSelectFile() {
-		return videoSelectFile;
-	}
-	public void setVideoSelectFile(MultipartFile videoSelectFile) {
-		this.videoSelectFile = videoSelectFile;
-	}
-	public String getLectureDuration() {
-		return lectureDuration;
-	}
-	public void setLectureDuration(String lectureDuration) {
-		this.lectureDuration = lectureDuration;
-	}
-	public String getLectureRegDate() {
-		return lectureRegDate;
-	}
-	public void setLectureRegDate(String lectureRegDate) {
-		this.lectureRegDate = lectureRegDate;
-	}
+	
+	
 
 
 
