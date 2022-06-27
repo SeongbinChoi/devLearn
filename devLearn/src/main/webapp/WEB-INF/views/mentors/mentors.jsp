@@ -457,7 +457,7 @@ $(function() {
 	
 //결제 스크립트 아임포트
 var IMP = window.IMP;
-IMP.init("imp99705384");
+IMP.init("가맹점 식별코드 넣기");
 
 function requestPay(data) {
 	IMP.request_pay (
