@@ -13,7 +13,8 @@ public interface MemberService {
 	public void updatePwdFailUp(String memberEmail) throws Exception;
 	// 로그인 실패 횟수를 세고 5회 이상이면 -> 계정 비활성화 시키기
 	public void updatePwdEnabled(MemberManage dto, String memberEmail) throws Exception;
-	
+	// 1년이상 미접속자 -> 계정 비활성화 시키기
+	public void updateLoginEnabled(MemberManage dto, String memberEmail) throws Exception;
 	
 	// 회원가입
 	public void insertMember(Member dto) throws Exception;

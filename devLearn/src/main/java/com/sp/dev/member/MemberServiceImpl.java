@@ -46,7 +46,6 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 	
-	
 	// 임시비밀번호로 수정 
 	@Override
 	public void updateMemberPwd(Map<String, Object> map) throws Exception {
@@ -74,6 +73,19 @@ public class MemberServiceImpl implements MemberService {
 	// 패스워드 5회 이상 틀림 = 비활성화로 변경
 	@Override
 	public void updatePwdEnabled(MemberManage dto, String memberEmail) throws Exception {
+		try {
+			dao.updateData("member.updateEnabled", memberEmail);
+			dao.insertData("memberManage.insertMemberState", dto); //memberState 에 로그 찍기
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}		
+	}
+	
+	// 1년 이상 미접속 = 비활성화로 변경
+	@Override
+	public void updateLoginEnabled(MemberManage dto, String memberEmail) throws Exception {
 		try {
 			dao.updateData("member.updateEnabled", memberEmail);
 			dao.insertData("memberManage.insertMemberState", dto); //memberState 에 로그 찍기

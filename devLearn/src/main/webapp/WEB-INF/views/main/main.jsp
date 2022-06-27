@@ -13,6 +13,11 @@ $(function() {
 	if(mode == "enabled") {
 		alert(message);
 	}
+	
+	if(mode == "logout") {
+		alert(message);
+		location.href="${pageContext.request.contextPath}/member/logout";
+	}
 });
 </script>
 

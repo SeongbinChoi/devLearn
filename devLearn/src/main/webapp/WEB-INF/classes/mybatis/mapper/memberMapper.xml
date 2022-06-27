@@ -23,7 +23,7 @@
 		UPDATE member SET pwdFail = pwdFail + 1 WHERE memberEmail = #{memberEmail}
 	</update>
 	
-	<!-- 비밀번호 틀린횟수 5회 누적 시 계정 비활성화 -->
+	<!-- 비밀번호 틀린횟수 5회 누적 시, 1년 이상 미접속 -> 계정 비활성화 -->
 	<update id="updateEnabled" parameterType="String">
 		UPDATE member SET enabled = 99 WHERE memberEmail = #{memberEmail}
 	</update>

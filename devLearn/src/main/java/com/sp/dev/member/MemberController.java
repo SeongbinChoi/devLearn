@@ -1,5 +1,9 @@
 package com.sp.dev.member;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,7 +121,7 @@ class MemberController {
 				Mdto.setAdminId("admin");
 				Mdto.seteMail(memberEmail);
 				Mdto.setStateCode(9);
-				Mdto.setMemo("비밀번호 잘못입력 횟수 초과");
+				Mdto.setMemo("패스워드 5회이상 실패");
 				
 				service.updatePwdEnabled(Mdto ,memberEmail);
 				service.updatePwdFailUp(memberEmail);
@@ -167,9 +171,38 @@ class MemberController {
 		session.setAttribute("member", info);
 		
 		
+		// 1년이상 미접속자 -> 비활성화 및 관리자 문의
+		String yesDate = dto.getLastLogin().substring(0, 10);
+		
+		Calendar calendar = new GregorianCalendar();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");         
+		calendar.add(Calendar.YEAR, -1);
+		String curDate = sdf.format(calendar.getTime());
+		
+		// yesDate가 마지막 접속날짜, curDate가 현재날짜 -> (현재날짜-1년)이 더 큰경우가 1년 이상 로그인 안함
+		int compare = yesDate.compareTo(curDate);
+		
+		if(compare < 0) {
+			MemberManage Mdto = new MemberManage();
+			Mdto.setAdminId("admin");
+			Mdto.seteMail(memberEmail);
+			Mdto.setStateCode(6);
+			Mdto.setMemo("1년이상 로그인 하지 않음");
+			
+			service.updateLoginEnabled(Mdto ,memberEmail);
+			
+			StringBuilder mes = new StringBuilder();
+			mes.append("1년이상 로그인 하지 않아 비활성화 되었습니다.\\n관리자에게 문의해주세요.");
+			
+			rea.addFlashAttribute("message", mes.toString());
+			rea.addFlashAttribute("mode", "logout");
+			return "redirect:/";
+		}
+		
+		
+		
 		// 6개월이상 정보수정안한사람 -> 관리자문의
 		
-		// 1년이상 미접속자 -> 관리자 문의  (보류)
 		
 		// 로그인 성공 시 변경사항들 업데이트
 		service.updateMemberState(info.getMemberEmail());
