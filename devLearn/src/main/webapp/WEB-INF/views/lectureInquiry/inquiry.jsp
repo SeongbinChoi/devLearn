@@ -13,7 +13,7 @@
 .inquiry-form textarea { width: 100%; height: 75px; resize: none; }
 
 .inquiry-list tr:nth-child(2n+1) { border: 1px solid #ccc; background: #f8f9fa; }
-.inquiry-list .deleteInquiry, .inquiry-list .notifyInquiry { cursor: pointer; }
+.inquiry-list .deleteInquiry, .inquiry-list { cursor: pointer; }
 .inquiry-list .deleteInquiry:hover { text-decoration: underline; color: #F28011; }
 
 textarea::placeholder{
@@ -59,6 +59,7 @@ $(function() {
 	listPage(1);
 });
 
+// 문의 리스트
 function listPage(page) {
 	let url = "${pageContext.request.contextPath}/lectureInquiry/list";
 	let query = "pageNo=" + page + "&lectureNum=${lectureNum}";
@@ -71,6 +72,7 @@ function listPage(page) {
 
 function printInquiry(data) {
 	const uid = "${sessionScope.member.memberEmail}";
+	const qNickname = "${sessionScope.member.memberNickname}";
 	let permission = "${sessionScope.member.memberRole == 99 ? 'true' : 'false'}"; 
 	
 	let dataCount = data.dataCount;
@@ -96,22 +98,44 @@ function printInquiry(data) {
 	let out = "";
 	for(let idx=0; idx < data.list.length; idx++) {
 		let inquiryNum = data.list[idx].inquiryNum;
+		
 		let qmember = data.list[idx].qmember;
 		let question = data.list[idx].question;
 		let q_regDate = data.list[idx].q_regDate;
-
+		
+		let amember = data.list[idx].amember;
+		let answer = data.list[idx].answer;
+		let a_regDate = data.list[idx].a_regDate;
+		
+		// 문의자 이메일, 날짜, 삭제 버튼
 		out += "<tr>";
-		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + qmember + "</span></td>";
+		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + qNickname + "</span></td>";
 		out += "	<td width='50%' align='right'>" + q_regDate;
 		if(uid === qmember || permission === "true") {
+//			out += "	| <span class='updateInquiry' data-inquiryNum='" + inquiryNum + "'>수정</span>";
 			out += "	| <span class='deleteInquiry' data-inquiryNum='" + inquiryNum + "'>삭제</span>";
 		}
 		out += "    </td>";
 		out += "</tr>";
+		
+		// 문의 내용
 		out += "<tr>";
 		out += "    <td colspan='2' valign='top'>" + question + "</td>"; 
-		out += "</tr>";	
+		out += "</tr>";
 		
+		if(answer != null) { // 답변 부분은 없다면 출력하면 안되니까  if를 씌운다
+			// 답변자 이메일, 날짜
+			out += "<tr>";
+			out += "	<td width='45%'>&nbsp<i class='bi bi-arrow-return-right'></i>&nbsp<i class='bi bi-person-circle text-muted'></i> <span>" +  amember + "</span></td>";
+			out += "	<td width='45%' align='right'>" + a_regDate;
+			out += "    </td>";
+			out += "</tr>";
+			
+			// 답변 내용
+			out += "<tr>";
+			out += "    <td colspan='2' valign='top'>&nbsp&nbsp&nbsp&nbsp&nbsp" + answer + "</td>"; 
+			out += "</tr>";
+		}
 	}
 	
 	$(".inquiry-list-body").append(out);
@@ -139,6 +163,7 @@ $(function() {
 	});
 });
 
+// 문의 삭제
 $(function() {
 	$("body").on("click", ".deleteInquiry", function() {
 		if(! confirm("문의를 삭제하시겠습니까?")) {
@@ -146,7 +171,7 @@ $(function() {
 		}
 		
 		let inquiryNum = $(this).attr("data-inquiryNum");
-		let url = "${pageContext.request.contextPath}/lectureInquiry/delete";
+		let url = "${pageContext.request.contextPath}/lectureInquiry/deleteInquiry";
 		let query = "inquiryNum=" + inquiryNum + "&lectureNum=${lectureNum}";
 		const fn = function(data) {
 			$(".inquiry-list-body").empty();
@@ -214,16 +239,40 @@ $(function() {
 				<a class="nav-link" href="#">커뮤니티</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="#">새소식</a>
+				<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lecturenews/news?lectureNum=${lectureNum}';">새 소식</a>
 			</li>
 		</ul>
 	</nav>
+	<hr>
+	<div>
+		<h3><i class="bi bi-clipboard"></i> 수강 전 문의 </h3>
+		<br>
+		<span> 강의를 수강하기 전에 궁금한 사항을 질문해보세요. 강사가 직접 친절하게 답변해 드립니다! </span>
+	</div>
+	<br>
 	 
 	<!-- 일단 답변형 게시판 같은건데 한 줄로 주루룩 나오는건 방명록처럼 나오게 만들면 된다는 것 -->
 	<div class="contentBody">
-		<div class="bodyMain col-8 px-5 py-5">
+		<div class="bodyMain col-8 px-5 py-3">
+			<div id="listLecInq">
+				<div class="mt-1 mb-1">
+					<span class="inquiry-count fw-bold text-primary" data-pageNo="1" data-totalPage="1"></span>
+				</div>
+				
+				<table class="inquiry-list table table-borderless">
+					<tbody class="inquiry-list-body">
+						
+					</tbody>
+				</table>
+				
+				<div class="more-box mt-2 text-end">
+					<span class="more btn btn-light">&nbsp;더보기&nbsp;<i class="bi bi-chevron-down"></i>&nbsp;</span>
+				</div>
+			</div>
+			<br>
+			
 			<form name="inquiryForm" method="post">
-				<div class="inquiry-form border border-secondary mt-5 p-3">
+				<div class="inquiry-form border border-secondary mt-3 p-3">
 					<div class="p-1">
 						<span class="fw-bold">문의 작성</span>
 						<br>
@@ -240,22 +289,6 @@ $(function() {
 					</div>
 				</div>
 			</form>
-			
-			<div id="listLecInq">
-				<div class="mt-4 mb-1">
-					<span class="inquiry-count fw-bold text-primary" data-pageNo="1" data-totalPage="1"></span>
-				</div>
-				
-				<table class="inquiry-list table table-borderless">
-					<tbody class="inquiry-list-body">
-						
-					</tbody>
-				</table>
-				
-				<div class="more-box mt-2 text-end">
-					<span class="more btn btn-light">&nbsp;더보기&nbsp;<i class="bi bi-chevron-down"></i>&nbsp;</span>
-				</div>
-			</div>
 		</div>
 		
 		<!-- 사이드메뉴 -->

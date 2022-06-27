@@ -71,9 +71,7 @@ public class LecInqController {
 			Model model
 			) throws Exception {
 		
-		// SessionInfo info = (SessionInfo) session.getAttribute("member");
 		keyword = URLDecoder.decode(keyword, "utf-8");
-			
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("lectureNum", lectureNum); // 이게 가장 먼저 나와야 그 아래에서 강의별 dataCount든 list든 가져올 수 있다!
@@ -105,15 +103,16 @@ public class LecInqController {
 		return mod;
 	}
 	
-	@RequestMapping(value = "delete", method = RequestMethod.POST)
-	public Map<String, Object> deleteInq(@RequestParam int lectureNum, @RequestParam int inquiryNum, HttpSession session) throws Exception {
+	@ResponseBody
+	@RequestMapping(value = "deleteInquiry", method = RequestMethod.POST)
+	public Map<String, Object> deleteInquiry(@RequestParam int lectureNum, @RequestParam int inquiryNum, HttpSession session) throws Exception {
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		Map<String, Object> map = new HashMap<>();
 		map.put("lectureNum", lectureNum);
+		map.put("inquiryNum", inquiryNum);
 		 
 		String state = "true";
 		try {
-			map.put("inquiryNum", inquiryNum);
 			map.put("memberRole", info.getMemberRole());
 			map.put("memberEmail", info.getMemberEmail());
 			service.deleteInquiry(map);
