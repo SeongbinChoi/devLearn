@@ -60,12 +60,44 @@
 		WHERE mentorNum = #{mentorNum}
 	</select>
 	
-	<insert id="insertMentoringApply" parameterType="map">
+	<select id="readMentoringPaymentSeq" resultType="long">
+		SELECT mentorPay_seq.NEXTVAL FROM dual
+	</select>
+	
+	<!-- <insert id="insertMentoringApply" parameterType="map">
+		<selectKey keyProperty="mentoringNum" resultType="Integer" order="AFTER">
+				SELECT MENTORINGAPPLY_SEQ.NEXTVAL FROM dual
+		</selectKey>
 		INSERT INTO mentoringApply (mentoringNum, mentorNum, memberEmail, mentoringPrice,
 			 mentoringDate, status, phoneNum, applyMessage, applyDate)
 		VALUES ( MENTORINGAPPLY_SEQ.NEXTVAL, #{dto.mentorNum}, #{dto.memberEmail}, #{dto.mentorPrice},
-			'${dto.mentoringDate}', 0, #{dto.phoneNum}, #{dto.applyMessage}, SYSDATE )
-	</insert>
+			#{dto.mentoringDate}, 0, #{dto.phoneNum}, #{dto.applyMessage}, SYSDATE )
+			
+	</insert> -->
+	
+	<update id="insertMentoringApply" parameterType="map">
+		<selectKey keyProperty="mentoringNum" resultType="Integer" order="BEFORE">
+				SELECT MENTORINGAPPLY_SEQ.NEXTVAL FROM dual
+		</selectKey>
+		INSERT ALL
+			INTO mentoringApply (
+				mentoringNum, mentorNum, memberEmail, mentoringPrice,
+				mentoringDate, status, phoneNum, applyMessage, applyDate)
+			VALUES (
+				#{mentoringNum}, #{dto.mentorNum}, #{dto.memberEmail}, #{dto.mentoringPrice},
+				#{dto.mentoringDate}, 0, #{dto.phoneNum}, #{dto.applyMessage}, SYSDATE )
+				
+			INTO mentorPay (
+				detailNum, paid, payDate, payState, approveNum, paymentCode)
+			VALUES (
+				#{mentoringNum}, #{dto.mentoringPrice}, SYSDATE, #{payState}, #{approveNum}, #{paymentCode} )		
+		SELECT * FROM dual
+	</update>
+	
+	<!-- <insert id="insertMentoringPayment" parameterType="map">
+		INSERT INTO mentorPay (detailNum, paid, payDate, payState, approveNum, paymentCode)
+		VALUES (#{lastIndex}, #{dto.mentoringPrice}, SYSDATE, #{payState}, #{approveNum}, #{paymentCode} )	
+	</insert> -->
 	
 	<select id="mentorReviewList" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
 		SELECT mentorRate, mentorReviewContent 

@@ -78,16 +78,27 @@ public class MentorsServiceImpl implements MentorsService {
 	}
 
 	@Override
-	public void insertMentoringApply(Map<String, Object> map) throws Exception {
-		
+	public int insertMentoringApply(Map<String, Object> map) throws Exception {
+			int lastIndex = 0;
 		try {
-			dao.insertData("mentors.insertMentoringApply", map);
+			lastIndex = dao.insertData("mentors.insertMentoringApply", map);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
-		
+		return lastIndex;
 	}
+	
+	@Override
+	public void insertMentoringPayment(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("mentors.insertMentoringPayment", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 
 	@Override
 	public List<Mentors> mentorReviewList(int mentorNum) {
@@ -100,6 +111,19 @@ public class MentorsServiceImpl implements MentorsService {
 		}
 		return list;
 	}
+
+	@Override
+	public long readMentoringPaymentSeq() {
+		long result = 0;
+		
+		try {
+			result = dao.selectOne("mentors.readMentoringPaymentSeq");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
 	
 
 }
