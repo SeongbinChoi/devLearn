@@ -91,7 +91,6 @@
 							<c:if test="${sessionScope.member.memberRole eq '99'}">
 								<button type="button" onclick="send()" class="btn btn-primary">글 작성</button>
 							</c:if>
-							<!-- 이건 관리자한테만 보여야 하는건데...	-->
 						</td>
 					</tr>
 				</table>
