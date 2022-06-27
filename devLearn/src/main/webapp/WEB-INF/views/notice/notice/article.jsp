@@ -133,9 +133,12 @@ img {
 				<div class="card-header">
 				  공지사항
 				</div>
-				<a class="list-group-item list-group-item-action active" aria-current="true" href="#">· 공지사항</a>
-				<a class="list-group-item list-group-item-action" href="#">· 이벤트</a>
-				<a class="list-group-item list-group-item-action" href="#">· FAQ & 1:1문의</a>
+				<a class="list-group-item list-group-item-action active" aria-current="true" href="${pageContext.request.contextPath}/notice/notice">· 공지사항</a>
+				<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/eventList">· 이벤트</a>
+				<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/faq">· FAQ </a>
+				<c:if test="${sessionScope.member.memberEmail != null}">
+					<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/mTomInquiry">· 1:1문의 </a>
+				</c:if>
 			</div>
 		</div>
 			

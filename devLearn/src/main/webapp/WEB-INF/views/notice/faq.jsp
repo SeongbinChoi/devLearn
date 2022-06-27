@@ -15,20 +15,20 @@
 	
 	<div class="content container col-11 my-5 ">
 		<!-- 사이드바 -->
-		<div class="side-nav col-2">
-			<div class="sideMenu ">
-				<div class="notice-menu list-group px-1">
-					<a class="list-group-item list-group-item-action disabled list-group-item-secondary" style="background: rgba(0,0,0,0.03);">공지사항</a>
-					<a class="list-group-item list-group-item-action " href="#">· 공지사항</a>
-					<a class="list-group-item list-group-item-action" href="#">· 이벤트</a>
-					<a class="list-group-item list-group-item-action active" aria-current="true"  href="#">· FAQ</a>
-				</div>			
-			</div>
-			<div class="my-question list-group px-1 mt-3">
-				<a class="list-group-item list-group-item-action" href="#">· 내 문의</a>
+		
+		<div class="sideMenu col-2">
+			<div class="card">
+				<div class="card-header">
+				  공지사항
+				</div>
+				<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/notice">· 공지사항</a>
+				<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/eventList">· 이벤트</a>
+				<a class="list-group-item list-group-item-action active" aria-current="true"  href="${pageContext.request.contextPath}/notice/faq">· FAQ </a>
+				<c:if test="${sessionScope.member.memberEmail != null}">
+					<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/mTomInquiry">· 1:1문의 </a>
+				</c:if>
 			</div>
 		</div>
-	
 		<div class="right-side col-9 " style="float:none; margin:0 auto;">
 			<div class="top-nav">
 				<ul class="nav nav-tabs" id="myTab" role="tablist">

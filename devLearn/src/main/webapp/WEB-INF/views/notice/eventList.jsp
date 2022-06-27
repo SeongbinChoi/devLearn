@@ -17,6 +17,18 @@
 		<div class="sideMenu col-2">
 			<div class="card">
 				<div class="card-header">
+				  공지사항
+				</div>
+				<a class="list-group-item list-group-item-action " aria-current="true" href="${pageContext.request.contextPath}/notice/notice">· 공지사항</a>
+				<a class="list-group-item list-group-item-action active" href="${pageContext.request.contextPath}/notice/eventList">· 이벤트</a>
+				<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/faq">· FAQ </a>
+				<c:if test="${sessionScope.member.memberEmail != null}">
+					<a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/notice/mTomInquiry">· 1:1문의 </a>
+				</c:if>
+			</div>
+			
+			<div class="card mt-3">
+				<div class="card-header">
 				  이벤트
 				</div>
 				<a class="list-group-item list-group-item-action" href="#">· 특강</a>
@@ -76,7 +88,9 @@
 				<table class="table btn-table ">
 					<tr>
 						<td>
-							<button type="button" onclick="send()" class="btn btn-primary">글 작성</button>
+							<c:if test="${sessionScope.member.memberRole eq '99'}">
+								<button type="button" onclick="send()" class="btn btn-primary">글 작성</button>
+							</c:if>
 							<!-- 이건 관리자한테만 보여야 하는건데...	-->
 						</td>
 					</tr>
