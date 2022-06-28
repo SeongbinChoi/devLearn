@@ -128,7 +128,6 @@
 			</div>
 			<div class="buttons">
 				<button class="btn btn_primary e-show-form" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jisikModal">지식공유참여</button>
-				<a class="btn btn_light" target="" href="#">지식공유자 안내서</a>
 			</div>
 		</div>
 	</div>
@@ -293,39 +292,42 @@
 				"지식공유자가 되어주세요!"
 			</h1>
 			<div class="tabs is-centered">
-				<div class="step e_tab is-active">절차</div>
-				<div class="faq e_tab">FAQ</div>
+				<div class="step e_tab is-active" >절차</div>
+				<div class="faq e_tab" >FAQ</div>
 			</div>
-			<div class="step_content">
-				<div class="step_card">
-					<div class="step_title">
-						<span class="green">01.</span>
-						"신청하고, 강의를 만드세요."
+				<div class="step_content d-flex flex-wrap justify-content-between tab-pane fade show active" id = "step_tab_content" style="width: 100%;">
+					<div class="step_card" >
+						<div class="step_title">
+							<span class="green">01.</span>
+							"신청하고, 강의를 만드세요."
+						</div>
+						<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
 					</div>
-					<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
-				</div>
-				<div class="step_card">
-					<div class="step_title">
-						<span class="green">02.</span>
-						"동영상을 업로드하고 소개글을 작성해주세요."
+					<div class="step_card">
+						<div class="step_title">
+							<span class="green">02.</span>
+							"동영상을 업로드하고 소개글을 작성해주세요."
+						</div>
+						<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
 					</div>
-					<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
-				</div>
-				<div class="step_card">
-					<div class="step_title">
-						<span class="green">03.</span>
-						"자기만의 커뮤니티를 만들어보세요."
+					<div class="step_card">
+						<div class="step_title">
+							<span class="green">03.</span>
+							"자기만의 커뮤니티를 만들어보세요."
+						</div>
+						<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
 					</div>
-					<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
-				</div>
-				<div class="step_card">
-					<div class="step_title">
-						<span class="green">04.</span>
-						"이제 합당한 보상을 받으세요."
+					<div class="step_card">
+						<div class="step_title">
+							<span class="green">04.</span>
+							"이제 합당한 보상을 받으세요."
+						</div>
+						<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
 					</div>
-					<div class="step_desc">커뮤니케이션 매니저가 강의 제작과 노하우를 공유해드려요!</div>
 				</div>
-			</div>
+				<div id = "faq_tab_content" class="tab-pane fade">
+					<h1>FAQ</h1>
+				</div>
 		</div>	
 	</div>
 </section>
@@ -341,7 +343,6 @@
 			</p>
 			<div class="buttons">
 				<button class="btn btn_primary e-show-form" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jisikModal">지식공유참여</button>
-				<button class="btn btn_light e-show-form">지식공유자 안내서</button>
 				<input type="hidden" value="${already}" id="alreadyExist"> 
 			</div>
 		</div>
