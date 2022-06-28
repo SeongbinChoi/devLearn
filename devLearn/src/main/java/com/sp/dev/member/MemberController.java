@@ -2,7 +2,6 @@ package com.sp.dev.member;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +107,8 @@ class MemberController {
 			mes.append("등록된 아이디가 아닙니다.");
 		 
 			rea.addFlashAttribute("message", mes.toString());
-			rea.addFlashAttribute("mode", "enabled"); return "redirect:/"; 
+			rea.addFlashAttribute("mode", "enabled"); 
+			return "redirect:/"; 
 		}
 		
 		Member dto = service.loginMember(memberEmail);
@@ -199,9 +199,7 @@ class MemberController {
 			return "redirect:/";
 		}
 		
-		
-		
-		// 6개월이상 정보수정안한사람 -> 관리자문의
+		// 6개월이상 정보수정안한사람 -> 관리자문의(보류 : 정보수정일자가 NULL로 되어있음) 
 		
 		
 		// 로그인 성공 시 변경사항들 업데이트
