@@ -206,7 +206,7 @@ $(function() {
 						str += "<i class='fas fa-star'></i>";
 					}
 					for(let i = 0; i < 5 - item.mentorRate; i++) {
-						str += "<i class='fa-regular fa-star'></i>"
+						str += "<i class='far fa-star'></i>"
 					}
 				str += "</p>";
 				str += "<p>" + item.mentorReviewContent + "</p></div>";
@@ -230,10 +230,10 @@ $(function() {
 	<div class="container mb-5">
 		<div class="contents">
 			<div class="side col-2.5 px-4">
-				<select class="form-select mb-3" name="choiceValue" id="choiceValue" aria-label="Default select example">
-				  <option value="0" <c:if test="${choiceValue eq 0}">selected="selected"</c:if> onclick="selectFn();">:: 검색조건 ::</option>
-				  <option value="1" <c:if test="${choiceValue eq 1}">selected="selected"</c:if> onclick="selectFn();">신규 멘토</option>
-				  <option value="2" <c:if test="${choiceValue eq 2}">selected="selected"</c:if> onclick="selectFn();">인기순</option>
+				<select class="form-select mb-3" name="choiceValue" id="choiceValue" aria-label="Default select example" onchange="selectFn();">
+				  <option value="0" <c:if test="${choiceValue eq 0}">selected="selected"</c:if>>:: 검색조건 ::</option>
+				  <option value="1" <c:if test="${choiceValue eq 1}">selected="selected"</c:if>>신규 멘토</option>
+				  <option value="2" <c:if test="${choiceValue eq 2}">selected="selected"</c:if>>인기순</option>
 				</select>
 				<div class="card">
 					<div class="card-header">
@@ -280,7 +280,7 @@ $(function() {
 							</div>
 							<div class="card-body">
 								<div class="btn-group" role="group" aria-label="Basic outlined example">
-								  <button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mentor_profile.jsp'">프로필</button>
+								  <button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/mentors/mentorProfile?mentorNum=${dto.mentorNum}';">프로필</button>
 								  <button type="button" class="btn btn-outline-primary showModal" data-num="${dto.mentorNum}">내용보기</button>
 								</div>
 							</div>
@@ -457,7 +457,7 @@ $(function() {
 	
 //결제 스크립트 아임포트
 var IMP = window.IMP;
-IMP.init("가맹점 식별코드 넣기");
+IMP.init("imp99705384");
 
 function requestPay(data) {
 	IMP.request_pay (
@@ -466,7 +466,7 @@ function requestPay(data) {
 			pay_method: "card",
 			merchant_uid: "mentoring-" + data.dto.mentorNum + data.paymentSeq, // 중복되지 않게
 			name: data.dto.mentorSubject,
-			amount: data.dto.mentorPrice,
+			amount: 100000,
 			buyer_email: "${sessionScope.member.memberEmail}",
 			buyer_name: "${sessionScope.member.memberName}",
 		buyer_tel: data.phoneNum

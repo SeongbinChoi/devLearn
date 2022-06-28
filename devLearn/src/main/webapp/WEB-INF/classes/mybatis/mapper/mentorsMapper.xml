@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mentors">
+<mapper namespace="mentors">	
 	<select id="listCategory" resultType="com.sp.dev.mentors.Mentors">
 		SELECT * FROM category
 		WHERE maincategory IS NULL
@@ -48,7 +48,7 @@
 	</select>
 	
 	<select id="readMentors" parameterType="Integer" resultType="com.sp.dev.mentors.Mentors">
-		SELECT mentorNum, m.memberNickname, mentorSubject, mentorContent, mentorPrice, ableDay, sTime, eTime
+		SELECT mentorNum, mt.memberEmail, m.memberNickname, mentorSubject, mentorContent, mentorPrice, ableDay, sTime, eTime
 		FROM mentor mt
 		JOIN member m ON mt.memberEmail =  m.memberEmail
 		WHERE mentorNum = #{mentorNum}

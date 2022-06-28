@@ -1,5 +1,6 @@
 package com.sp.dev.mentors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,12 +18,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
+import com.sp.dev.member.SessionInfo;
+import com.sp.dev.mypage.MypageService;
+import com.sp.dev.mypage.profile.Profile;
+import com.sp.dev.mypage.profile.ProfileService;
 
 @Controller("mentors.mentorsController")
 @RequestMapping("/mentors/*")
 public class MentorsController {
 	@Autowired
 	private MentorsService service;
+	
+	@Autowired
+	private ProfileService pfService;
 	
 	@Autowired
 	private MyUtil myUtil;
@@ -81,6 +89,28 @@ public class MentorsController {
 		model.addAttribute("choiceValue", choiceValue);
 		
 		return ".mentors.mentors";
+	}
+	
+	@RequestMapping(value = "mentorProfile")
+	public String mentorProfile(
+			@RequestParam int mentorNum,
+			Model model
+			) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		Mentors mentorInfo = service.readMentors(mentorNum);
+		List<Mentors> reviewList = new ArrayList<Mentors>();
+		map.put("memberEmail", mentorInfo.getMemberEmail());
+		
+		Profile dto = pfService.readProfile(map);
+		reviewList = service.mentorReviewList(mentorNum);
+		
+		model.addAttribute("profileDto", dto);
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("mentorNum", mentorNum);
+		
+		return ".mentors.mentorProfile";
 	}
 	
 	// ajax - json
