@@ -353,8 +353,8 @@ $(function(){
 	        	<small>(해당내용은 강의소개에서 보여집니다.)</small>
 	        </label>
 	        
-	        <textarea class="form-control" id="lectureSummary" rows="3" 
-	        placeholder="ex) 이 강의를 통해 수강생은 검퓨터 공학의 기초를 다질 수 있을 것으로 예상합니다." style="height: 150px; margin-top: 10px;"></textarea>
+	        <textarea class="form-control" name="lectureSummary" id="lectureSummary" rows="3" 
+	        placeholder="ex) 이 강의를 통해 수강생은 검퓨터 공학의 기초를 다질 수 있을 것으로 예상합니다." style="height: 150px; margin-top: 10px;">${dto.lectureSummary}</textarea>
     	</div>
     	
     	<div class="wrapper">

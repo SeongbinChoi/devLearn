@@ -6,10 +6,10 @@
 	<insert id="insertLecture" parameterType="com.sp.dev.instrutorPage.Lectures">
 		INSERT INTO lecture(lectureNum, memberEmail, categoryCode, lectureSubject, 
 			lectureContent, lecturePrice, regDate, dcPercent, 
-			lectureDuration, thumbNail, lectureState)
+			lectureDuration, thumbNail, lectureState, lectureSummary)
 		VALUES(#{lectureNum}, #{memberEmail}, #{categoryCode}, #{lectureSubject},
 			#{lectureContent}, #{lecturePrice}, SYSDATE, #{dcPercent}, 
-			#{lectureDuration}, #{thumbNail}, 0)
+			#{lectureDuration}, #{thumbNail}, 0, #{lectureSummary})
 	</insert>
 	
 	<update id="updateLecture" parameterType="com.sp.dev.instrutorPage.Lectures">

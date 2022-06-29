@@ -337,12 +337,13 @@ $(function() {
 	});
 });
 
+/*
 $(function(){
-	$('#videoupload').click(function(){
-		alert("비디오 업로드");
+	$('#btnFinish').click(function(){
+		$(window).off("beforeunload");
 	});
 })
-
+*/
 
 
 window.addEventListener("load", function(){
@@ -374,6 +375,7 @@ window.onbeforeunload = function(e) {
     e.returnValue = dialogText;
     return dialogText;
 };
+
 </script>
 </head>
 <body>
@@ -413,7 +415,7 @@ window.onbeforeunload = function(e) {
         
      
      <div class="button_container">   
-    	<button type="button" class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의 등록완료</button>
+    	<button type="button" id= "btnFinish" class="btn btn-outline-secondary btnFinish" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의 등록완료</button>
 	 </div>
 	 
 	 <!-- Modal -->
