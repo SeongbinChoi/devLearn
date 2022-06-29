@@ -24,7 +24,7 @@ function sendOk() {
 <!-- 메인 -->
 <div class="container" style="width:500px;">	
 	<form name="pwdForm" method="post" class="border mt-5 p-5">
-		<h2 class="h3 mb-4 fw-normal">패스워드 찾기</h2>
+		<h2 class="h3 mb-4 fw-normal">비밀번호 찾기</h2>
 		<div class="form-footer col-12 checkbox mb-3">
 			<p>이메일을 입력 하세요.</p>
 		</div>
