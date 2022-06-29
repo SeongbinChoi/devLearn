@@ -42,11 +42,12 @@ function sendOk() {
 	f.submit();
 }
 
+// 수정 중에 파일만 삭제하는거?
 <c:if test="${mode=='update'}">
-	function deleteFile(newsfileNum) {
+	function deleteFile(newsFileNum) {
 		var url = "${pageContext.request.contextPath}/lecturenews/deleteFile";
-		$.post(url, {newsfileNum:newsfileNum}, function(data) {
-			$("#f" + newsfileNum).remove();
+		$.post(url, {newsFileNum:newsFileNum}, function(data) {
+			$("#f" + newsFileNum).remove();
 		}, "json");
 	}
 </c:if>
@@ -83,6 +84,19 @@ function sendOk() {
 							<input type="hidden" name="content">
 						</td>
 					</tr>
+					
+					<c:if test="${mode=='update'}">
+						<c:forEach var="vo" items="${listFile}">
+							<tr id="f${vo.newsFileNum}">
+								<td class="table-light col-sm-2" scope="row">첨부된파일</td>
+								<td>
+									<p class="form-contorl=plaintext">
+										<a href="javascript:deleteFile('${vo.newsFileNum}');"><i class="bi bi-trash"></i></a>
+									</p>
+								</td>
+							</tr>
+						</c:forEach>
+					</c:if>
 				</table>
 				
 				<table class="table table-borderless">

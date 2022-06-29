@@ -5,13 +5,11 @@ import java.util.Map;
 
 public interface LecNewsService {
 	public void insertLecNews(LecNews dto, String pathname) throws Exception;
-	
+	public List<LecNews> listLecNews(Map<String, Object> map);
 	public int dataCount(Map<String, Object> map);
-	public List<LecNews> listNews(Map<String, Object> map);
-	public LecNews readNews(int num);
 	
 	public void updateLecNews(LecNews dto, String pathname) throws Exception;
-	public void deleteLecNews(int num, String pathname) throws Exception;
+	public void deleteLecNews(int newsNum, String pathname) throws Exception;
 	
 	public void insertFile(LecNews dto) throws Exception;
 	public List<LecNews> listFile(int newsNum);

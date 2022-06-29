@@ -52,13 +52,4 @@
 		where inquirynum = #{inquiryNum}
 	</update>
 	
-	<select id="readLecture" parameterType="Integer" resultType="com.sp.dev.lectureInquiry.LecInq">
-		SELECT lectureNum, l.memberEmail, memberNickname, lectureSubject, lectureContent, l.regdate, lecturePrice, dcPercent,
-			CASE WHEN dcPercent = 0 THEN lecturePrice
-             	 WHEN dcPercent > 0 THEN lecturePrice * (100-dcPercent) / 100
-        	END as finalPrice
-		FROM lecture l
-		JOIN member m ON l.memberEmail=m.memberEmail
-		WHERE lectureNum = #{lectureNum}
-	</select>
 </mapper>
