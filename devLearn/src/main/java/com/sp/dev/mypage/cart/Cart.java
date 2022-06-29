@@ -17,6 +17,54 @@ public class Cart {
 	private int totalPrice;
 	private int totalDiscount;
 	
+	private int totalPay;
+	
+	private int detailNum;
+	
+	private int sugangNum;
+	private int lecturePay;
+	private int discount;
+	private String lectureSdate;
+	private String lectureEdate;
+	
+	public int getDetailNum() {
+		return detailNum;
+	}
+	public void setDetailNum(int detailNum) {
+		this.detailNum = detailNum;
+	}
+	public int getSugangNum() {
+		return sugangNum;
+	}
+	public void setSugangNum(int sugangNum) {
+		this.sugangNum = sugangNum;
+	}
+	public int getLecturePay() {
+		return lecturePay;
+	}
+	public void setLecturePay(int lecturePay) {
+		this.lecturePay = lecturePay;
+	}
+	public int getDiscount() {
+		return discount;
+	}
+	public void setDiscount(int discount) {
+		this.discount = discount;
+	}
+	public String getLectureSdate() {
+		return lectureSdate;
+	}
+	public void setLectureSdate(String lectureSdate) {
+		this.lectureSdate = lectureSdate;
+	}
+	public String getLectureEdate() {
+		return lectureEdate;
+	}
+	public void setLectureEdate(String lectureEdate) {
+		this.lectureEdate = lectureEdate;
+	}
+	
+	
 	public String getMemberEmail() {
 		return memberEmail;
 	}
@@ -87,6 +135,12 @@ public class Cart {
 	
 	public void setTotalDiscount(int totalDiscount) {
 		this.totalDiscount = totalDiscount;
+	}
+	public int getTotalPay() {
+		return totalPay;
+	}
+	public void setTotalPay(int totalPay) {
+		this.totalPay = totalPay;
 	}
 	
 }

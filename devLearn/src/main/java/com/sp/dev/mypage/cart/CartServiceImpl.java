@@ -56,4 +56,13 @@ public class CartServiceImpl implements CartService {
 		return cart;
 	}
 
+	@Override
+	public void insertSugang(Map<String, Object> map) throws Exception {
+		try {
+			dao.insertData("my.insertSugang", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -104,4 +104,42 @@ public class CartController {
 		return model;
 		
 	}
+	
+	
+	@RequestMapping(value = "sugang", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> lectureSugang(
+							@RequestParam String paymentCode,
+							@RequestParam String payState,
+							@RequestParam String approveNum,
+							Cart dto
+							) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		String state = "false";
+
+		try {
+			map.put("dto", dto);
+			map.put("paymentCode", paymentCode);
+			map.put("payState", payState);
+			map.put("approveNum", approveNum);
+			System.out.println(approveNum);
+			
+			service.insertSugang(map);
+			
+			map.put("memberEmail", dto.getMemberEmail());
+			map.put("lectureNum", dto.getLectureNum());
+			
+			
+			service.deleteCart(map);
+			state = "true";
+		} catch (Exception e) {
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		
+		return model;
+	}	
+	
+
 }

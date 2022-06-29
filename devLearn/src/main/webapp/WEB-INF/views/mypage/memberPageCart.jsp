@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+  <!-- iamport.payment.js -->
+  <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
+
 <style type="text/css">
 .container {
 	gap: 15px;
@@ -186,6 +189,13 @@
 	padding: 2px 0;
 
 }
+
+
+.blue {
+	color: #0d6efd;
+	font-weight: bold;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -282,6 +292,131 @@ $(function() {
 });
 
 
+
+// 결제
+$(function() {
+	$("#iamportPayment").click(function() {
+		let chk_val = [];
+		$('.cart-content input:checkbox[name=cartCheck]:checked').each(function(i, iVal){
+			chk_val.push(iVal.value);
+		});
+		
+		if(chk_val.length == 0){
+			chk_val.push(0);
+		}
+		
+		
+		let url = "${pageContext.request.contextPath}/mypage/cart/result";
+		let query = {
+				lectureNum : chk_val
+		};
+		
+		var fn = function(data){
+			requestPay(data);
+		};
+
+		ajaxFun(url, "get", query, "json", fn);
+	});
+});
+	
+//결제 스크립트 아임포트
+var IMP = window.IMP;
+IMP.init("imp82635895");
+
+function requestPay(data) {
+	console.log(data);
+	let chk_val = [];
+	$('.cart-content input:checkbox[name=cartCheck]:checked').each(function(i, iVal){
+		chk_val.push(iVal.value);
+	});
+	
+	let chkNum = chk_val.length;  // 체크한거 개수
+	let chkSubject = $("#cart-subject"+chk_val[0]).text().trim();  // 체크한거 첫번째 제목
+
+	IMP.request_pay (
+		{ // param
+			pg: "kakaopay.TC0ONETIME", //pg사명.CID
+			pay_method: "card",
+			merchant_uid: "lecture-" + new Date().getTime(), // 중복되지 않게
+			name: chkSubject + "외 " + (chkNum-1) + "개",
+			amount: data.dto.totalPrice - data.dto.totalDiscount,
+			buyer_email: "${sessionScope.member.memberEmail}",
+			buyer_name: "${sessionScope.member.memberName}",
+		},
+		function (rsp) { // callback
+			console.log(rsp);
+			if (rsp.success) {
+				//console.log("------" + data);
+				let url = "${pageContext.request.contextPath}/mypage/sugang";
+				let memberEmail = rsp.buyer_email;
+				let totalPay = rsp.paid_amount;
+				let totalDiscount = data.dto.totalDiscount;
+				let paymentCode = rsp.merchant_uid;
+				
+				let chkPrice = $("#cart-price"+chk_val[0]).text().replace("원", "");
+				let chkDc = $("#cart-dc"+chk_val[0]).text().replace("%", "");
+				let chkEdate = $("#cart-duration"+chk_val[0]).text();
+				console.log(chkEdate);
+				chkEdate = chkEdate.replace("일", "");
+				if(chkEdate == '무제한'){
+					chkEdate = "9999-12-31";
+				}
+				
+				/*
+				let param = [];
+				for(let i=0; i<chkNum; i++){
+					let chkPrice = $("#cart-price"+chk_val[i]).text().replace("원", "");
+					let chkDc = $("#cart-dc"+chk_val[i]).text().replace("%", "");
+					let chkEdate = $("#cart-duration"+chk_val[i]).text().trim();
+					if(chkEdate == '무제한'){
+						chkEdate = "9999-12-31";
+					}
+					
+					var data = {           
+						memberEmail : memberEmail,
+						totalPay : totalPay,
+						totalDiscount : totalDiscount,
+						paymentCode : paymentCode,
+						payState : rsp.pay_method,
+						approveNum : rsp.pg_tid,
+						lectureNum : chk_val[i],
+						lecturePay : chkPrice, 
+						discount : chkDc,
+						lectureEdate : chkEdate      
+					};       
+					param.push(data);
+				}
+				console.log(param);
+				
+				var jsonData = JSON.stringify(param);    
+				jQuery.ajaxSettings.traditional = true;
+				
+				let query = {
+						jsonData : jsonData
+				};	
+				console.log(jsonData);
+				*/
+				
+				let query = "memberEmail=" + memberEmail + "&totalPay=" + totalPay;
+					query += "&totalDiscount=" + totalDiscount + "&paymentCode=" + paymentCode;
+					query += "&payState=" + rsp.pay_method + "&approveNum=" + rsp.pg_tid;	
+					query += "&lectureNum=" + chk_val[0] + "&lecturePay=" + chkPrice;
+					query += "&discount=" + chkDc + "&lectureEdate=" + chkEdate;
+					console.log(query);
+				
+				const fn = function(data) {
+					window.location.href="${pageContext.request.contextPath}/mypage/cart";
+				};			
+				ajaxFun(url, "post", query, "json", fn);
+			} else {
+				alert("실패 : 코드(" + rsp.error_code + ") / 메세지(" + rsp.error_msg + " :: 결제 실패..)");
+			}
+		}
+	);
+};
+
+
+
 </script>
 
 
@@ -305,15 +440,15 @@ $(function() {
 						<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" >
 					</div>
 					<div class="cart-course-title flex-fill">
-						<p>${dto.lectureSubject}</p>
-						<span>${dto.memberNickname}&nbsp;&nbsp;|&nbsp;&nbsp;</span><span>수강 기간 ${dto.lectureDuration == 0 ? "무제한" : dto.lectureDuration + "까지"}</span>				
+						<p id="cart-subject${dto.lectureNum}">${dto.lectureSubject}</p>
+						<span>${dto.memberNickname}&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="blue">수강 기간 : 구매 후 </span><span id="cart-duration${dto.lectureNum}">${dto.lectureDuration == 0 || dto.lectureDuration == null ? "무제한" : dto.lectureDuration}<c:if test="${dto.lectureDuration != 0 && dto.lectureDuration != null}">일</c:if></span>				
 					</div>
 					<div class="closeBtnSection">
 						<i class="fa-solid fa-xmark"></i>
 					</div>
 					<div class="priceSection">
-						<span class="dcPercent">${dto.dcPercent}%</span> <span class="originalPrice">${dto.lecturePrice}원</span>
-						<p class="finalPrice">${dto.dcAfterPrice}원</p>
+						<span class="dcPercent" id="cart-dc${dto.lectureNum}">${dto.dcPercent}%</span> <span class="originalPrice">${dto.lecturePrice}원</span>
+						<p class="finalPrice" id="cart-price${dto.lectureNum}">${dto.dcAfterPrice}원</p>
 					</div>
 				</div>
 			</c:forEach>
@@ -364,21 +499,21 @@ $(function() {
 			<div class="coupon">
 				<span>쿠폰 <i class="fa-solid fa-circle-question"></i></span>
 				<div class="right">
-					<span>사용가능 </span><span>0</span>
+					<span>사용가능 </span><span>3</span>
 				</div>
 				<div class="iptBtn">
-					<input type="text" placeholder="0" class="">
-					<button type="button" style="width:82px;">쿠폰선택</button>
+					<input type="text" placeholder="2000" class="">
+					<button type="button" class="px-1" style="width:85px;">쿠폰선택</button>
 				</div>
 			</div>
 			<div class="point">
 				<span>포인트 <a><i class="fa-solid fa-circle-question"></i></a></span>
 				<div class="right">
-					<span>보유 </span><span>0</span>
+					<span>보유 </span><span>5500</span>
 				</div>
 				<div class="iptBtn">
 					<div>
-						<input type="text" placeholder="0" class="">
+						<input type="text" placeholder="1000" class="">
 					</div>
 					<div>
 						<button type="button">전액사용</button>
@@ -395,23 +530,21 @@ $(function() {
 						<td> - 할인금액</td>
 						<td class="totalDc">- 0</td>
 					</tr>
-					<!-- 
 					<tr class="discounted" style="color: #999;">
 						<td>&nbsp;- 쿠폰할인</td>
-						<td> -20,000</td>
+						<td> -2,000</td>
 					</tr>
 					<tr class="discounted2" style="color: #999;">
 						<td>&nbsp;- 포인트사용</td>
-						<td> -20,000</td>
+						<td> -1,000</td>
 					</tr>
-					 -->
 					<tr>
 						<td>총 결제 금액</td>
 						<td class="totalResult">0</td>
 					</tr>
 				</table>
 			</div>
-			<button type="button" class="btn btn-primary confirmbtn">결제하기</button>
+			<button type="button" id="iamportPayment" class="btn btn-primary confirmbtn">결제하기</button>
 			<p class="term" style="font-size: 12px; color: #ddd;">회원 본인은 주문내용을 확인했으며, 구매조건 및 개인정보취급방침과 결제에 동의합니다.</p>
 		</div>
 	</div>

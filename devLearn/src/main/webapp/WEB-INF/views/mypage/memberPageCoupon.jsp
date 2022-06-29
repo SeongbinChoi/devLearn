@@ -264,7 +264,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="guidePointLabel" style="font-weight: 800;">포인트 적립 안내</h5>
+				<h5 class="modal-title" id="guidePointLabel" style="font-weight: 800;">쿠폰 사용 안내</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body" style="margin:0 auto; ">

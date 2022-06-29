@@ -360,6 +360,31 @@
 		</where>
 	</select>
 	
+	<!-- 결제 -->
+	<select id="readSugangSeq" resultType="long">
+		SELECT sugang_seq.NEXTVAL FROM dual
+	</select>
+	<insert id="insertSugang" parameterType="map">
+		<selectKey keyProperty="sugangNum" resultType="Integer" order="BEFORE">
+			SELECT sugang_seq.NEXTVAL FROM dual
+		</selectKey>
+		INSERT ALL
+			INTO sugang (sugangNum, memberEmail, totalPay, totalDiscount)
+			VALUES (#{sugangNum}, #{dto.memberEmail}, #{dto.totalPay},#{dto.totalDiscount})
+				
+			INTO pay (sugangNum, totalPay, payDate, payState, approveNum)
+			VALUES (#{sugangNum}, #{dto.totalPay}, SYSDATE, #{payState}, #{approveNum})	
+			
+			INTO sugangDetail(detailNum, lectureNum, sugangNum, memberEmail, 
+								lecturePay, discount, lectureSdate, lectureEdate, point, coupon)
+			VALUES (sugangDetail_seq.NEXTVAL, #{dto.lectureNum}, #{sugangNum}, #{dto.memberEmail}, 
+					#{dto.lecturePay}, #{dto.discount}, SYSDATE, to_date(#{dto.lectureEdate}, 'YYYY-MM-DD'), 0, 0)
+				
+		SELECT * FROM dual
+	</insert>
+	
+	
+	
 	
 	<!-- 프로필 등록하기 -->
 	<insert id="insertProfile" parameterType="com.sp.dev.mypage.profile.Profile">

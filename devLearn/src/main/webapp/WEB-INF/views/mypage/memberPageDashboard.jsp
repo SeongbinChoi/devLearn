@@ -90,7 +90,7 @@
 			<p>최근 구매한 강의</p>
 			<div class="content">
 				<table class="myLectureTable">
-					<c:forEach var="rec" begin="1" end="5" items="${recentList}">
+					<c:forEach var="rec" begin="0" end="5" items="${recentList}">
 						<tr class="click" style="cursor: pointer;" onclick="강의 이어보기">
 							<td>${rec.lectureSubject}</td>
 							<td>${rec.lectureSdate}</td>
