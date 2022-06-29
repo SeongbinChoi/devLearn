@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
+import com.sp.dev.lectures.Lectures;
+import com.sp.dev.lectures.LecturesService;
 import com.sp.dev.member.SessionInfo;
 
 @Controller("lectureInquiry.lecInqController")
@@ -23,13 +25,15 @@ import com.sp.dev.member.SessionInfo;
 public class LecInqController {
 	@Autowired
 	private LecInqService service;
-	
+	@Autowired
+	private LecturesService lservice;
 	@Autowired
 	private MyUtil myUtil;
 	
 	// 연결하면서 강의 번호 받아오기 - 이거 없애면 404
 	@RequestMapping("inquiry")
-	public String inquiry(@RequestParam int lectureNum, Model model) throws Exception {
+	public String inquiry(@RequestParam int lectureNum,
+			Model model) throws Exception {
 		model.addAttribute("lectureNum", lectureNum); // 이걸로 강의번호를 받아오긴 했는데 이걸로 끝인가?
 		
 		return ".lectureInquiry.inquiry";
@@ -54,6 +58,27 @@ public class LecInqController {
 		model.put("state", state);
 		
 		return model;
+	}
+	
+	// 답변 등록(입력창이 필요)
+	@ResponseBody
+	@RequestMapping(value = "answer", method = RequestMethod.POST)
+	public Map<String, Object> answerSubmit(LecInq dto, HttpSession session, @RequestParam int lectureNum) throws Exception {
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String state = "true";
+		
+		try {
+			dto.setAmember(info.getMemberEmail());
+			dto.setLectureNum(lectureNum);
+			service.insertAnswer(dto);
+		} catch (Exception e) {
+			state = "false";
+		}
+		
+		Map<String, Object> model = new HashMap<>();
+		model.put("state", state);
+		
+		return null;
 	}
 	
 	// 리스트(페이지에 들어가면 질문+답변 2가지가 모두, 1명의 문답만이 아니라 전체 사용자의 문답이 한꺼번에 다 나오도록)
@@ -100,6 +125,10 @@ public class LecInqController {
 		mod.put("pageNo", current_page);
 		mod.put("list", list);
 		
+		Lectures dto = lservice.readLecture(lectureNum);
+		model.addAttribute("dto", dto);
+		System.out.println(dto.getDcPercent() + "---------");
+		model.addAttribute("lectureNum", lectureNum);
 		return mod;
 	}
 	

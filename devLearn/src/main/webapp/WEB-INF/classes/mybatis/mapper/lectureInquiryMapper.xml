@@ -2,6 +2,8 @@
 
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="lectureInquiry">
+
+	<!-- 문의 등록 -->
 	<insert id="insertInquiry" parameterType="com.sp.dev.lectureInquiry.LecInq">
 		insert into lectureinquiry(inquirynum, lecturenum, qmember, question, q_regdate)
 		values (lectureinquiry_seq.NEXTVAL, #{lectureNum}, #{qmember}, #{question}, sysdate)
@@ -12,21 +14,51 @@
 		where lectureNum = #{lectureNum}
 	</select>
 	
-	<!-- 리스트 출력 : 문의 쪽 Mapper의 list 부분처럼 하면 된다 -->
+	<!-- 리스트 출력 -->
+	<!-- 문의 테이블 / 강의 테이블 / 회원 테이블 join -->
 	<select id="listLecInq" parameterType="map" resultType="com.sp.dev.lectureInquiry.LecInq">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
 				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate,
-				aMember, answer, TO_CHAR(a_regDate, 'YYYY-MM-DD')a_regDate
-				FROM lectureInquiry l
-				WHERE lectureNum = #{lectureNum}
+					aMember, answer, TO_CHAR(a_regDate, 'YYYY-MM-DD')a_regDate,
+					m.membernickName as aNickname, l.memberEmail as instructorEmail,
+					l.lecturePrice, l.dcPercent,
+					CASE WHEN dcPercent = 0 THEN lecturePrice
+		             	 WHEN dcPercent > 0 THEN lecturePrice * (100-dcPercent) / 100
+		        	END as finalPrice
+				FROM lectureInquiry li
+				JOIN lecture l ON l.lectureNum=li.lectureNum
+				JOIN member m ON l.memberEmail=m.memberEmail
+				WHERE l.lectureNum = #{lectureNum}
 				ORDER BY inquiryNum DESC
 			) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
 	
+	<!-- 문의 삭제 -->
 	<delete id="deleteInquiry" parameterType="map">
 		DELETE from lectureinquiry WHERE inquiryNum = #{inquiryNum}
 	</delete>
 	
+	<!-- 답변 등록 -->
+	<update id="insertAnswer" parameterType="com.sp.dev.lectureInquiry.LecInq">
+		update lectureinquiry set amember = #{amember}, answer = #{answer}, a_regDate = sysdate
+		where inquirynum = #{inquiryNum}
+	</update>
+	
+	<!-- 답변 삭제 -->
+	<update id="deleteAnswer" parameterType="com.sp.dev.lectureInquiry.LecInq">
+		update lectureinquiry set amember = null, answer = null, a_regDate = null
+		where inquirynum = #{inquiryNum}
+	</update>
+	
+	<select id="readLecture" parameterType="Integer" resultType="com.sp.dev.lectureInquiry.LecInq">
+		SELECT lectureNum, l.memberEmail, memberNickname, lectureSubject, lectureContent, l.regdate, lecturePrice, dcPercent,
+			CASE WHEN dcPercent = 0 THEN lecturePrice
+             	 WHEN dcPercent > 0 THEN lecturePrice * (100-dcPercent) / 100
+        	END as finalPrice
+		FROM lecture l
+		JOIN member m ON l.memberEmail=m.memberEmail
+		WHERE lectureNum = #{lectureNum}
+	</select>
 </mapper>

@@ -36,7 +36,7 @@ public class LecturesController {
 		
 		String cp = req.getContextPath();
 		
-		int rows = 30;
+		int rows = 20;
 		int total_page = 0;
 		int dataCount = 0;
 		
@@ -64,23 +64,15 @@ public class LecturesController {
 		
 		List<Lectures> list = service.listLecture(map);
 		
-		// 이 부분 없어야 함
-//		int lectureNum, n = 0;
-//		for(Lectures dto : list) {
-//			lectureNum = dataCount - (start + n - 1);
-//			dto.setLectureNum(lectureNum);
-//			n++;
-//		}
-		
 		String query = "";
-		String listUrl = cp + "/lectures/lectures";
+		String listUrl = cp + "/lectures/all";
 		String articleUrl = cp + "/lectures/lectureDetail" + current_page;
 		if(keyword.length() != 0) {
 			query = "condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "utf-8");
 		}
 		
 		if(query.length() != 0) {
-			listUrl = cp + "/lectures/lectures?" + query;
+			listUrl = cp + "/lectures/all?page=" + current_page + "&" + query;
 			articleUrl = cp + "/lectures/lectureDetail?page=" + current_page + "&" + query;
 		}
 		

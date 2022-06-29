@@ -9,5 +9,5 @@ public interface LecInqService {
 	public List<LecInq> listLecInq(Map<String, Object> map);
 	public void insertAnswer(LecInq dto) throws Exception;
 	public void deleteInquiry(Map<String, Object> map) throws Exception;
-	public void deleteAnswer(int inquirynum) throws Exception;
+	public void deleteAnswer(LecInq dto) throws Exception;
 }

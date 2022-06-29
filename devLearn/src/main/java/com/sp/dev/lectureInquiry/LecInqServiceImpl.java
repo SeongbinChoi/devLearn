@@ -52,8 +52,12 @@ public class LecInqServiceImpl implements LecInqService {
 
 	@Override
 	public void insertAnswer(LecInq dto) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			dao.updateData("lectureInquiry.insertAnswer", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 	}
 	
 	@Override
@@ -68,8 +72,13 @@ public class LecInqServiceImpl implements LecInqService {
 	}
 
 	@Override
-	public void deleteAnswer(int inquirynum) throws Exception {
-		// TODO Auto-generated method stub
+	public void deleteAnswer(LecInq dto) throws Exception {
+		try {
+			dao.updateData("lectureInquiry.deleteAnswer", dto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
 		
 	}
 	

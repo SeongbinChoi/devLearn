@@ -119,7 +119,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="Price">${dto.price}</div>
+										<div class="Price">${dto.lecturePrice}</div>
 										<div class="tags row row-cols-4 d-flex justify-content-start gap-1 py-2">
 											<span class="tag col">+100명</span>
 											<span class="tag col">업데이트</span>
@@ -133,19 +133,9 @@
 				</div>
 				
 				<nav aria-label="...">
-					<ul class="pagination justify-content-center">
-						<li class="page-item disabled">
-							<span class="page-link">Previous</span>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">1</a></li>
-						<li class="page-item active" aria-current="page">
-							<span class="page-link">2</span>
-						</li>
-						<li class="page-item"><a class="page-link" href="#">3</a></li>
-						<li class="page-item">
-							<a class="page-link" href="#">Next</a>
-						</li>
-					</ul>
+					<div class="pagination justify-content-center page-box">
+						${dataCount == 0 ? "등록된 게시물이 없습니다." : paging}
+				  	</div>
 				</nav>
 			</div>
 		</div>

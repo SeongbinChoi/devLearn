@@ -13,7 +13,7 @@
 .inquiry-form textarea { width: 100%; height: 75px; resize: none; }
 
 .inquiry-list tr:nth-child(2n+1) { border: 1px solid #ccc; background: #f8f9fa; }
-.inquiry-list .deleteInquiry, .inquiry-list { cursor: pointer; }
+.inquiry-list .deleteInquiry, .inquiry-list .answer { cursor: pointer; }
 .inquiry-list .deleteInquiry:hover { text-decoration: underline; color: #F28011; }
 
 textarea::placeholder{
@@ -103,17 +103,21 @@ function printInquiry(data) {
 		let question = data.list[idx].question;
 		let q_regDate = data.list[idx].q_regDate;
 		
+		let instructorEmail = data.list[idx].instructorEmail;
 		let amember = data.list[idx].amember;
 		let answer = data.list[idx].answer;
 		let a_regDate = data.list[idx].a_regDate;
+		let aNickname = data.list[idx].aNickname;
 		
 		// 문의자 이메일, 날짜, 삭제 버튼
 		out += "<tr>";
 		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + qNickname + "</span></td>";
 		out += "	<td width='50%' align='right'>" + q_regDate;
+		
 		if(uid === qmember || permission === "true") {
-//			out += "	| <span class='updateInquiry' data-inquiryNum='" + inquiryNum + "'>수정</span>";
 			out += "	| <span class='deleteInquiry' data-inquiryNum='" + inquiryNum + "'>삭제</span>";
+		} else if(uid === instructorEmail && answer === null) {
+			out += "	| <span class='answer' data-inquiryNum='" + inquiryNum + "'>답변</span>";	
 		}
 		out += "    </td>";
 		out += "</tr>";
@@ -123,10 +127,10 @@ function printInquiry(data) {
 		out += "    <td colspan='2' valign='top'>" + question + "</td>"; 
 		out += "</tr>";
 		
-		if(answer != null) { // 답변 부분은 없다면 출력하면 안되니까  if를 씌운다
+		if(answer != null) { // 답변 부분은 없다면 출력하면 안되니까  if
 			// 답변자 이메일, 날짜
 			out += "<tr>";
-			out += "	<td width='45%'>&nbsp<i class='bi bi-arrow-return-right'></i>&nbsp<i class='bi bi-person-circle text-muted'></i> <span>" +  amember + "</span></td>";
+			out += "	<td width='45%'>&nbsp<i class='bi bi-arrow-return-right'></i>&nbsp<i class='bi bi-person-circle text-muted'></i> <span>" +  aNickname + "</span></td>";
 			out += "	<td width='45%' align='right'>" + a_regDate;
 			out += "    </td>";
 			out += "</tr>";
@@ -135,12 +139,14 @@ function printInquiry(data) {
 			out += "<tr>";
 			out += "    <td colspan='2' valign='top'>&nbsp&nbsp&nbsp&nbsp&nbsp" + answer + "</td>"; 
 			out += "</tr>";
-		}
+		} 
+		
 	}
 	
 	$(".inquiry-list-body").append(out);
 }
 
+// 문의 등록
 $(function() {
 	$(".btnSend").click(function() {
 		let question = $("#question").val().trim();
@@ -163,6 +169,29 @@ $(function() {
 	});
 });
 
+// 답변 등록
+$(function() {
+	$(".btnAns").click(function() {
+		let lectureNum = "${dto.lectureNum}";
+		let answer = $("#answer").val().trim();
+		if(! answer) {
+			$("#answer").focus();
+			return false;			
+		}
+		
+		let url = "${pageContext.request.contextPath}/lectureInquiry/answer";
+		let query = "answer=" + encodeURIComponent(answer) + "&lectureNum=${lectureNum}";
+		
+		const fn = function(data) {
+			$("#answer").val("");
+			$(".inquiry-list-body").empty();
+			listPage(1);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
 // 문의 삭제
 $(function() {
 	$("body").on("click", ".deleteInquiry", function() {
@@ -175,6 +204,7 @@ $(function() {
 		let query = "inquiryNum=" + inquiryNum + "&lectureNum=${lectureNum}";
 		const fn = function(data) {
 			$(".inquiry-list-body").empty();
+			$(".card-header").html(data.dto.dcPercent + "% 할인 중인 강의");
 			listPage(1);
 		};
 		
@@ -205,14 +235,14 @@ $(function() {
 			</div>
 			<div class="title_right">
 				<p class="mb-2">개발 · 프로그래밍 > 백엔드</p>
-				<p class="title_right_2 mb-4">스프링 DB - 데이터 접근 활용 기술</p>
+				<p class="title_right_2 mb-4">${dto.lectureSubject}</p>
 				<p class="mb-2">
 					<c:forEach var="s" begin="1" end="5">
 						<i class="fas fa-star" style="color: #FDCC11; font-size:13px;"></i>
 					</c:forEach>
 					 (5.0) &nbsp;&nbsp;&nbsp; 50개의 수강평 · 999명의 수강생
 				</p>
-				<p class="mb-0"><i class="fa-regular fa-user" style="color: white; font-size:16px;"></i> 자바의 신</p>
+				<p class="mb-0"><i class="fa-regular fa-user" style="color: white; font-size:16px;"></i>${dto.memberNickname}</p>
 			</div>
 		</div>
 	</div>
@@ -293,30 +323,30 @@ $(function() {
 		
 		<!-- 사이드메뉴 -->
 		<div class="sideBar col-4 py-4">
-		
-			<div class="card col-9" style="float: none; margin:0 auto;">
-				<div class="card-header">
-					30% 할인 중인 강의
-				</div>
-				
-				<div class="card-body mx-2 my-3">
-					<div class="price mb-3">
-						<p>30%</p>
-						<p><fmt:formatNumber value="53900" type="number"/>원&nbsp;</p>
-						<p class="mb-1"><del><fmt:formatNumber value="77000" type="number"/>원</del></p>
+			
+				<div class="card col-9" style="float: none; margin:0 auto;">
+					<div class="card-header">
+						
 					</div>
-					<a href="#" class="btn btn-primary col-12 mb-2">수강신청 하기</a>
-					<a href="#" class="btn btn-outline-primary col-12 mb-2">장바구니 담기</a>
-				</div>
-				
-				<div class="card-footer">
-					<ul class="mb-0">
-						<li>지식공유자: 자바의신</li>
-						<li>총 30개 수업(5시간)</li>
-						<li>수강기한: 무제한</li>
-					</ul>
+					
+					<div class="card-body mx-2 my-3">
+						<div class="price mb-3">
+							<p>${dto.dcPercent}%</p>
+							<p><fmt:formatNumber value="${dto.finalPrice}" type="number"/>원&nbsp;</p>
+							<p class="mb-1"><del><fmt:formatNumber value="${dto.lecturePrice}" type="number"/>원</del></p>
+						</div>
+						<a href="#" class="btn btn-primary col-12 mb-2">수강신청 하기</a>
+						<a href="#" class="btn btn-outline-primary col-12 mb-2">장바구니 담기</a>
+					</div>
+					
+					<div class="card-footer">
+						<ul class="mb-0">
+							<li>지식공유자: ${dto.memberNickname}</li>
+							<li>총 30개 수업(5시간)</li>
+							<li>수강기한: 무제한</li>
+						</ul>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>

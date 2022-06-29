@@ -6,8 +6,9 @@ public class Lectures {
 	private String categoryCode;
 	private String lectureSubject;
 	private String lectureContent;
-	private int price;
+	private int lecturePrice;
 	private int dcPercent;
+	private int finalPrice;
 	private String memberNickname;
 	
 	private String mainCategory;
@@ -88,12 +89,8 @@ public class Lectures {
 	public void setLectureContent(String lectureContent) {
 		this.lectureContent = lectureContent;
 	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
+	
+
 	public int getDcPercent() {
 		return dcPercent;
 	}
@@ -333,6 +330,18 @@ public class Lectures {
 	}
 	public void setReviewAnswer(String reviewAnswer) {
 		this.reviewAnswer = reviewAnswer;
+	}
+	public int getLecturePrice() {
+		return lecturePrice;
+	}
+	public void setLecturePrice(int lecturePrice) {
+		this.lecturePrice = lecturePrice;
+	}
+	public int getFinalPrice() {
+		return finalPrice;
+	}
+	public void setFinalPrice(int finalPrice) {
+		this.finalPrice = finalPrice;
 	}
 	
 }
