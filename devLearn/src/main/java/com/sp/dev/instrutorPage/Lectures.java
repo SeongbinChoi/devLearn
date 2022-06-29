@@ -14,6 +14,7 @@ public class Lectures {
 	private String lectureDuration;
 	private String lectureRegDate;
 	private String thumbNail;
+	private int state;
 	
 	private int videoNum;
 	private double fileTotalTime;
@@ -364,6 +365,12 @@ public class Lectures {
 	}
 	public void setReviewAnswer(String reviewAnswer) {
 		this.reviewAnswer = reviewAnswer;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
 	}
 	
 	

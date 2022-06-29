@@ -37,12 +37,25 @@
 		WHERE mainCategory = #{categoryCode}
 	</select>
 	
+	<select id="videoSeq" resultType="Integer">
+		SELECT lectureVideoFile_seq.NEXTVAL FROM dual
+	</select>
 	<insert id="insertVideo" parameterType="com.sp.dev.instrutorPage.Lectures">
 		INSERT INTO lectureVideoFile(lectureNum, videoNum, fileTotalTime, videoTitle, chapter, 
 			videoFileName)
-		VALUES(#{lectureNum}, lectureVideoFile_seq.NEXTVAL, #{fileTotalTime}, #{videoTitle}, #{chapter},
+		VALUES(#{lectureNum}, #{videoNum}, #{fileTotalTime}, #{videoTitle}, #{chapter},
 			#{videoFileName})
 	</insert>
+
+	<select id="readVideo" parameterType="Integer" resultType="com.sp.dev.instrutorPage.Lectures" >
+		SELECT lectureNum, videoNum, fileTotalTime, videoTitle, chapter, videoFileName
+		FROM lectureVideoFile
+		WHERE videoNum = #{videoNum}
+	</select>
+	
+	<delete id="deleteVideo" parameterType="map">
+		DELETE from lectureVideoFile WHERE videoNum = #{videoNum}
+	</delete>
 	
 	<select id="seq" resultType="Integer">
 		SELECT lecture_seq.NEXTVAL FROM dual
@@ -51,25 +64,22 @@
 	<select id="listLecture" parameterType="java.util.Map" resultType="com.sp.dev.instrutorPage.Lectures">
 		SELECT * FROM(
 		    SELECT ROWNUM rnum, tb.* FROM(
-		        select l.lectureNum, l.memberEmail instMail, m.membername instName , lectureSubject subject, lecturePrice price, l.regDate, dcpercent , 
-		            lectureDuration duration, categoryCode category, lectureContent content, lecturestate state
-		        FROM lecture l
-		        JOIN member m on l.memberEmail = m.memberEmail
+		        SELECT lectureNum, memberEmail, lectureSubject, lecturePrice, TO_CHAR(regDate,'YYYY-MM-DD') lectureRegDate, dcPercent , 
+		            lectureDuration ,lectureContent , lectureState state, thumbNail
+		        FROM lecture 
 		        <where>
-					<if test="state != '30'">
-						lectureState = #{state}
-					</if>
+					memberEmail=#{memberEmail}
 				</where>
-		    )tb WHERE ROWNUM &lt;= #{end}
+				ORDER BY regDate DESC
+		    ) tb WHERE ROWNUM &lt;= #{end}
 		) WHERE rnum &gt;= #{start}
 	</select>
 	
 	<select id="countLecture" parameterType="java.util.Map" resultType="Integer">
-		SELECT NVL(COUNT(*), 0) FROM LECTURE
+		SELECT NVL(COUNT(*), 0) 
+		FROM LECTURE
 		<where>
-			<if test="state != '30'">
-				lectureState = #{state}
-			</if>
+			memberEmail=#{memberEmail}
 		</where>
 	</select>
 	

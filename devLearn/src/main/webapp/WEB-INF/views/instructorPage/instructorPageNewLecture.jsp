@@ -362,7 +362,7 @@ $(function(){
 	        	<span>강사</span>
 	        </label>
 	        
-	        <input type="email" class="form-control" id="memberEmail" name="memberEmail" readonly="readonly" value="${sessionScope.member.memberEmail}">
+	        <input type="email" class="form-control" id="memberEmail" name="memberEmail" readonly="readonly" style="margin-top: 10px;" value="${sessionScope.member.memberEmail}">
     	</div>
     	
     	<div class="wrapper">
@@ -441,13 +441,7 @@ $(function(){
 					</div>
 				</div>
 				<div class="duration">
-					<select class="form-select" id="lectureDuration" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width:100px; height : 50px;">
-					  <option value="0">기간</option>
-					  <option value="1">년</option>
-					  <option value="2">월</option>
-					  <option value="3">일</option>
-					</select>
-					<input type="text" class="form-control" name="lectureDuration" id="lectureDuration2" placeholder="기간을 입력해주세요" value="${dto.lectureDuration}" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width: 200px; height: 50px;">
+					<input type="text" class="form-control" name="lectureDuration" id="lectureDuration2" placeholder="기간(일 단위)을 입력해주세요" value="${dto.lectureDuration}" style="margin-top: 10px; margin-left: 30px; text-align: center; display: none; width: 250px; height: 50px;">
 				</div>
 			</div>
 		</div>

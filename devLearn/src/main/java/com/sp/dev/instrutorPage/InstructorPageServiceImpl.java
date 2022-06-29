@@ -1,6 +1,7 @@
 package com.sp.dev.instrutorPage;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,20 +88,79 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 	}
 
 	@Override
-	public void insertVideo(Lectures dto, String pathname) throws Exception {
+	public int insertVideo(Lectures dto, String pathname) throws Exception {
+		int videoNum = 0;
+		
 		try {
 			if(! dto.getVideoSelectFile().isEmpty()) {
+				int seq = dao.selectOne("instructorPage.videoSeq");
+				dto.setVideoNum(seq);
 				String videoFileName = fileManager.doFileUpload(dto.getVideoSelectFile(), pathname);
 				dto.setVideoFileName(videoFileName);
+				
+				dao.insertData("instructorPage.insertVideo", dto);
+				videoNum = seq;
 			}
 			
-			dao.insertData("instructorPage.insertVideo", dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
 		
+		return videoNum;
+	}
+	
+	@Override
+	public Lectures readVideo(int videoNum) {
+		Lectures dto = null;
+		
+		try {
+			dto = dao.selectOne("instructorPage.readVideo", videoNum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dto;
+	}
+
+	@Override
+	public void deleteVideo(int videoNum, String pathname) throws Exception {
+		try {
+			if (pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+			
+			dao.deleteData("instructorPage.deleteVideo", videoNum);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
+	@Override
+	public int countLecture(Map<String, Object> map) {
+		int result = 0;
+		
+		try {
+			result = dao.selectOne("instructorPage.countLecture", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Lectures> listLecture(Map<String, Object> map) {
+		List<Lectures> list = null;
+		try {
+			list = dao.selectList("instructorPage.listLecture",map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return list;
 	}
 
 }

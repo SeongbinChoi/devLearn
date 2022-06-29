@@ -169,24 +169,132 @@ img {
 }
 </style>
 <script>
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+	    	if(jqXHR.status === 403) {
+	    		login();
+	    		return false;
+	    	} else if(jqXHR.status === 402) {
+	    		alert("권한이 없습니다.");
+	    		return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+	    	} else if(jqXHR.status === 410) {
+	    		alert("삭제된 게시물입니다.");
+	    		return false;
+	    	}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+function ajaxFileFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		processData: false,  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		contentType: false,  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+	    	} else if(jqXHR.status === 402) {
+	    		alert("권한이 없습니다.");
+	    		return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+	    	} else if(jqXHR.status === 410) {
+	    		alert("삭제된 게시물입니다.");
+	    		return false;
+	    	}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+
 function sendOk() {
     var f = document.videoForm;
-	   
-
-    f.action = "${pageContext.request.contextPath}/instructorPage/instructorPageLectureList";
-    f.submit();
+    
+    let url = "${pageContext.request.contextPath}/instructorPage/instructorPageLectureVideo";
+    let query = new FormData(f); // IE는 10이상에서만 가능
+    
+	const fn = function(data){
+		let state = data.state;
+		let videoNum = data.videoNum;
+		
+		if(state === "false") return false;
+		
+		const table = document.getElementById("table");
+		const newTr = document.createElement('tr');
+		newTr.innerHTML = "<td>"+f.chapter.value+"</td>"
+		+"<td>"+f.videoTitle.value+"</td>"
+		+"<td>"+f.videoSelectFile.value+"</td>"
+		+"<td>"+f.fileTotalTime.value+"</td>"
+		+"<td><input type='button' class='btn btn-dark btn-sm btnVideoDelete' value='영상삭제' data-videoNum='"+videoNum+"' style='margin: 10px; background-color: #212529';></td>";
+		table.appendChild(newTr);
+		
+		f.chapter.value = "";
+		f.videoSelectFile.value = "";
+		f.fileTotalTime.value = "";
+		f.videoTitle.value = "";
+		$(".lectureVideo").attr("src", "");
+		
+		$("#videoModal").hide();
+		
+	};
+	
+	ajaxFileFun(url, "post", query, "json", fn);
 }
 
-const add_textbox = () => {
-	const box = document.getElementById("box");
-	const newP = document.createElement('p');
-	newP.innerHTML = "<input type='text' readonly='readonly' class='form-control' placeholder='영상 추가하기 (강의명[영상 이름]이 들어갈 예정)' style='margin-top: 10px; margin-right: 30px; margin-left: 30px;'>"+
-	" <input type='button' class='btn btn-secondary' value='영상삭제' onclick='remove(this)' style='margin-top: 10px; margin-right: 20px;'>"+
-	" <input type='button' class='btn btn-secondary' value='영상추가' data-bs-toggle='modal' data-bs-target='#videoModal' style='margin-top: 10px;'>";
-	box.appendChild(newP);
-}
+$(function(){
+	$("body").on("click", ".btnVideoDelete", function(){
+		if(! confirm('비디오를 삭제 하시겠습니까 ? ')) {
+			return false;
+		}
+		
+		var $tr = $(this).closest("tr");
+		var videoNum = $(this).attr("data-videoNum");
+		
+	    let url = "${pageContext.request.contextPath}/instructorPage/videoDelete";
+		let query = "videoNum="+videoNum;
+		
+		var fn = function(data) {
+			$tr.remove();
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+		
+	});
+	
+});
+
 const remove = (obj) => {
-	document.getElementById('box').removeChild(obj.parentNode);
+	document.getElementById('table').removeChild(obj.parentNode);
 }
       
 $(function() {
@@ -251,7 +359,7 @@ window.addEventListener("load", function(){
 		videoEl.setAttribute("src", videoUrl);
 		  
 		videoEl.onloadedmetadata = function() {
-			const secondsNumber = parseInt(videoEl.duration);
+			const secondsNumber = parseFloat(videoEl.duration);
 			let hours = Math.floor(secondsNumber / 3600);
 			let minutes = Math.floor((secondsNumber - hours * 3600) / 60);
 			let seconds = secondsNumber - hours * 3600 - minutes * 60;
@@ -260,6 +368,12 @@ window.addEventListener("load", function(){
 		};
 	});
 });
+
+window.onbeforeunload = function(e) {
+    var dialogText = 'Dialog text here';
+    e.returnValue = dialogText;
+    return dialogText;
+};
 </script>
 </head>
 <body>
@@ -278,22 +392,32 @@ window.addEventListener("load", function(){
         </label>
         
         <div id="box" class="box">
-        	<div id="box2" style="display: flex;">
-            	<input type="text" class="form-control" placeholder="ex) 챕터의 이름을 입력하세요." style="margin-top: 10px; margin-right: 30px; margin-bottom: 25px;"> 
-            	<input type="button" class="btn btn-secondary" value="추가" onclick="add_textbox()" style="margin-top: 10px; margin-bottom: 25px;">
-        	</div>
+        	<p>
+		        <input type='text' readonly='readonly' class='form-control' placeholder='영상 추가하기 (강의명[영상 이름]이 들어갈 예정)' style='margin-top: 30px; margin-right: 30px; margin-left: 30px;'>
+				<input type='button' class='btn btn-secondary' value='영상추가' data-bs-toggle='modal' data-bs-target='#videoModal' style='margin-top: 10px;'>
+			</p>
+			<table id="table" class="table table-hover" style='margin-top: 75px;'>
+				<thead>
+				    <tr>
+				      <th scope="col">챕터</th>
+				      <th scope="col">강의명</th>
+				      <th scope="col">영상 파일</th>
+				      <th scope="col">영상 재생시간</th>
+				      <th scope="col">영상 삭제</th>
+				    </tr>
+	  			</thead>
+  			</table>
         </div>
-		
       </form>
      </div>
         
      
      <div class="button_container">   
-    	<button type="button" class="btn btn-outline-secondary" onclick="sendOk();">강의 등록완료</button>
+    	<button type="button" class="btn btn-outline-secondary" onclick="location.href='${pageContext.request.contextPath}/instructorPage/instructorPageLectureList';">강의 등록완료</button>
 	 </div>
 	 
 	 <!-- Modal -->
-	 <form name="videoForm" method="post">
+	<form name="videoForm" method="post">
 	<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-scrollable modal-lg">
 	    <div class="modal-content">
@@ -343,7 +467,7 @@ window.addEventListener("load", function(){
 			<div class="mt-5 mb-3">
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 					<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">취소</button>
-					<button class="btn btn-outline-secondary" type="button" onclick="sendOk();">저장</button>
+					<button class="btn btn-outline-secondary" type="button" onclick="sendOk();" data-bs-dismiss="modal">저장</button>
 				</div>
 			</div>
 	      </div>

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,8 @@ public class InstructorPageController {
 	
 	@RequestMapping(value = "instructorPageNewLecture2", method = RequestMethod.POST)
 	public String instructorPageNewLecture2(
-			Lectures dto, HttpSession session,
+			@ModelAttribute Lectures dto, 
+			HttpSession session,
 			RedirectAttributes ra
 			) throws Exception {
 		// 테이블애 자장하고 비디오 등록 화면으로 이동
@@ -98,8 +100,96 @@ public class InstructorPageController {
 		return "redirect:/instructorPage/instructorPageNewLecture2";
 	}
 
-
+	// AJAX를 이용하여 비디오 저장
+	@RequestMapping(value = "instructorPageLectureVideo", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> instructorPageLectureVideo(
+			Lectures dto, 
+			HttpSession session
+			) throws Exception {
+		
+		
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + File.separator + "uploads" + File.separator + "video";
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		dto.setMemberEmail(info.getMemberEmail());
+		
+		System.out.println(dto.getLectureNum() + dto.getVideoSelectFile().getOriginalFilename());
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		String state = "false";
+		try {
+			int videoNum = service.insertVideo(dto, pathname);
+			
+			state = "true";
+			model.put("videoNum", videoNum);
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
+		return model;
+	}
 	
+	@RequestMapping(value = "videoDelete", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> instructorPageLectureVideoDelete(
+			@RequestParam int videoNum, 
+			HttpSession session
+			) throws Exception {
+		
+		
+		String root = session.getServletContext().getRealPath("/");
+		String pathname = root + File.separator + "uploads" + File.separator + "video";
+		
+		
+		Map<String, Object> model = new HashMap<String, Object>();
+		String state = "false";
+		try {
+			Lectures dto = service.readVideo(videoNum);
+			if(dto != null) {
+				pathname = pathname + File.separator + dto.getVideoFileName();
+				
+				service.deleteVideo(videoNum, pathname);
+				state = "true";
+			}
+			
+		} catch (Exception e) {
+		}
+		
+		model.put("state", state);
+		return model;
+	}
+	
+	
+	
+	
+	
+	/*
+	@RequestMapping(value = "delete", method = RequestMethod.GET)
+		public String delete(@RequestParam String videoFilename,
+				@RequestParam(defaultValue = "all") String condition,
+				@RequestParam(defaultValue = "") String keyword,
+				HttpSession session) throws Exception {
+
+			keyword = URLDecoder.decode(keyword, "utf-8");
+			if (keyword.length() != 0) {
+			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
+		}
+
+			String root = session.getServletContext().getRealPath("/");
+			String pathname = root + "uploads" + File.separator + "video" + File.separator + videoFilename;
+
+			try {
+				service.deleteVideo(pathname);
+			} catch (Exception e) {
+			}
+
+			return "redirect:/instructorPage/instructorNewLecture2?" + query;
+		}
+	*/
+
+	/*
 	@RequestMapping(value = "instructorPageLectureList", method = RequestMethod.POST)
 	public String instructorPageLectureList(
 			Lectures dto, HttpSession session
@@ -119,6 +209,8 @@ public class InstructorPageController {
 		
 		return "redirect:/instructorPage/instructorPageLectureList";
 	}
+	*/
+	
 	
 	@RequestMapping(value = "instructorPageNewLecture2", method = RequestMethod.GET)
 	public String instructorPageNewLecture2(@ModelAttribute("dto") Lectures dto) throws Exception {
@@ -127,7 +219,57 @@ public class InstructorPageController {
 	}
 	
 	@RequestMapping(value = "instructorPageLectureList", method = RequestMethod.GET)
-	public String instructorPageLectureList() throws Exception {
+	public String instructorPageLectureList(
+			@RequestParam(defaultValue = "1", value = "page") int currentPage,
+			HttpSession session,
+			HttpServletRequest req,
+			Model model
+			) throws Exception {
+		
+		int rows = 10;
+		int totalPage = 0;
+		int dataCount = 0;
+		
+		int start = (currentPage - 1) * rows + 1;
+		int end = currentPage * rows;
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String id = info.getMemberEmail();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("memberEmail", id);
+		map.put("start", start);
+		map.put("end", end);
+		
+		dataCount = service.countLecture(map);
+		List<Lectures> list = service.listLecture(map);
+		
+		String cp = req.getContextPath();
+		String listUrl = cp + "/instructorPage/instructorPageLectureList";
+		String query = "";
+		
+		if(query.length() != 0) {
+			listUrl = listUrl + "?" + query;
+		}
+		
+		if(dataCount != 0) {
+			totalPage = myUtil.pageCount(rows, dataCount);
+		}
+		
+		totalPage = dataCount / rows + (dataCount % rows > 0 ? 1 : 0);
+		if(currentPage > totalPage) {
+			totalPage = currentPage;
+		}
+		
+		String lecturePaging = myUtil.paging(currentPage, totalPage, listUrl);
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("listUrl", listUrl);
+		model.addAttribute("page", currentPage);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("paging", lecturePaging);
 		
 		return ".instructorPage.instructorPageLectureList";
 	}
