@@ -62,7 +62,7 @@
 								<button class="btn btn-outline-danger" type="button" onclick="location.href='${pageContext.request.contextPath}/admin/admin';">관리</button>
 							</c:when>
 							<c:otherwise>
-								<span style="color: blue;">${sessionScope.member.memberName}</span><span style="padding-right: 10px;">님 환영합니다!</span>
+								<span style="color: blue;">${sessionScope.member.memberNickname}</span><span style="padding-right: 10px;">님 환영합니다!</span>
 								<button class="btn me-2" id="elevationRole" type="button" onclick="location.href='${pageContext.request.contextPath}/member/infoShare';">지식공유자</button>
 								&nbsp;
 								<button class="btn btn-outline-primary" type="button" onclick="location.href='${pageContext.request.contextPath}/member/logout';">로그아웃</button>
