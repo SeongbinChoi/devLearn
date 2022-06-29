@@ -109,4 +109,13 @@
 		)
 	</select>
 	
+	<select id="ReviewstatisticInfo" parameterType="Integer" resultType="map">
+		SELECT 
+			NVL((SELECT NVL(COUNT(*), 0) FROM mentoringApply WHERE mentorNum = #{mentorNum}), 0) applyCnt,
+			NVL((SELECT TO_CHAR(NVL(AVG(mentorRate), 0), 'fm99.0') FROM mentorReview WHERE mentorNum = #{mentorNum} GROUP BY mentorNum), 0) reviewRate,
+			NVL((SELECT NVL(COUNT(*), 0) FROM mentorReview WHERE mentorNum = #{mentorNum} GROUP BY mentorNum), 0) reviewCnt
+		FROM dual
+		
+	</select>
+	
 </mapper>

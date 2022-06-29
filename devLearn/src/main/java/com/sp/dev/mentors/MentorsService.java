@@ -15,5 +15,6 @@ public interface MentorsService {
 	public int insertMentoringApply(Map<String, Object> map) throws Exception;
 	public void insertMentoringPayment(Map<String, Object> map) throws Exception;
 	public List<Mentors> mentorReviewList(int mentorNum);
+	public Map<String, Object> ReviewstatisticInfo(int mentorNum);
 
 }

@@ -85,7 +85,7 @@ function printDetailModal(data) {
 					<div class="title mx-3 mb-2">
 						<div class="namePart">
 							<p class="card-title">${profileDto.memberNickname}</p>
-							<span><i class="fa-regular fa-user"></i> 100 &nbsp;&nbsp;&nbsp;<i class="fa-regular fa-star"></i> 4.5(50)</span>
+							<span><i class="fa-regular fa-user"></i> ${reviewMap.APPLYCNT} &nbsp;&nbsp;&nbsp;<i class="fa-regular fa-star"></i> ${reviewMap.REVIEWRATE}(${reviewMap.REVIEWCNT})</span>
 						</div>
 						<div class="mentor_img my-1">
 							<figure class="figure">
@@ -105,11 +105,7 @@ function printDetailModal(data) {
 				
 				<hr>
 				
-				<div class="sec_body">
-					<a class="nav-link active picked" aria-current="page" href="#">· 홈</a>
-					<a class="nav-link" href="#">· 강의</a>
-					<a class="nav-link" href="#">· 수강후기</a>
-				</div>
+				
 			</div>
 		</div>
 		
@@ -124,17 +120,15 @@ function printDetailModal(data) {
 			
 			<div class="mentor_lecture">
 				<div class="lec_top mb-4 mt-5">
-					<p class="miniTitle">강의(8)</p>
-					<button type="button" class="btn btn-outline-primary" onclick="location.href='#'">더보기</button>
+					<p class="miniTitle">강의(3)</p>
 				</div>
 				<div class="row row-cols-1 row-cols-md-3 g-4">
-					<c:forEach var="i" begin="1" end="6">
-						<div class="col">
+					<div class="col">
 							<div class="card h-100">
-								<img src="https://s3.ap-northeast-2.amazonaws.com/grepp-cloudfront/programmers_imgs/learn/thumb-course-java-intermediate.jpg" class="card-img-top" alt="">
+								<img src="https://cdn.inflearn.com/public/courses/328606/cover/696fc375-3add-425c-bf21-eb5e193de93b/328606-eng.png" class="card-img-top" alt="">
 								<div class="card-body py-3">
-									<p class="card-title">어렵게 배우는 자바</p>
-									<p class="card-text">자바의 신</p>
+									<p class="card-title" style="height:50%;">자바 개발자를 위한 코틀린 입문(Java to Kotlin Starter Guide)</p>
+									<p class="card-text">${profileDto.memberNickname}</p>
 									<p>
 										<c:forEach var="s" begin="1" end="5">
 											<i class="fas fa-star" style="color: #FDCC11; font-size:13px;"></i>
@@ -142,12 +136,47 @@ function printDetailModal(data) {
 										 (10)
 									</p>
 									<p class="price">
-										<fmt:formatNumber value="99999" type="currency" />
+										<fmt:formatNumber value="55000" type="currency" />
 									</p>
 								</div>
 							</div>
 						</div>
-					</c:forEach>
+						<div class="col">
+							<div class="card h-100">
+								<img src="https://s3.ap-northeast-2.amazonaws.com/grepp-cloudfront/programmers_imgs/learn/thumb-course-java-intermediate.jpg" class="card-img-top" alt="">
+								<div class="card-body py-3">
+									<p class="card-title" style="height:50%;">어렵게 배우는 자바</p>
+									<p class="card-text">${profileDto.memberNickname}</p>
+									<p>
+										<c:forEach var="s" begin="1" end="5">
+											<i class="fas fa-star" style="color: #FDCC11; font-size:13px;"></i>
+										</c:forEach>
+										 (10)
+									</p>
+									<p class="price">
+										<fmt:formatNumber value="55000" type="currency" />
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="col">
+							<div class="card h-100">
+								<img src="https://cdn.inflearn.com/public/courses/328723/cover/062da05a-55e9-49f1-a9ad-3e67ea079fe9/328723-eng.png" class="card-img-top" alt="">
+								<div class="card-body py-3">
+									<p class="card-title" style="height:50%;">스프링 DB 1편-데이터 접근 핵심 원리</p>
+									<p class="card-text">${profileDto.memberNickname}</p>
+									<p>
+										<c:forEach var="s" begin="1" end="5">
+											<i class="fas fa-star" style="color: #FDCC11; font-size:13px;"></i>
+										</c:forEach>
+										 (10)
+									</p>
+									<p class="price">
+										<fmt:formatNumber value="88000" type="currency" />
+									</p>
+								</div>
+							</div>
+						</div>
 				</div>
 				<hr class="mt-5">
 			</div>
@@ -155,7 +184,7 @@ function printDetailModal(data) {
 			
 			<div class="mentor_review">
 				<div class="lec_top mb-4 mt-5">
-					<p class="miniTitle">수강후기</p>
+					<p class="miniTitle">멘토링 후기</p>
 				</div>
 				<c:forEach var="vo" items="${reviewList}">
 					<div class="review_content mb-5">

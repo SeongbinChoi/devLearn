@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sp.dev.common.MyUtil;
-import com.sp.dev.member.SessionInfo;
-import com.sp.dev.mypage.MypageService;
 import com.sp.dev.mypage.profile.Profile;
 import com.sp.dev.mypage.profile.ProfileService;
 
@@ -98,17 +96,21 @@ public class MentorsController {
 			) throws Exception {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> reviewMap = new HashMap<String, Object>();
 		
 		Mentors mentorInfo = service.readMentors(mentorNum);
 		List<Mentors> reviewList = new ArrayList<Mentors>();
 		map.put("memberEmail", mentorInfo.getMemberEmail());
 		
+		
 		Profile dto = pfService.readProfile(map);
 		reviewList = service.mentorReviewList(mentorNum);
+		reviewMap = service.ReviewstatisticInfo(mentorNum);
 		
 		model.addAttribute("profileDto", dto);
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("mentorNum", mentorNum);
+		model.addAttribute("reviewMap", reviewMap);
 		
 		return ".mentors.mentorProfile";
 	}

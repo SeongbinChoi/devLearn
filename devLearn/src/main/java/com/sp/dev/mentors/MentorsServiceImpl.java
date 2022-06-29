@@ -1,6 +1,7 @@
 package com.sp.dev.mentors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +123,20 @@ public class MentorsServiceImpl implements MentorsService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@Override
+	public Map<String, Object> ReviewstatisticInfo(int mentorNum) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			map = dao.selectOne("mentors.ReviewstatisticInfo", mentorNum);
+			System.out.println(map.get("APPLYCNT"));
+			System.out.println(map.get("REVIEWRATE"));
+			System.out.println(map.get("REVIEWCNT"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
 	}
 
 	
