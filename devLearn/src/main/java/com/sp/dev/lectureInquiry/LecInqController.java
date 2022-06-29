@@ -34,6 +34,15 @@ public class LecInqController {
 	@RequestMapping("inquiry")
 	public String inquiry(@RequestParam int lectureNum,
 			Model model) throws Exception {
+		
+		Lectures dto = lservice.readLecture(lectureNum);
+		if(dto == null) {
+			return "redirect:/lectures/lectures";
+		}
+		
+		dto.setLectureContent(dto.getLectureContent());
+		
+		model.addAttribute("dto", dto); 
 		model.addAttribute("lectureNum", lectureNum); // 이걸로 강의번호를 받아오긴 했는데 이걸로 끝인가?
 		
 		return ".lectureInquiry.inquiry";

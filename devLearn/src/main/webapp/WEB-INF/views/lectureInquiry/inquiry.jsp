@@ -204,7 +204,6 @@ $(function() {
 		let query = "inquiryNum=" + inquiryNum + "&lectureNum=${lectureNum}";
 		const fn = function(data) {
 			$(".inquiry-list-body").empty();
-			$(".card-header").html(data.dto.dcPercent + "% 할인 중인 강의");
 			listPage(1);
 		};
 		
@@ -326,7 +325,7 @@ $(function() {
 			
 				<div class="card col-9" style="float: none; margin:0 auto;">
 					<div class="card-header">
-						
+						${dto.dcPercent}% 할인 중인 강의
 					</div>
 					
 					<div class="card-body mx-2 my-3">
