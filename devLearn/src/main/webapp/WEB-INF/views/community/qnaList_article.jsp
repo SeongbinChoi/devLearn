@@ -25,6 +25,10 @@ a#top_btn {
     max-height: 250px;
 }
 
+img {
+	width: 100%;
+}
+
 </style>
 
 <script type="text/javascript">
