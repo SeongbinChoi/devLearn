@@ -8,11 +8,11 @@
 <style type="text/css">
 .body-container {
 	max-width: 800px;
-}
+}se
 
 .inquiry-form textarea { width: 100%; height: 75px; resize: none; }
 
-.inquiry-list tr:nth-child(2n+1) { border: 1px solid #ccc; background: #f8f9fa; }
+.inquiry-list { border: 1px solid #ccc;}
 .inquiry-list .deleteInquiry, .inquiry-list .answer { cursor: pointer; }
 .inquiry-list .deleteInquiry:hover { text-decoration: underline; color: #F28011; }
 
@@ -59,6 +59,53 @@ $(function() {
 	listPage(1);
 });
 
+
+//문의 등록
+$(function() {
+	$(".btnSend").click(function() {
+		let question = $("#question").val().trim();
+		if(! question) {
+			$("#question").focus();
+			return false;
+		}
+		
+		let url = "${pageContext.request.contextPath}/lectureInquiry/insert";
+		let query = "question=" + encodeURIComponent(question) + "&lectureNum=${lectureNum}";
+		
+		const fn = function(data) {
+			$("#question").val("");
+			$(".inquiry-list-body").empty();
+			listPage(1);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+		
+	});
+});
+
+//답변 등록
+$(function() {
+	$("body").on("click", ".btnAns",function() {
+		let lectureNum = "${dto.lectureNum}";
+		let answer = $("#answer").val().trim();
+//		if(! answer) {
+//			$("#answer").focus();
+//			return false;			
+//		}
+		
+		let url = "${pageContext.request.contextPath}/lectureInquiry/answer";
+		let query = "answer=" + encodeURIComponent(answer) + "&lectureNum=${lectureNum}";
+		
+		const fn = function(data) {
+			$("#answer").val("");
+			$(".inquiry-list-body").empty();
+			listPage(1);
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+	});
+});
+
 // 문의 리스트
 function listPage(page) {
 	let url = "${pageContext.request.contextPath}/lectureInquiry/list";
@@ -71,8 +118,8 @@ function listPage(page) {
 }
 
 function printInquiry(data) {
+	console.log(data);
 	const uid = "${sessionScope.member.memberEmail}";
-	const qNickname = "${sessionScope.member.memberNickname}";
 	let permission = "${sessionScope.member.memberRole == 99 ? 'true' : 'false'}"; 
 	
 	let dataCount = data.dataCount;
@@ -102,22 +149,20 @@ function printInquiry(data) {
 		let qmember = data.list[idx].qmember;
 		let question = data.list[idx].question;
 		let q_regDate = data.list[idx].q_regDate;
+		let qNickname = data.list[idx].qNickname;
 		
-		let instructorEmail = data.list[idx].instructorEmail;
 		let amember = data.list[idx].amember;
 		let answer = data.list[idx].answer;
 		let a_regDate = data.list[idx].a_regDate;
 		let aNickname = data.list[idx].aNickname;
 		
 		// 문의자 이메일, 날짜, 삭제 버튼
-		out += "<tr>";
+		out += "<tr style='background: #f8f9fa;'>";
 		out += "	<td width='50%'><i class='bi bi-person-circle text-muted'></i> <span>" + qNickname + "</span></td>";
 		out += "	<td width='50%' align='right'>" + q_regDate;
 		
 		if(uid === qmember || permission === "true") {
 			out += "	| <span class='deleteInquiry' data-inquiryNum='" + inquiryNum + "'>삭제</span>";
-		} else if(uid === instructorEmail && answer === null) {
-			out += "	| <span class='answer' data-inquiryNum='" + inquiryNum + "'>답변</span>";	
 		}
 		out += "    </td>";
 		out += "</tr>";
@@ -129,68 +174,32 @@ function printInquiry(data) {
 		
 		if(answer != null) { // 답변 부분은 없다면 출력하면 안되니까  if
 			// 답변자 이메일, 날짜
-			out += "<tr>";
+			out += "<tr style='background: #f8f9fa;'>";
 			out += "	<td width='45%'>&nbsp<i class='bi bi-arrow-return-right'></i>&nbsp<i class='bi bi-person-circle text-muted'></i> <span>" +  aNickname + "</span></td>";
 			out += "	<td width='45%' align='right'>" + a_regDate;
 			out += "    </td>";
 			out += "</tr>";
 			
 			// 답변 내용
-			out += "<tr>";
-			out += "    <td colspan='2' valign='top'>&nbsp&nbsp&nbsp&nbsp&nbsp" + answer + "</td>"; 
+			out += "<tr style='border-bottom: 1px solid #ccc;'>";
+			out += "    <td colspan='2' valign='top'>&nbsp&nbsp&nbsp&nbsp&nbsp" + answer + "</td>";
 			out += "</tr>";
-		} 
+		}
+		
+		if(uid === "${dto.memberEmail}" && answer == null) {
+			out += "<tr style='border-bottom: 1px solid #ccc;'>";
+			out += "    <td colspan='2'>";
+			out += "		<textarea style='width: 100%;' name='answer' id='answer' class='form-control' style='width: auto;'></textarea>";
+			out += "		<input type='hidden' name='inquiryNum' value='${inquiryNum}'>";
+			out += "		<button type='button' class='btnAns btn' style='background: #0D6EFD; color: white;'>답변 <i class='bi bi-check2'></i></button>";
+			out += "    </td>";
+			out += "</tr>";
+		}
 		
 	}
 	
 	$(".inquiry-list-body").append(out);
 }
-
-// 문의 등록
-$(function() {
-	$(".btnSend").click(function() {
-		let question = $("#question").val().trim();
-		if(! question) {
-			$("#question").focus();
-			return false;
-		}
-		
-		let url = "${pageContext.request.contextPath}/lectureInquiry/insert";
-		let query = "question=" + encodeURIComponent(question) + "&lectureNum=${lectureNum}";
-		
-		const fn = function(data) {
-			$("#question").val("");
-			$(".inquiry-list-body").empty();
-			listPage(1);
-		};
-		
-		ajaxFun(url, "post", query, "json", fn);
-		
-	});
-});
-
-// 답변 등록
-$(function() {
-	$(".btnAns").click(function() {
-		let lectureNum = "${dto.lectureNum}";
-		let answer = $("#answer").val().trim();
-		if(! answer) {
-			$("#answer").focus();
-			return false;			
-		}
-		
-		let url = "${pageContext.request.contextPath}/lectureInquiry/answer";
-		let query = "answer=" + encodeURIComponent(answer) + "&lectureNum=${lectureNum}";
-		
-		const fn = function(data) {
-			$("#answer").val("");
-			$(".inquiry-list-body").empty();
-			listPage(1);
-		};
-		
-		ajaxFun(url, "post", query, "json", fn);
-	});
-});
 
 // 문의 삭제
 $(function() {
@@ -310,11 +319,13 @@ $(function() {
 						<span> - 광고, 욕설, 비방, 도배 등 강의와 무관한 글은 예고 없이 삭제될 수 있습니다. </span>
 					</div>
 					<div class="p-1">
-						<textarea name="question" id="question" class="form-control" placeholder="${empty sessionScope.member ? '로그인 후 등록 가능합니다.':''}"></textarea>
+						<textarea name="question" id="question" class="form-control" 
+							placeholder="${empty sessionScope.member ? '로그인 후 등록 가능합니다.':''}"></textarea>
 					</div>
 					<div class="p-1 text-end">
 						<input type="hidden" name="lectureNum" value="${lectureNum}">
-						<button type="button" class="btnSend btn" style="background: #0D6EFD; color: white;" ${empty sessionScope.member ? "disabled='disabled'":""}>등록 <i class="bi bi-check2"></i></button>
+						<button type="button" class="btnSend btn" style="background: #0D6EFD; color: white;" 
+							${empty sessionScope.member ? "disabled='disabled'":""}>등록 <i class="bi bi-check2"></i></button>
 					</div>
 				</div>
 			</form>

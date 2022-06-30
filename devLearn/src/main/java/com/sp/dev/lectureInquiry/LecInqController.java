@@ -87,7 +87,7 @@ public class LecInqController {
 		Map<String, Object> model = new HashMap<>();
 		model.put("state", state);
 		
-		return null;
+		return model;
 	}
 	
 	// 리스트(페이지에 들어가면 질문+답변 2가지가 모두, 1명의 문답만이 아니라 전체 사용자의 문답이 한꺼번에 다 나오도록)
@@ -136,7 +136,6 @@ public class LecInqController {
 		
 		Lectures dto = lservice.readLecture(lectureNum);
 		model.addAttribute("dto", dto);
-		System.out.println(dto.getDcPercent() + "---------");
 		model.addAttribute("lectureNum", lectureNum);
 		return mod;
 	}

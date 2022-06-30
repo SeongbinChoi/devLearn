@@ -15,11 +15,11 @@
 	</select>
 	
 	<!-- 리스트 출력 -->
-	<!-- 문의 테이블 / 강의 테이블 / 회원 테이블 join -->
+	<!-- 문의 테이블 / 강의 테이블 / 회원 테이블 join(문의자와 답변자(강사)의 닉네임을 따로 가져오느라 member가 2번 join됨. 다른 방법 없나?) -->
 	<select id="listLecInq" parameterType="map" resultType="com.sp.dev.lectureInquiry.LecInq">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate,
+				SELECT inquiryNum, qMember, question, TO_CHAR(q_regDate, 'YYYY-MM-DD') q_regDate, qm.memberNickname as qNickname,
 					aMember, answer, TO_CHAR(a_regDate, 'YYYY-MM-DD')a_regDate,
 					m.membernickName as aNickname, l.memberEmail as instructorEmail,
 					l.lecturePrice, l.dcPercent,
@@ -29,6 +29,7 @@
 				FROM lectureInquiry li
 				JOIN lecture l ON l.lectureNum=li.lectureNum
 				JOIN member m ON l.memberEmail=m.memberEmail
+				JOIN member qm on qMember=qm.memberEmail
 				WHERE l.lectureNum = #{lectureNum}
 				ORDER BY inquiryNum DESC
 			) tb WHERE ROWNUM &lt;= #{end}

@@ -43,9 +43,11 @@
 				<li class="nav-item"> 
 					<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lectureInquiry/inquiry?lectureNum=${dto.lectureNum}';">수강 전 문의</a>	
 				</li>
+				<!--  
 				<li class="nav-item">
 					<a class="nav-link" href="#">커뮤니티</a>
 				</li>
+				-->
 				<li class="nav-item">
 					<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lecturenews/news?lectureNum=${dto.lectureNum}';">새 소식</a>
 				</li>
@@ -57,11 +59,20 @@
 		
 			<div class="bodyMain col-8 px-5 py-5">
 				<div data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="0" class="scrollspy-example" tabindex="0">
-					<h4 id="scrollspyHeading1" class="mb-3">널 위해 준비했어!<br>이건 강의 제목이야!</h4>
+					<h4 id="scrollspyHeading1" class="mb-3">강의 카테고리<br>${dto.lectureSubject}</h4>
 					<p class="mb-5">
-						너무 이것만 있으면 휑해 보이니까 대충 아무 말이나 적어볼까?
+						강의를 수강해 주신 모든 분들께 감사드립니다.
+						
 						${dto.lectureContent}
-						이라는게 내용이야. 그런데 이래도 허전하긴 매한가지네.
+						<br>
+						
+						강의는 지속적으로 업데이트 될 예정이며, 강의에 대한 궁금증이나 내용에 대한 질문은 문의 게시판이나 강사 이메일을 통해 해결해 드리도록 하겠습니다.
+						<br>
+						다시 한 번 수강생 분들에게 감사드리며, 수강 후에는 한 계단 높은 곳에 계시기를 기원합니다!
+						
+						
+						
+
 					</p>
 					
 					
