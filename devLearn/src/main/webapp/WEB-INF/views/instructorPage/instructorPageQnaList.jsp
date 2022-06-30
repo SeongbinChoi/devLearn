@@ -30,100 +30,33 @@ th, td {
 <body>
 <main>
 <jsp:include page="/WEB-INF/views/instructorPage/instructorPage.jsp"/>
-<table class="table table-hover" style="background: #FFFFFF;">
-  <thead>
-    <tr>
-      <th scope="col">강의 이미지</th>
-      <th scope="col">강의명</th>
-      <th scope="col">평점</th>
-      <th scope="col">총 수강생</th>
-      <th scope="col">질문</th>
-      <th scope="col">총 수입</th>
-      <th scope="col">상태</th>
-      
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-      </th>
-      <td>나도 할수 있다! 데브런강사!</td>
-      <td>5.0</td>
-      <td>172</td>
-      <td>5</td>
-      <td>$300,000</td>
-      <td><a href="#">미승인</a></td>
-    </tr>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-	</th>
-      <td>나도 할수 있다! 데브런강사!22</td>
-      <td>3.5</td>
-      <td>172</td>
-      <td>4</td>
-      <td>$250,000</td>
-      <td><a href="#">승인</a></td>
-    </tr>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-      </th>
-      <td>나도 할수 있다! 데브런강사!33</td>
-      <td>4.0</td>
-      <td>12</td>
-      <td>0</td>
-      <td>$280,000</td>
-      <td><a href="#">미승인</a></td>
-    </tr>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-      </th>
-      <td>나도 할수 있다! 데브런강사!44</td>
-      <td>4.7</td>
-      <td>69</td>
-      <td>2</td>
-      <td>$250,000</td>
-      <td><a href="#">승인</a></td>
-    </tr>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-      </th>
-      <td>나도 할수 있다! 데브런강사!55</td>
-      <td>2.3</td>
-      <td>109</td>
-      <td>11</td>
-      <td>$730,000</td>
-      <td><a href="#">승인</a></td>
-    </tr>
-    <tr>
-      <th scope="row">
-      	<div class="lec_img">
-      		<img src="${pageContext.request.contextPath}/resources/images/no_image.gif">
-      	</div>
-      </th>
-      <td>나도 할수 있다! 데브런강사!66</td>
-      <td>5.0</td>
-      <td>72</td>
-      <td>5</td>
-      <td>$300,000</td>
-      <td><a href="#">승인</a></td>
-    </tr>
-  </tbody>
-</table>
+<div class="mt-3">
+		 		<table class="table table-centered table-nowrap table-hover mb-0">
+		 			<thead>
+			 			<tr>
+			 				<td>번호</td>
+			 				<td>강의번호</td>
+			 				<td>질문자</td>
+			 				<td>질문</td>
+			 				<td>등록일</td>
+			 			</tr>
+		 			</thead>
+					<tbody>
+			 			<c:forEach var="dto" items="${list}" varStatus="status">
+			 				<tr>
+				 				<td>${dataCount - (page-1) * rows - status.index}</td>
+				 				<td>${dto.lectureNum}</td>
+				 				<td>${dto.qMember}</td>
+				 				<td>${dto.question}</td>
+				 				<td>${dto.q_regDate}</td>
+			 				</tr>
+			 			</c:forEach>
+					</tbody>
+		 		</table>
+		 		<div class="paginate mt-5">
+		 			${paging}
+		 		</div>
+	 		</div>
 </main>
 
 </body>

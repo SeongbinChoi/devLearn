@@ -161,55 +161,47 @@ public class InstructorPageController {
 		return model;
 	}
 	
-	
-	
-	
-	
 	/*
-	@RequestMapping(value = "delete", method = RequestMethod.GET)
-		public String delete(@RequestParam String videoFilename,
-				@RequestParam(defaultValue = "all") String condition,
-				@RequestParam(defaultValue = "") String keyword,
-				HttpSession session) throws Exception {
-
-			keyword = URLDecoder.decode(keyword, "utf-8");
-			if (keyword.length() != 0) {
-			query += "&condition=" + condition + "&keyword=" + URLEncoder.encode(keyword, "UTF-8");
-		}
-
-			String root = session.getServletContext().getRealPath("/");
-			String pathname = root + "uploads" + File.separator + "video" + File.separator + videoFilename;
-
-			try {
-				service.deleteVideo(pathname);
-			} catch (Exception e) {
-			}
-
-			return "redirect:/instructorPage/instructorNewLecture2?" + query;
-		}
-	*/
-
-	/*
-	@RequestMapping(value = "instructorPageLectureList", method = RequestMethod.POST)
-	public String instructorPageLectureList(
-			Lectures dto, HttpSession session
+	@RequestMapping(value = "lectureDelete", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> instructorPageLectureDelete(
+			@RequestParam int lectureNum, 
+			HttpSession session
 			) throws Exception {
-		// 테이블애 저장하고 비디오 리스트 화면으로 이동
+		
 		
 		String root = session.getServletContext().getRealPath("/");
 		String pathname = root + File.separator + "uploads" + File.separator + "video";
 		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		dto.setMemberEmail(info.getMemberEmail());
 		
+		Map<String, Object> model = new HashMap<String, Object>();
+		String state = "false";
 		try {
-			service.insertVideo(dto, pathname);
+			Lectures dto = service.readVideo(lectureNum);
+			Lectures dto2 = service.readLecture(lectureNum);
+			if(dto != null && dto2 != null) {
+				pathname = pathname + File.separator + dto.getVideoFileName();
+				
+				service.deleteLectureVideo(lectureNum, pathname);
+				state = "true";
+			}
+		String state2 = "false";	
+			if(dto2 != null && state ="true") {
+				pathname = pathname + File.separator + dto.getThumbNail();
+				
+				service.deleteLecture(lectureNum, pathname);
+				state2 = "true";
+			}
+			
 		} catch (Exception e) {
 		}
 		
-		return "redirect:/instructorPage/instructorPageLectureList";
+		model.put("state", state);
+		return model;
 	}
 	*/
+
+
 	
 	
 	@RequestMapping(value = "instructorPageNewLecture2", method = RequestMethod.GET)
@@ -234,10 +226,10 @@ public class InstructorPageController {
 		int end = currentPage * rows;
 		
 		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		String id = info.getMemberEmail();
+		String memberEmail = info.getMemberEmail();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("memberEmail", id);
+		map.put("memberEmail", memberEmail);
 		map.put("start", start);
 		map.put("end", end);
 		
@@ -307,8 +299,63 @@ public class InstructorPageController {
 		return ".instructorPage.instructorPageRev";
 	}
 	
-	@RequestMapping(value = "instructorPageQnaList", method = RequestMethod.GET)
-	public String instructorPageQnaList() throws Exception {
+		
+	@RequestMapping(value = "instructorPageQnaList")
+	public String instructorPageQnaList(
+						  @RequestParam(value = "page", defaultValue = "1") int current_page,
+						  HttpServletRequest req,
+						  HttpSession session,
+						  Model model
+						  ) throws Exception {
+		
+		String cp = req.getContextPath();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		int rows = 10;
+		int total_page = 0;
+		int dataCount = 0;
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		String id = info.getMemberEmail();
+		
+		map.put("memberEmail", id);
+		
+		dataCount = service.countInquiry(map);
+		System.out.println("데이터카운트 : " + dataCount);
+		if(dataCount != 0) {
+			total_page = myUtil.pageCount(rows, dataCount);
+		}
+		
+		if(current_page > total_page) {
+			current_page = total_page;
+		}
+		
+		int start = (current_page - 1) * rows + 1;
+		int end = current_page * rows;
+		map.put("start", start);
+		map.put("end", end);
+
+		
+		List<Lectures> list = service.listInquiry(map);
+		System.out.println(list);
+		String listUrl = cp + "/instructorPage/instructorPageQnaList";
+		String articleUrl = cp + "/lectures/lectures/lectureNum=";
+		
+		String query = "rows=" + rows;
+		listUrl += "?" + query;
+		
+		String paging = myUtil.paging(current_page, total_page, listUrl);
+		
+		
+		model.addAttribute("list", list);
+		model.addAttribute("listUrl", listUrl);
+		model.addAttribute("articleUrl", articleUrl);
+		model.addAttribute("page", current_page);
+		model.addAttribute("dataCount", dataCount);
+		model.addAttribute("total_page", total_page);
+		model.addAttribute("paging", paging);
+		
+		model.addAttribute("rows", rows);
 		
 		return ".instructorPage.instructorPageQnaList";
 	}

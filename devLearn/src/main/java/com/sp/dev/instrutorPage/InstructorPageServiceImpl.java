@@ -163,4 +163,48 @@ public class InstructorPageServiceImpl implements InstructorPageService {
 		return list;
 	}
 
+	@Override
+	public int countInquiry(Map<String, Object> map) {
+		int result=0;
+		try {
+			result = dao.selectOne("instructorPage.countInquiry", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@Override
+	public List<Lectures> listInquiry(Map<String, Object> map) {
+		List<Lectures> list = null;
+		try {
+			list = dao.selectList("instructorPage.listInquiry", map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	@Override
+	public void deleteLecture(int lectureNum) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteLectureVideo(int lectureNum, String pathname) throws Exception {
+		try {
+			if (pathname != null) {
+				fileManager.doFileDelete(pathname);
+			}
+			
+			dao.deleteData("instructorPage.deleteLectureVideo", lectureNum);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		
+	}
+
 }

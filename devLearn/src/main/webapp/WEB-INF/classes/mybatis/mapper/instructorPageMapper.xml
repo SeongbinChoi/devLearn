@@ -53,6 +53,28 @@
 		WHERE videoNum = #{videoNum}
 	</select>
 	
+	<select id="readLecture2" parameterType="String" resultType="com.sp.dev.instrutorPage.Lectures">
+		SELECT lectureNum, memberEmail, categoryCode, lectureSubject, 
+			lectureContent, lecturePrice, reg_date, dcPercent, lectureState,
+			lectureDuration, thumbNail
+		FROM lecture
+		WHERE lectureNum = #{lectureNum}
+	</select>
+	
+	<select id="readVideo2" parameterType="Integer" resultType="com.sp.dev.instrutorPage.Lectures" >
+		SELECT lectureNum, videoNum, fileTotalTime, videoTitle, chapter, videoFileName
+		FROM lectureVideoFile
+		WHERE lectureNum = #{lectureNum}
+	</select>
+	
+	<delete id="deleteLecture" parameterType="map">
+		DELETE from lecture WHERE lectureNum = #{lectureNum}
+	</delete>
+	
+	<delete id="deleteLectureVideo" parameterType="map">
+		DELETE from lectureVideoFile WHERE lectureNum = #{lectureNum}
+	</delete>
+	
 	<delete id="deleteVideo" parameterType="map">
 		DELETE from lectureVideoFile WHERE videoNum = #{videoNum}
 	</delete>
@@ -80,6 +102,30 @@
 		FROM LECTURE
 		<where>
 			memberEmail=#{memberEmail}
+		</where>
+	</select>
+	
+	<select id="listInquiry" parameterType="map" resultType="com.sp.dev.instrutorPage.Lectures">
+		SELECT * FROM (
+					SELECT ROWNUM rnum, tb.* FROM (
+						SELECT inquiryNum, i.lectureNum,qMember,
+							question, q_regDate, answer,a_regDate
+						FROM lectureInquiry i
+						JOIN lecture l ON i.lectureNum=l.lectureNum 
+						<where>
+							l.memberEmail=#{memberEmail}
+						</where>
+						ORDER BY q_regDate DESC
+					) tb WHERE ROWNUM &lt;= #{end}
+				) WHERE rnum &gt;= #{start}
+	</select>
+
+	<select id="countInquiry" parameterType="map" resultType="Integer">
+		SELECT NVL(COUNT(*), 0) 
+		FROM lectureInquiry i
+		JOIN lecture l ON i.lectureNum=l.lectureNum
+		<where>
+			l.memberEmail=#{memberEmail}
 		</where>
 	</select>
 	

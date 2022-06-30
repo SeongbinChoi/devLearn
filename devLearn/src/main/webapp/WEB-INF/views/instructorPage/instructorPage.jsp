@@ -135,12 +135,12 @@
 							</li>
 							<li class="nav-item">
 								<c:if test="${sessionScope.member.memberRole eq '10' || sessionScope.member.memberRole eq '30'}">
-									<a class="nav-link active topNav_mentor">멘토</a>
+									<a class="nav-link topNav_mentor">멘토</a>
 								</c:if>
 							</li>
 							<li class="nav-item">
 								<c:if test="${sessionScope.member.memberRole eq '20' || sessionScope.member.memberRole eq '30'}">
-									<a class="nav-link topNav_instructor " aria-current="page"  href="${pageContext.request.contextPath}/instructorPage/dashboard">강사</a>
+									<a class="nav-link topNav_instructor active" aria-current="page"  href="${pageContext.request.contextPath}/instructorPage/instructorPageDashBoard">강사</a>
 								</c:if>
 							</li>
 						</ul>
@@ -156,7 +156,7 @@
 					<p class="menu-label">HOME</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap is_active" href="${pageContext.request.contextPath}/instructorPage/instructorPageDashBoard">
+							<a class="btn_wrap" href="${pageContext.request.contextPath}/instructorPage/instructorPageDashBoard">
 								<span>대시보드</span>
 							</a>
 						</li>	
@@ -166,12 +166,12 @@
 					<ul class="menu-list">
 						<li>
 							<a class="btn_wrap" href="${pageContext.request.contextPath}/instructorPage/instructorPageQnaList">
-								<span>질문 리스트</span>
+								<span>강의 문의 리스트</span>
 							</a>
 						</li>	
 						<li>
 							<a class="btn_wrap" href="${pageContext.request.contextPath}/instructorPage/instructorPageLectureList">
-								<span>강의 소식 관리</span>
+								<span>강의 관리</span>
 							</a>
 						</li>
 						<li>

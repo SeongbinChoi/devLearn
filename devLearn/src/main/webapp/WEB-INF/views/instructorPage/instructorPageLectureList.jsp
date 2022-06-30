@@ -26,6 +26,96 @@ th, td {
   vertical-align : middle;
 }
 </style>
+<script type="text/javascript">
+
+function ajaxFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+	    	if(jqXHR.status === 403) {
+	    		login();
+	    		return false;
+	    	} else if(jqXHR.status === 402) {
+	    		alert("권한이 없습니다.");
+	    		return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+	    	} else if(jqXHR.status === 410) {
+	    		alert("삭제된 게시물입니다.");
+	    		return false;
+	    	}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+function ajaxFileFun(url, method, query, dataType, fn) {
+	$.ajax({
+		type:method,
+		url:url,
+		processData: false,  // file 전송시 필수. 서버로전송할 데이터를 쿼리문자열로 변환여부
+		contentType: false,  // file 전송시 필수. 서버에전송할 데이터의 Content-Type. 기본:application/x-www-urlencoded
+		data:query,
+		dataType:dataType,
+		success:function(data) {
+			fn(data);
+		},
+		beforeSend:function(jqXHR) {
+			jqXHR.setRequestHeader("AJAX", true);
+		},
+		error:function(jqXHR) {
+			if(jqXHR.status === 403) {
+				login();
+				return false;
+	    	} else if(jqXHR.status === 402) {
+	    		alert("권한이 없습니다.");
+	    		return false;
+			} else if(jqXHR.status === 400) {
+				alert("요청 처리가 실패 했습니다.");
+				return false;
+	    	} else if(jqXHR.status === 410) {
+	    		alert("삭제된 게시물입니다.");
+	    		return false;
+	    	}
+	    	
+			console.log(jqXHR.responseText);
+		}
+	});
+}
+
+$(function(){
+	$("body").on("click", ".btnLectureDelete", function(){
+		if(! confirm('강의를 삭제 하시겠습니까 ? ')) {
+			return false;
+		}
+		
+		var $tr = $(this).closest("tr");
+		var lectureNum = $(this).attr("data-lectureNum");
+		
+	    let url = "${pageContext.request.contextPath}/instructorPage/videoLecture";
+		let query = "lectureNum="+lectureNum;
+		
+		var fn = function(data) {
+			$tr.remove();
+		};
+		
+		ajaxFun(url, "post", query, "json", fn);
+		
+	});
+	
+});
+</script>
 </head>
 <body>
 <main>
@@ -40,6 +130,7 @@ th, td {
 			 				<td>가격</td>
 			 				<td>등록일</td>
 			 				<td>상태</td>
+			 				<td>강의 삭제</td>
 			 			</tr>
 		 			</thead>
 					<tbody>
@@ -59,6 +150,11 @@ th, td {
 				 							승인완료
 				 						</c:otherwise>
 				 					</c:choose>
+				 				</td>
+				 				<td>
+				 				<c:if test="${dto.state == 0}">
+									<button type="button" class="btn btn-dark btn-sm" id="deleteBtn" onclick="" data-num="${dto.lectureNum}">삭제하기</button>
+								</c:if>
 				 				</td>
 			 				</tr>
 			 			</c:forEach>

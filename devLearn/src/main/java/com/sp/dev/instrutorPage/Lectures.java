@@ -41,7 +41,7 @@ public class Lectures {
 	private int inquiryNum;
 	private String qMember;
 	private String question;
-	private String q_regDtae;
+	private String q_regDate;
 	private String amember;
 	private String answer;
 	private String a_regDate;
@@ -247,11 +247,11 @@ public class Lectures {
 	public void setQuestion(String question) {
 		this.question = question;
 	}
-	public String getQ_regDtae() {
-		return q_regDtae;
+	public String getQ_regDate() {
+		return q_regDate;
 	}
-	public void setQ_regDtae(String q_regDtae) {
-		this.q_regDtae = q_regDtae;
+	public void setQ_regDate(String q_regDate) {
+		this.q_regDate = q_regDate;
 	}
 	public String getAmember() {
 		return amember;
