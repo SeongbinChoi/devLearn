@@ -63,9 +63,9 @@ function selectFn() {
 <jsp:include page="mentorPage.jsp"/>
 <h2><i class="fa-solid fa-chart-line"></i>수익 관리</h2>
 <div style="float: right;">
-	<select class="form-control" id="mentoringYear">
+	<select class="form-control" id="mentoringYear" onChange="selectFn();">
 		<c:forEach var="vo" items="${mentoringYearList}">
-			<option value="${vo.YEAR}" <c:if test="${vo.YEAR eq year}">selected="selected"</c:if> onclick="selectFn();">${vo.YEAR}</option>		
+			<option value="${vo.YEAR}" <c:if test="${vo.YEAR eq year}">selected="selected"</c:if>>${vo.YEAR}</option>		
 		</c:forEach>
 	</select>
 </div>
