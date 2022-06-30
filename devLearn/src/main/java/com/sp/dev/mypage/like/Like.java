@@ -7,6 +7,7 @@ public class Like {
 	private int lecturePrice;
 	private String regDate;
 	private String memberNickname;
+	private String thumbnail;
 	
 	public int getLectureNum() {
 		return lectureNum;
@@ -37,6 +38,12 @@ public class Like {
 	}
 	public void setMemberNickname(String memberNickname) {
 		this.memberNickname = memberNickname;
+	}
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	
 	

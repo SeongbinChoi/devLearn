@@ -8,7 +8,7 @@ public class Cart {
 	private String lectureSubject;
 	private String memberNickname;
 	private String lectureDuration;
-	//썸네일 추가하기
+	private String thumbnail;
 	private int lecturePrice;
 	private int dcPercent;
 	
@@ -142,5 +142,12 @@ public class Cart {
 	public void setTotalPay(int totalPay) {
 		this.totalPay = totalPay;
 	}
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
 	
 }

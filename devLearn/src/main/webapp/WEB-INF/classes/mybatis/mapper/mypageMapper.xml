@@ -288,7 +288,8 @@
 	<select id="likeList" parameterType="map" resultType="com.sp.dev.mypage.like.Like">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT lk.lectureNum, lectureSubject, lecturePrice, l.regDate, m.memberNickname
+				SELECT lk.lectureNum, lectureSubject, lecturePrice, l.regDate, 
+						m.memberNickname, thumbnail
 				FROM lectureLike lk
 				JOIN lecture l ON lk.lectureNum = l.lectureNum
 				JOIN member m ON l.memberEmail = m.memberEmail
@@ -327,8 +328,8 @@
 	
 	<!-- 수강바구니 리스트 -->
 	<select id="cartList" parameterType="map" resultType="com.sp.dev.mypage.cart.Cart">
-		SELECT c.memberEmail, m1.memberName, 
-			c.lectureNum, lectureSubject, m2.memberNickname, lectureDuration, lecturePrice, dcPercent
+		SELECT c.memberEmail, m1.memberName, c.lectureNum, lectureSubject, 
+				m2.memberNickname, lectureDuration, lecturePrice, dcPercent, thumbnail
 		FROM cart c
 		JOIN lecture l ON c.lectureNum = l.lectureNum
 		JOIN member m1 ON c.memberEmail = m1.memberEmail

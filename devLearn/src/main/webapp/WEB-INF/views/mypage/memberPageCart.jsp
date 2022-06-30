@@ -326,6 +326,20 @@ $(function() {
 					$('#sectionId'+i).append('<input type="hidden" class="h-discount" name="discounts" value="">');
 					$('#sectionId'+i).append('<input type="hidden" class="h-lectureEdate" name="lectureEdates" value="">');
 					
+					let chkPrice = $("#cart-price"+chk_val[i]).text().replace("원", "");
+					let chkDc = $("#cart-dc"+chk_val[i]).text().replace("%", "");
+					let chkEdate = $("#cart-duration"+chk_val[i]).text();
+					chkEdate = chkEdate.replace("일", "");
+					if(chkEdate == '무제한'){
+						chkEdate = "9999-12-31";
+					} else {
+						const eDate = getFormatDate(new Date());
+						chkEdate = eDate;
+					}
+					
+					$('#sectionId'+i +' .h-lecturePay').val(chkPrice);
+					$('#sectionId'+i +' .h-discount').val(chkDc);
+					$('#sectionId'+i +' .h-lectureEdate').val(chkEdate);
 					
 				}
 			}
@@ -389,26 +403,32 @@ function requestPay(data) {
 				let totalDiscount = data.dto.totalDiscount;
 				let paymentCode = rsp.merchant_uid;
 				
-				let chkPrice = $("#cart-price"+chk_val[0]).text().replace("원", "");
-				let chkDc = $("#cart-dc"+chk_val[0]).text().replace("%", "");
-				let chkEdate = $("#cart-duration"+chk_val[0]).text();
-				chkEdate = chkEdate.replace("일", "");
-				if(chkEdate == '무제한'){
-					chkEdate = "9999-12-31";
-				} else {
-					const eDate = getFormatDate(new Date());
-					chkEdate = eDate;
+				/*
+				for(let i=0; i<chkNum; i++){
+					let chkPrice = $("#cart-price"+chk_val[i]).text().replace("원", "");
+					let chkDc = $("#cart-dc"+chk_val[i]).text().replace("%", "");
+					let chkEdate = $("#cart-duration"+chk_val[i]).text();
+					chkEdate = chkEdate.replace("일", "");
+					if(chkEdate == '무제한'){
+						chkEdate = "9999-12-31";
+					} else {
+						const eDate = getFormatDate(new Date());
+						chkEdate = eDate;
+					}
 				}
+				*/
+				
 				
 				$('.h-totalPay').val(totalPay);
 				$('.h-totalDiscount').val(totalDiscount);
 				$('.h-paymentCode').val(paymentCode);
 				$('.h-payState').val(rsp.pay_method);
 				$('.h-approveNum').val(rsp.pg_tid);
+				/*
 				$('.h-lecturePay').val(chkPrice);
 				$('.h-discount').val(chkDc);
 				$('.h-lectureEdate').val(chkEdate);
-
+				*/
 				
 				let query = $('#purchaseForm').serialize();
 				
@@ -492,7 +512,7 @@ function requestPay(data) {
 							<input class="form-check-input" name="cartCheck" type="checkbox" value="${dto.lectureNum}" id="flexCheckDefault">
 						</div>
 						<div class="cart-img">
-							<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" >
+							<img src="${pageContext.request.contextPath}/uploads/profile/${dto.thumbnail}" >
 						</div>
 						<div class="cart-course-title flex-fill">
 							<p id="cart-subject${dto.lectureNum}">${dto.lectureSubject}</p>

@@ -139,7 +139,7 @@ $(function(){
 						<td>결제완료</td>
 						<td>${dto.lectureSubject} 외 ${dto.totalCount-1}개</td>
 						<td>
-							<p>${dto.totalPay - dto.totalDiscount}</p>
+							<p>${dto.totalPay + dto.totalDiscount}</p>
 							<p>- ${dto.totalDiscount}</p>
 							<p>${dto.totalPay}</p>
 						<td><button type="button" class="btn btn-secondary detail" data-num=${dto.sugangNum}>보기</button></td>

@@ -133,6 +133,9 @@ p span {
 	font-weight: 900;
 }
 
+img {
+	height: 220px;
+}
 
 </style>
 
@@ -173,7 +176,7 @@ function filterList() {
 	<div class="row row-cols-md-3 lecture-section my-3">
 		<c:forEach var="vo" items="${list}">
 				<div class="card border-light" style="cursor:pointer;">
-					<img src="https://cdn.inflearn.com/public/courses/328742/cover/e1dfb69f-15e7-4ee9-8118-65b400f622f4/328742-eng-resize.png" class="card-img-top" alt="...">
+					<img src="${pageContext.request.contextPath}/uploads/profile/${vo.thumbnail}" class="card-img-top" alt="...">
 					<div class="card-body">
 						<div class="card-title">${vo.lectureSubject}</div>
 						<div class="instructor">${vo.memberNickname}</div>
