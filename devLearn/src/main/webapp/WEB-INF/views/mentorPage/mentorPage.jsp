@@ -72,17 +72,17 @@
 					<p class="menu-label">설정</p>
 					<ul class="menu-list">
 						<li>
-							<a class="btn_wrap" href="myPage-noti.jsp">
+							<a class="btn_wrap" href="#">
 								<span>알림</span>
 							</a>
 						</li>
 						<li>
-							<a class="btn_wrap" href="myPage-profile.jsp">
+							<a class="btn_wrap" href="#">
 								<span>프로필</span>
 							</a>
 						</li>	
 						<li>
-							<a class="btn_wrap" href="myPage-setNoti.jsp">
+							<a class="btn_wrap" href="#">
 								<span>알림설정</span>
 							</a>
 						</li>

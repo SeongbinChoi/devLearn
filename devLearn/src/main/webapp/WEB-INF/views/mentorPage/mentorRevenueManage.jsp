@@ -61,7 +61,7 @@ function selectFn() {
 
 </script>
 <jsp:include page="mentorPage.jsp"/>
-<h2>수익 관리</h2>
+<h2><i class="fa-solid fa-chart-line"></i>수익 관리</h2>
 <div style="float: right;">
 	<select class="form-control" id="mentoringYear">
 		<c:forEach var="vo" items="${mentoringYearList}">
@@ -115,8 +115,8 @@ function selectFn() {
 		<thead>
 			<tr>
 				<th style="width: 10%;">멘토링 번호</th>
-				<th scope="col" style="width:30%;">제목</th>
-				<th>멘티 이메일</th>
+				<th scope="col" style="width:40%;">제목</th>
+				<th style="width:20%;">멘티 이메일</th>
 				<th style="width: 15%;">멘토링 진행일</th>
 				<th style="width: 15%;">금액</th>
 			</tr>
@@ -125,10 +125,10 @@ function selectFn() {
 			<c:forEach var="vo" items="${mentoringDetailList}" varStatus="status">
 				<tr>
 					<td>${status.count}</td>
-					<td>${vo.mentorSubject}</td>
+					<td style="text-align: center;">${vo.mentorSubject}</td>
 					<td>${vo.memberEmail}</td>
 					<td>${vo.mentoringDate}</td>
-					<td>${vo.mentoringPrice}</td>
+					<td><fmt:formatNumber value="${vo.mentoringPrice}" pattern="#,###"/>원</td>
 				</tr>
 			</c:forEach>
 		</tbody>

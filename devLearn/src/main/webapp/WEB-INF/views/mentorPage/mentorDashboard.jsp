@@ -64,7 +64,7 @@ $(function(){
 			</div>
 			<div class="grade">
 				<p>평점</p>
-				<p>${dataMap['AVG']} / 5.0</p>
+				<p><fmt:formatNumber value="${dataMap['AVG']}" pattern="0.0"/> / 5.0</p>
 			</div>
 			<div class="total-rev">
 				<p>총 수익</p>

@@ -272,7 +272,7 @@ $(function() {
 									</div>
 									<button class="mentor_review px-1 py-1" data-num="${dto.mentorNum}" data-bs-toggle="modal" data-bs-target="#reviewModal">
 										<span><i class="fas fa-star"></i></span>
-										<span>${dto.reviewAve}<span>/5 〉</span></span>
+										<span><fmt:formatNumber value="${dto.reviewAve}" pattern="0.0"/><span>/5 〉</span></span>
 									</button>
 								</div>
 								<p class="card-title">${dto.mentorSubject}</p>
@@ -466,7 +466,7 @@ function requestPay(data) {
 			pay_method: "card",
 			merchant_uid: "mentoring-" + data.dto.mentorNum + data.paymentSeq, // 중복되지 않게
 			name: data.dto.mentorSubject,
-			amount: 100000,
+			amount: data.dto.mentorPrice,
 			buyer_email: "${sessionScope.member.memberEmail}",
 			buyer_name: "${sessionScope.member.memberName}",
 		buyer_tel: data.phoneNum
