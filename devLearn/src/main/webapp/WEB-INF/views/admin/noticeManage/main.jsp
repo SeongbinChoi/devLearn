@@ -225,7 +225,7 @@ var str;
 	      	<div class="mb-3">
 				<ul class="nav nav-pills mb-3" id="pills_button" role="tablist">
 					<li class="nav-item" role="presentation">
-				    	<button class="nav-link active" id="pills-qna-tab" data-bs-toggle="pill" data-bs-target="#qna_content" type="button" role="tab" aria-controls="pills-qna" aria-selected="true">질문과 답변</button>
+				    	<button class="nav-link active" id="pills-qna-tab" data-bs-toggle="pill" data-bs-target="#qna_content" type="button" role="tab" aria-controls="pills-qna" aria-selected="true">공지 작성</button>
 				  	</li>
 				</ul>
 			</div>

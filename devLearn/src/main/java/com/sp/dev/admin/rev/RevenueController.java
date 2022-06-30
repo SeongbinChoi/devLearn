@@ -33,6 +33,7 @@ public class RevenueController {
 	@RequestMapping(value="totalSales" , method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> totalChart() {
+	
 		Calendar cal = Calendar.getInstance();
 		int y = cal.get(Calendar.YEAR);
 		int m = cal.get(Calendar.MONTH) + 1;
@@ -54,13 +55,14 @@ public class RevenueController {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("months", months);
+		
+		
 		List<Integer> yearlyLectureSalesList = service.yearlyLectureSales(map);
 		List<Integer> yearlyMentorSalesList = service.yearlyMentorSales(map);
 		List<Integer> yearlyTotalSalesList = new ArrayList<Integer>();
 		int s;
 		for(int i=0; i<yearlyLectureSalesList.size(); i++) {
 			s = yearlyLectureSalesList.get(i) + yearlyMentorSalesList.get(i);
-			System.out.println("==================="+s);
 			yearlyTotalSalesList.add(s);
 		}
 		

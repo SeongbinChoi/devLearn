@@ -41,7 +41,7 @@ public class MemberManageController {
 		
 		String cp = req.getContextPath();
 		
-		int rows = 20;
+		int rows = 10;
 		
 		int dataCount = 0;
 		int totalPage = 0;

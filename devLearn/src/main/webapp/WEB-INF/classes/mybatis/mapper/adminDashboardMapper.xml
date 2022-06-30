@@ -23,25 +23,4 @@
 		WHERE TO_CHAR(payDate, 'YYYY-MM') = #{item}			
 	</select> 
 	
-	<select id="yearlyLectureSales" parameterType="java.util.Map" resultType="Integer">
-		WITH T_TEMP AS
-		    (SELECT 
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month1} ,totalpay, 0)) AS "${month1}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month2} ,totalpay, 0)) AS "${month2}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month3} ,totalpay, 0)) AS "${month3}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month4} ,totalpay, 0)) AS "${month4}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month5} ,totalpay, 0)) AS "${month5}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month6} ,totalpay, 0)) AS "${month6}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month7} ,totalpay, 0)) AS "${month7}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month8} ,totalpay, 0)) AS "${month8}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month9} ,totalpay, 0)) AS "${month9}",
-			    sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month10} ,totalpay, 0)) AS "${month10}",
-		        sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month11} ,totalpay, 0)) AS "${month11}",
-		        sum( decode(TO_CHAR(paydate, 'yyyy-mm'), #{month12} ,totalpay, 0)) AS "${month12}"
-		    FROM pay
-		    )	
-		SELECT value
-		FROM T_TEMP
-		UNPIVOT ( value FOR month IN ("${month1}","${month2}","${month3}","${month4}","${month5}","${month6}","${month7}","${month8}","${month9}","${month10}","${month11}", "${month12}"))
-	</select>
 </mapper>

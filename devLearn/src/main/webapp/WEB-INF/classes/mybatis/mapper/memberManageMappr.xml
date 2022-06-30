@@ -174,7 +174,10 @@
 		        FROM notified n
 		        JOIN communityQna q ON n.qnaNum = q.qnaNum 
 		        JOIN member m ON n.memberEmail = m.memberEmail
-		        JOIN (SELECT n.notifyNum, memberName notifiedName FROM communityQna q JOIN member m ON q.memberEmail = m.memberEmail JOIN notified n ON n.qnaNum = q.qnaNum
+		        JOIN (	SELECT n.notifyNum, memberName notifiedName 
+		        		FROM communityQna q 
+		        		JOIN member m ON q.memberEmail = m.memberEmail 
+		        		JOIN notified n ON n.qnaNum = q.qnaNum
 		        )stb ON n.notiFyNum = stb.notifyNum
 		        <where>
 					<include refid="notifyWhere"/>
@@ -197,8 +200,11 @@
 		FROM notified n
 		JOIN communityQna q ON n.qnaNum = q.qnaNum 
 		JOIN member m ON n.memberEmail = m.memberEmail
-		JOIN (SELECT n.notifyNum, memberName notifiedName FROM communityQna q JOIN member m ON q.memberEmail = m.memberEmail JOIN notified n ON n.qnaNum = q.qnaNum
-		)stb ON n.notiFyNum = stb.notifyNum
+		JOIN (	SELECT n.notifyNum, memberName notifiedName 
+				FROM communityQna q 
+				JOIN member m ON q.memberEmail = m.memberEmail 
+				JOIN notified n ON n.qnaNum = q.qnaNum
+			)stb ON n.notiFyNum = stb.notifyNum
 		WHERE n.notifyNum = #{notifyNum} 
 	</select>
            
