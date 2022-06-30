@@ -1,5 +1,6 @@
 package com.sp.dev.mypage.cart;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +110,42 @@ public class CartController {
 	@RequestMapping(value = "sugang", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> lectureSugang(
+							CartList dto
+							) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		String state = "false";
+
+		try {
+			System.out.println(dto.getLectureNums()+"-------------");
+			System.out.println(dto.getLectureNums().size()+"-------------");
+			
+			List<Integer> li = new ArrayList<Integer>();
+			for(int i=0; i<dto.getLectureNums().size(); i++) {
+				li.add(service.countVal());
+			}
+			System.out.println(li.toString());
+			dto.setDetailNums(li);
+			
+			map.put("dto", dto);
+			
+			service.insertSugang(map);
+			
+			state = "true";
+			
+		} catch (Exception e) {
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("state", state);
+		
+		return model;
+	}	
+	
+	
+	/*
+	@RequestMapping(value = "sugang", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> lectureSugang(
 							@RequestParam String paymentCode,
 							@RequestParam String payState,
 							@RequestParam String approveNum,
@@ -140,6 +177,6 @@ public class CartController {
 		
 		return model;
 	}	
-	
+	*/
 
 }

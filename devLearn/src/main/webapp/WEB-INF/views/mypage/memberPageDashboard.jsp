@@ -48,6 +48,10 @@
 	height: 40px;
 }
 
+.myLectureTable td {
+	height: 40px;
+}
+
 </style>
 
 <jsp:include page="memberPage.jsp"/>
@@ -75,10 +79,10 @@
 		<div class="recent-lecture">
 			<p>최근 학습 강의</p>
 			<div class="curr-content">
-				<p class="lec-title">최근학습 강의최근학습 강의최근학습 강의최근학습 강의최근학습 강의최근학습 강의최근학습 강의최근학습 강의</p>
+				<p class="lec-title">AWS 클라우드 서비스 인프라 구축 이해와 해킹, 보안 part2</p>
 				<div class="curr-prog-sec">
-					<span>진행률  12.8%</span> | <span>기한 : 무제한</span>
-					<progress class="curr-lec-prog" value="12.8" max="100"></progress>
+					<span>진행률  11.8%</span> | <span>기한 : 무제한</span>
+					<progress class="curr-lec-prog" value="11.8" max="100"></progress>
 				</div>
 			</div>
 			<div class="cardEnd">
@@ -99,7 +103,7 @@
 				</table>
 			</div>
 			<div class="cardEnd">
-				<a href="${pageContext.request.contextPath}/mypage/myStudy">내 강의 전체 보기</a>
+				<a href="${pageContext.request.contextPath}/mypage/myLecture">내 강의 전체 보기</a>
 			</div>
 		</div>
 		<div class="statistics">
@@ -128,14 +132,19 @@
 		<div class="over-lectuer">
 			<p>완료한 강의</p>
 			<div class="content">
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
-				<p>완료한 강의 이름 완료한 강의 이름완료한 강의 이름완료한 강의 이름완료한 강의 이름</p>
+				<table class="myLectureTable">
+					<tr>
+						<td>최신 딥러닝</td>
+						<td>2022-07-10</td>
+					</tr>
+					<tr>
+						<td>스프링 MVC part2</td>
+						<td>2022-07-15</td>
+					</tr>
+				</table>
 			</div>
 			<div class="cardEnd">
-				<a href="${pageContext.request.contextPath}/mypage/myStudy">내 강의 전체 보기</a>
+				<a href="${pageContext.request.contextPath}/mypage/myLecture">내 강의 전체 보기</a>
 			</div>
 		</div>
 	</div>

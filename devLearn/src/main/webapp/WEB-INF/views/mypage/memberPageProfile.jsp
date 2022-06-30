@@ -138,7 +138,7 @@ label {
 					
 					<div class="nick my-4">
 						<label class="form-label">닉네임</label>
-						<input type="text" class="form-control" name="memberNickname" value="${sessionScope.member.memberNickname}">
+						<input type="text" class="form-control" name="memberNickname" value="${dto.memberNickname}">
 					</div>
 					<div class="my-introduce">
 						<label class="form-label">자기소개</label>
@@ -217,11 +217,7 @@ function profileSave() {
 	let str;
 	
 	str = window.editor.getData().trim();
-    if(! str) {
-        alert("내용을 입력하세요. ");
-        window.editor.focus();
-        return;
-    }
+
     f.intro.value = str;
 	
 	f.action = url;

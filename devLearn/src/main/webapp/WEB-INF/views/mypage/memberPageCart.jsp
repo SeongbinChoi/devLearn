@@ -252,7 +252,7 @@ $(function(){
 			console.log(data);
 			$(".totalPrice").html(data.dto.totalPrice);
 			$(".totalDc").html("-"+data.dto.totalDiscount);
-			$(".totalResult").html(data.dto.totalPrice - data.dto.totalDiscount);
+			$(".totalResult").html(data.dto.totalPrice - data.dto.totalDiscount -3000);
 		};
 
 		ajaxFun(url, "get", query, "json", fn);
@@ -311,6 +311,26 @@ $(function() {
 				lectureNum : chk_val
 		};
 		
+		for(let i=0; i<$('.priceSection').length; i++){
+			for(let j=0; j<chk_val.length; j++){
+				if( $('#sectionId'+i).attr("data-num") == chk_val[j] ){
+					let lectureNum = $('#sectionId'+i).attr("data-num");
+					$('#sectionId'+i).append('<input type="hidden" class="h-email" name="memberEmails" value="${sessionScope.member.memberEmail}">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-totalPay" name="totalPays" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-totalDiscount" name="totalDiscounts" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-paymentCode" name="paymentCodes" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-payState" name="payStates" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-approveNum" name="approveNums" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-lectureNum" name="lectureNums" value="'+lectureNum+'">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-lecturePay" name="lecturePays" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-discount" name="discounts" value="">');
+					$('#sectionId'+i).append('<input type="hidden" class="h-lectureEdate" name="lectureEdates" value="">');
+					
+					
+				}
+			}
+		}
+		
 		var fn = function(data){
 			requestPay(data);
 		};
@@ -318,6 +338,20 @@ $(function() {
 		ajaxFun(url, "get", query, "json", fn);
 	});
 });
+
+function getFormatDate(date){
+	var year = date.getFullYear();
+	var month = (1 + date.getMonth());
+	month = month >= 10 ? month : '0' + month;
+	var day = date.getDate();
+	day = day >= 10 ? day : '0' + day;
+	
+	return year + '-' + month + '-' + day;
+}
+
+function removeData(data){
+	$(data).remove();
+}
 	
 //결제 스크립트 아임포트
 var IMP = window.IMP;
@@ -328,7 +362,10 @@ function requestPay(data) {
 	let chk_val = [];
 	$('.cart-content input:checkbox[name=cartCheck]:checked').each(function(i, iVal){
 		chk_val.push(iVal.value);
+		
 	});
+	
+
 	
 	let chkNum = chk_val.length;  // 체크한거 개수
 	let chkSubject = $("#cart-subject"+chk_val[0]).text().trim();  // 체크한거 첫번째 제목
@@ -346,7 +383,6 @@ function requestPay(data) {
 		function (rsp) { // callback
 			console.log(rsp);
 			if (rsp.success) {
-				//console.log("------" + data);
 				let url = "${pageContext.request.contextPath}/mypage/sugang";
 				let memberEmail = rsp.buyer_email;
 				let totalPay = rsp.paid_amount;
@@ -356,11 +392,27 @@ function requestPay(data) {
 				let chkPrice = $("#cart-price"+chk_val[0]).text().replace("원", "");
 				let chkDc = $("#cart-dc"+chk_val[0]).text().replace("%", "");
 				let chkEdate = $("#cart-duration"+chk_val[0]).text();
-				console.log(chkEdate);
 				chkEdate = chkEdate.replace("일", "");
 				if(chkEdate == '무제한'){
 					chkEdate = "9999-12-31";
+				} else {
+					const eDate = getFormatDate(new Date());
+					chkEdate = eDate;
 				}
+				
+				$('.h-totalPay').val(totalPay);
+				$('.h-totalDiscount').val(totalDiscount);
+				$('.h-paymentCode').val(paymentCode);
+				$('.h-payState').val(rsp.pay_method);
+				$('.h-approveNum').val(rsp.pg_tid);
+				$('.h-lecturePay').val(chkPrice);
+				$('.h-discount').val(chkDc);
+				$('.h-lectureEdate').val(chkEdate);
+
+				
+				let query = $('#purchaseForm').serialize();
+				
+				console.log(query);
 				
 				/*
 				let param = [];
@@ -397,13 +449,15 @@ function requestPay(data) {
 				console.log(jsonData);
 				*/
 				
+				/*
 				let query = "memberEmail=" + memberEmail + "&totalPay=" + totalPay;
 					query += "&totalDiscount=" + totalDiscount + "&paymentCode=" + paymentCode;
 					query += "&payState=" + rsp.pay_method + "&approveNum=" + rsp.pg_tid;	
 					query += "&lectureNum=" + chk_val[0] + "&lecturePay=" + chkPrice;
 					query += "&discount=" + chkDc + "&lectureEdate=" + chkEdate;
 					console.log(query);
-				
+				*/
+					
 				const fn = function(data) {
 					window.location.href="${pageContext.request.contextPath}/mypage/cart";
 				};			
@@ -431,6 +485,45 @@ function requestPay(data) {
 			<button type="button" class="btn btn-primary deletebtn">선택 삭제 <i class="fa-solid fa-xmark"></i></button>
 		</div>
 		<div class="cart-content" >
+			<form name="purchaseForm" id="purchaseForm">
+				<c:forEach var="dto" items="${list}" varStatus="status">
+					<div class="cart-card d-flex px-3">
+						<div class="form-check">
+							<input class="form-check-input" name="cartCheck" type="checkbox" value="${dto.lectureNum}" id="flexCheckDefault">
+						</div>
+						<div class="cart-img">
+							<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" >
+						</div>
+						<div class="cart-course-title flex-fill">
+							<p id="cart-subject${dto.lectureNum}">${dto.lectureSubject}</p>
+							<span>${dto.memberNickname}&nbsp;&nbsp;|&nbsp;&nbsp;</span><span class="blue">수강 기간 : 구매 후 </span><span id="cart-duration${dto.lectureNum}">${dto.lectureDuration == 0 || dto.lectureDuration == null ? "무제한" : dto.lectureDuration}<c:if test="${dto.lectureDuration != 0 && dto.lectureDuration != null}">일</c:if></span>				
+						</div>
+						<div class="closeBtnSection">
+							<i class="fa-solid fa-xmark"></i>
+						</div>
+						<div class="priceSection">
+							<span class="dcPercent" id="cart-dc${dto.lectureNum}">${dto.dcPercent}%</span> <span class="originalPrice">${dto.lecturePrice}원</span>
+							<p class="finalPrice" id="cart-price${dto.lectureNum}">${dto.dcAfterPrice}원</p>
+						</div>
+						
+						<div class="hiddenSection" id="sectionId${status.index}" data-num="${dto.lectureNum}">
+							<!--
+							<input type="hidden" class="h-email" name="memberEmails" value="${sessionScope.member.memberEmail}">
+							<input type="hidden" class="h-totalPay" name="totalPays" value="">
+							<input type="hidden" class="h-totalDiscount" name="totalDiscounts" value="">
+							<input type="hidden" class="h-paymentCode" name="paymentCodes" value="">
+							<input type="hidden" class="h-payState" name="payStates" value="">
+							<input type="hidden" class="h-approveNum" name="approveNums" value="">
+							<input type="hidden" class="h-lectureNum" name="lectureNums" value="${dto.lectureNum}">
+							<input type="hidden" class="h-lecturePay" name="lecturePays" value="">
+							<input type="hidden" class="h-discount" name="discounts" value="">
+							<input type="hidden" class="h-lectureEdate" name="lectureEdates" value="">
+							-->
+						</div>
+					</div>
+				</c:forEach>
+			</form>
+			<!-- 
 			<c:forEach var="dto" items="${list}">
 				<div class="cart-card d-flex px-3">
 					<div class="form-check">
@@ -452,27 +545,8 @@ function requestPay(data) {
 					</div>
 				</div>
 			</c:forEach>
-			<!-- 할인 안하는 카드 가격 확인용(지우고 작업해주세요) -->
-			<!-- 
-			<div class="cart-card d-flex ">
-					<div class="form-check">
-						<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-					</div>
-					<div class="cart-img">
-						<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" >
-					</div>
-					<div class="cart-course-title flex-fill">
-						<p>스프링 CSS 웹개발 어쩌구</p>
-						<span>강사이름&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span><span> 수강 기간</span>				
-					</div>
-					<div class="closeBtnSection">
-						<i class="fa-solid fa-xmark"></i>
-					</div>
-					<div class="priceSection">
-						<p class="finalPrice">69,300원</p>
-					</div>
-				</div>
-			 -->
+			-->
+
 		</div>
 	</div>
 	

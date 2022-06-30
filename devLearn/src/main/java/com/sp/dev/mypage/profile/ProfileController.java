@@ -58,7 +58,6 @@ public class ProfileController {
 		} else {
 			service.updateProfile(dto, path);
 		}
-		service.updateNickname(dto);
 		
 		
 		return "redirect:/mypage/profile";

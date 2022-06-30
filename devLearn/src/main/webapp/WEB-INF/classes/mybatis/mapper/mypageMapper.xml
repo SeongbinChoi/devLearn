@@ -337,7 +337,13 @@
 	</select>
 	
 	<!-- 수강바구니 삭제 -->
+	<!-- 
 	<delete id="deleteCart" parameterType="map">
+		DELETE FROM cart 
+		WHERE memberEmail=#{memberEmail} AND lectureNum=#{lectureNum}
+	</delete>
+	 -->
+	 <delete id="deleteCart" parameterType="com.sp.dev.mypage.cart.CartList">
 		DELETE FROM cart 
 		WHERE memberEmail=#{memberEmail} AND lectureNum=#{lectureNum}
 	</delete>
@@ -364,6 +370,7 @@
 	<select id="readSugangSeq" resultType="long">
 		SELECT sugang_seq.NEXTVAL FROM dual
 	</select>
+	<!-- 
 	<insert id="insertSugang" parameterType="map">
 		<selectKey keyProperty="sugangNum" resultType="Integer" order="BEFORE">
 			SELECT sugang_seq.NEXTVAL FROM dual
@@ -382,8 +389,38 @@
 				
 		SELECT * FROM dual
 	</insert>
-	
-	
+	 -->
+	 
+	 <select id="countVal" resultType="Integer">
+	 	SELECT sugangDetail_seq.NEXTVAL FROM dual
+	 </select>
+	 
+	 <insert id="insertSugang" parameterType="map">
+	 	<selectKey keyProperty="sugangNum" resultType="Integer" order="BEFORE">
+		 	SELECT sugang_seq.NEXTVAL sugangNum FROM dual
+		 </selectKey>
+		INSERT ALL
+			INTO sugang (sugangNum, memberEmail, totalPay, totalDiscount)
+			VALUES (#{sugangNum}, #{memberEmail}, #{totalPay},#{totalDiscount})
+				
+			INTO pay (sugangNum, totalPay, payDate, payState, approveNum)
+			VALUES (#{sugangNum}, #{totalPay}, SYSDATE, #{payState}, #{approveNum})	
+			
+			<foreach collection="list" item="vo">
+				 INTO sugangDetail(detailNum, lectureNum, sugangNum, memberEmail, 
+								lecturePay, discount, lectureSdate, lectureEdate, point, coupon)
+			VALUES (#{vo.detailNum}, #{vo.lectureNum}, #{sugangNum}, #{vo.memberEmail}, 
+					#{vo.lecturePay}, #{vo.discount}, SYSDATE, to_date(#{vo.lectureEdate}, 'YYYY-MM-DD'), 0, 0)
+			</foreach>
+			
+		select * from dual
+	</insert>
+	<insert id="insertSugangDetail" parameterType="com.sp.dev.mypage.cart.CartList">
+		 INSERT INTO sugangDetail(detailNum, lectureNum, sugangNum, memberEmail, 
+								lecturePay, discount, lectureSdate, lectureEdate, point, coupon)
+			VALUES (sugangDetail_seq.NEXTVAL, #{lectureNum}, #{sugangNum}, #{memberEmail}, 
+					#{lecturePay}, #{discount}, SYSDATE, to_date(#{lectureEdate}, 'YYYY-MM-DD'), 0, 0)
+	</insert>
 	
 	
 	<!-- 프로필 등록하기 -->

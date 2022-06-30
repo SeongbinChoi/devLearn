@@ -10,6 +10,10 @@ public interface CartService {
 	public void deleteCart(Map<String, Object> map) throws Exception;
 	
 	public Cart cartCheckList(Map<String, Object> map);
+	
 	public void insertSugang(Map<String, Object> map) throws Exception;
+	//public void insertSugang(Map<String, Object> map) throws Exception;
+	
+	public int countVal();
 	
 }

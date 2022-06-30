@@ -24,6 +24,7 @@ public class ProfileServiceImpl implements ProfileService {
 			if (saveFilename != null) {
 				dto.setSaveFileName(saveFilename);
 				dao.insertData("my.insertProfile", dto);
+				dao.updateData("my.updateNickname", dto);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -47,6 +48,7 @@ public class ProfileServiceImpl implements ProfileService {
 			}
 			System.out.println("ddd");
 			dao.updateData("my.updateProfile", dto);
+			dao.updateData("my.updateNickname", dto);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -66,13 +68,5 @@ public class ProfileServiceImpl implements ProfileService {
 		return dto;
 	}
 
-	@Override
-	public void updateNickname(Profile dto) throws Exception {
-		try {
-			dao.updateData("my.updateNickname", dto);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

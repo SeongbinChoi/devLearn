@@ -174,7 +174,12 @@ $(function() {
 				$(".review-content").html(data.readReview.mentorReviewContent);
 				
 				
+			} else {
+				$(".review-content").html("");
+				$('.point-list i').parent().children('i').removeClass('star');
+				$('.point-list i:nth-child(1)').addClass('star');
 			}
+			
 			
 			$('#mentorReviewModal').modal('show');
 		};

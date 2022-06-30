@@ -19,11 +19,11 @@
 					<div class="banner-nav ">
 						<ul class="nav nav-pills">
 							<li class="nav-item">
-								<a class="nav-link topNav_member "href="${pageContext.request.contextPath}/mypage/mypage">회원</a>
+								<a class="nav-link active topNav_member "href="${pageContext.request.contextPath}/mypage/mypage">회원</a>
 							</li>
 							<li class="nav-item">
 								<c:if test="${sessionScope.member.memberRole eq '10' || sessionScope.member.memberRole eq '30'}">
-									<a class="nav-link active topNav_mentor" aria-current="page"  href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
+									<a class="nav-link  topNav_mentor" aria-current="page"  href="${pageContext.request.contextPath}/mentorPage/dashboard">멘토</a>
 								</c:if>
 							</li>
 							<li class="nav-item">

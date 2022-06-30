@@ -8,5 +8,4 @@ public interface ProfileService {
 	
 	public Profile readProfile(Map<String, Object> map);
 	
-	public void updateNickname(Profile dto) throws Exception;
 }

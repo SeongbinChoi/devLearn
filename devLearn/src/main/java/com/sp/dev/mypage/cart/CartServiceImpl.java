@@ -1,5 +1,6 @@
 package com.sp.dev.mypage.cart;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	private CommonDAO dao;
+	
 	
 	@Override
 	public int dataCount(Map<String, Object> map) {
@@ -55,7 +57,67 @@ public class CartServiceImpl implements CartService {
 		
 		return cart;
 	}
+	
+	
+	@Override
+	public void insertSugang(Map<String, Object> map) throws Exception {
+		try {
+			List<CartList> list = new ArrayList<CartList>();
+			
+			CartList dto = (CartList)map.get("dto");
+			
+			for(int i=0; i<dto.getLectureNums().size(); i++) {
+				
+				CartList vo = new CartList();
+				vo.setMemberEmail(dto.getMemberEmails().get(i));
+				vo.setTotalPay(dto.getTotalPays().get(i));
+				vo.setTotalDiscount(dto.getTotalDiscounts().get(i));
+				vo.setPaymentCode(dto.getPaymentCodes().get(i));
+				vo.setPayState(dto.getPayStates().get(i));
+				vo.setApproveNum(dto.getApproveNums().get(i));
+				vo.setLectureNum(dto.getLectureNums().get(i));
+				vo.setLecturePay(dto.getLecturePays().get(i));
+				vo.setDiscount(dto.getDiscounts().get(i));
+				vo.setLectureEdate(dto.getLectureEdates().get(i));
+				
+				vo.setDetailNum(dto.getDetailNums().get(i));
+				
+				list.add(vo);
+				System.out.println(vo.getMemberEmail()+"-----------------------");
+				if(i == 0) {
+					map.put("memberEmail", vo.getMemberEmail());
+					map.put("totalPay", vo.getTotalPay());
+					map.put("totalDiscount", vo.getTotalDiscount());
+					map.put("payState", vo.getPayState());
+					map.put("approveNum", vo.getApproveNum());
+					
+				}
+				
+				dao.deleteData("my.deleteCart", vo);
+				
+			}
+			map.put("list", list);
+			
 
+			dao.insertData("my.insertSugang", map);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public int countVal() {
+		int a = 0;
+		try {
+			a = dao.selectOne("my.countVal");
+		} catch (Exception e) {
+		}
+		return a;
+	}
+
+	/*
 	@Override
 	public void insertSugang(Map<String, Object> map) throws Exception {
 		try {
@@ -64,5 +126,5 @@ public class CartServiceImpl implements CartService {
 			e.printStackTrace();
 		}
 	}
-
+	*/
 }
