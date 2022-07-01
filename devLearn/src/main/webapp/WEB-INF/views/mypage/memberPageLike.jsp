@@ -176,7 +176,14 @@ function filterList() {
 	<div class="row row-cols-md-3 lecture-section my-3">
 		<c:forEach var="vo" items="${list}">
 				<div class="card border-light" style="cursor:pointer;">
-					<img src="${pageContext.request.contextPath}/uploads/profile/${vo.thumbnail}" class="card-img-top" alt="...">
+					<c:choose>
+						<c:when test="${vo.thumbnail != null}">
+							<img src="${pageContext.request.contextPath}/uploads/thumbNail/${vo.thumbnail}" style="width: 100%;">
+						</c:when>
+						<c:otherwise>
+							<img src="https://cdn.inflearn.com/public/courses/324844/course_cover/db70e7cf-b214-4985-830f-5fd824ae7e74/bgs-spring-jpa.jpg" style="width: 100%;">
+						</c:otherwise>
+					</c:choose>
 					<div class="card-body">
 						<div class="card-title">${vo.lectureSubject}</div>
 						<div class="instructor">${vo.memberNickname}</div>

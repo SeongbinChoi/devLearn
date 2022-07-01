@@ -58,7 +58,7 @@
 	<select id="myLectureList" parameterType="map" resultType="com.sp.dev.mypage.myLecture.MyLecture">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT s.lectureNum, thumbNail, lectureSubject, memberNickname, lectureEdate
+				SELECT s.lectureNum, thumbnail, lectureSubject, memberNickname, TO_CHAR(lectureEdate, 'YYYY-MM-DD') lectureEdate
 				FROM sugangDetail s
 				JOIN lecture l ON s.lectureNum=l.lectureNum
 				JOIN member m ON l.memberEmail=m.memberEmail

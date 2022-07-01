@@ -61,6 +61,10 @@
 	width: 630px;
 }
 
+img {
+	height: 200px;
+}
+
 </style>
 
 <script>
@@ -115,7 +119,14 @@ function filterList() {
 		<div class="lecture-section mt-3">
 			<c:forEach var="dto" items="${list}">
 				<div class="cards">
-					<img src="http://res.heraldm.com/content/image/2022/05/25/20220525000713_0.jpg" style="width: 100%;">
+					<c:choose>
+						<c:when test="${dto.thumbnail != null}">
+							<img src="${pageContext.request.contextPath}/uploads/thumbNail/${dto.thumbnail}" style="width: 100%;">
+						</c:when>
+						<c:otherwise>
+							<img src="https://cdn.inflearn.com/public/courses/324844/course_cover/db70e7cf-b214-4985-830f-5fd824ae7e74/bgs-spring-jpa.jpg" style="width: 100%;">
+						</c:otherwise>
+					</c:choose>
 					<div class="title d-flex align-items-center px-2">
 						<p>${dto.lectureSubject}</p>
 						<a href="#"><i class="fa-solid fa-circle-play"></i></a>

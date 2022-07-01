@@ -279,6 +279,9 @@ $(function() {
 							<c:when test="${dto.status == 3}">
 								<td><button type="button" class="btn btn-secondary reviewBtn" data-num="${dto.mentoringNum}" mentor-num="${dto.mentorNum}">후기작성</button></td>
 							</c:when>
+							<c:otherwise>
+								<td><button type="button" class="btn btn-secondary detail detailBtn" data-num="${dto.mentoringNum}">자세히</button></td>
+							</c:otherwise>
 						</c:choose>
 					</tr>
 				</c:forEach>

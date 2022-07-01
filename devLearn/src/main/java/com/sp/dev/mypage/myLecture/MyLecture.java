@@ -1,7 +1,7 @@
 package com.sp.dev.mypage.myLecture;
 
 public class MyLecture {
-	private String thumbNail;
+	private String thumbnail;
 	private String lectureSubject;
 	private String memberNickname;   // 강사 닉네임
 	private String lectureEdate;
@@ -25,11 +25,11 @@ public class MyLecture {
 	public void setLectureEdate(String lectureEdate) {
 		this.lectureEdate = lectureEdate;
 	}
-	public String getThumbNail() {
-		return thumbNail;
+	public String getThumbnail() {
+		return thumbnail;
 	}
-	public void setThumbNail(String thumbNail) {
-		this.thumbNail = thumbNail;
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 	public int getLectureNum() {
 		return lectureNum;

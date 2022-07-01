@@ -512,7 +512,7 @@ function requestPay(data) {
 							<input class="form-check-input" name="cartCheck" type="checkbox" value="${dto.lectureNum}" id="flexCheckDefault">
 						</div>
 						<div class="cart-img">
-							<img src="${pageContext.request.contextPath}/uploads/profile/${dto.thumbnail}" >
+							<img src="${pageContext.request.contextPath}/uploads/thumbNail/${dto.thumbnail}" >
 						</div>
 						<div class="cart-course-title flex-fill">
 							<p id="cart-subject${dto.lectureNum}">${dto.lectureSubject}</p>
