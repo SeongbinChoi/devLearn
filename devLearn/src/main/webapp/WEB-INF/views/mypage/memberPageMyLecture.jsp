@@ -24,8 +24,9 @@
 .lecture-section {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
 	height: 750px;
+	gap : 17px;
+	padding-left: 15px;
 }
 
 .cards {
