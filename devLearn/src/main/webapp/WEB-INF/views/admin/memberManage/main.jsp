@@ -305,6 +305,7 @@ function updateApply() {
 	//alert(query);
 	
 	const fn = function(data) {
+		$("#applyDetailModal").modal("hide");
 		showApplyList();
 	}
 		

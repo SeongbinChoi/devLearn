@@ -226,8 +226,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -275,11 +275,11 @@ $(function() {
 						<div class="course-Prices">
 							<c:choose>
 								<c:when test="${lectureDcPercent != 0}">
-									<p class="card-text course-price">￦70000</p>
+									<p class="card-text course-price">￦70,000</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -331,8 +331,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦120000</p>
-									<p class="card-text course-price">￦100000</p>
+									<p class="card-text course-originalPrice">￦120,000</p>
+									<p class="card-text course-price">￦100,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -381,11 +381,11 @@ $(function() {
 						<div class="course-Prices">
 							<c:choose>
 								<c:when test="${lectureDcPercent != 0}">
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -436,8 +436,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -496,8 +496,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦64000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦64,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -545,11 +545,11 @@ $(function() {
 						<div class="course-Prices">
 							<c:choose>
 								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
-									<p class="card-text course-price">￦70000</p>
+									<p class="card-text course-price">￦70,000</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦77000</p>
-									<p class="card-text course-price">￦57750</p>
+									<p class="card-text course-originalPrice">￦77,000</p>
+									<p class="card-text course-price">￦57,750</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -601,8 +601,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦120000</p>
-									<p class="card-text course-price">￦100000</p>
+									<p class="card-text course-originalPrice">￦120,000</p>
+									<p class="card-text course-price">￦100,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -651,11 +651,11 @@ $(function() {
 						<div class="course-Prices">
 							<c:choose>
 								<c:when test="${lectureDcPercent == 0}"><!-- 이거는..나중에 dto에서 정한 이름으로 바꿔주세요 -->
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦49500</p>
-									<p class="card-text course-price">￦34650</p>
+									<p class="card-text course-originalPrice">￦49,500</p>
+									<p class="card-text course-price">￦34,650</p>
 								</c:otherwise>
 							</c:choose>
 						</div>
@@ -706,8 +706,8 @@ $(function() {
 									<p class="card-text course-price">가격</p>
 								</c:when>
 								<c:otherwise>
-									<p class="card-text course-originalPrice">￦80000</p>
-									<p class="card-text course-price">￦40000</p>
+									<p class="card-text course-originalPrice">￦80,000</p>
+									<p class="card-text course-price">￦40,000</p>
 								</c:otherwise>
 							</c:choose>
 						</div>

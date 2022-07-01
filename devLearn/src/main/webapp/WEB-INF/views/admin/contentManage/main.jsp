@@ -86,7 +86,6 @@ $(function(){
 		 			<thead>
 			 			<tr>
 			 				<td>#</td>
-			 				<td>썸네일</td>
 			 				<td>제목</td>
 			 				<td>강사</td>
 			 				<td>등록일</td>
@@ -97,7 +96,6 @@ $(function(){
 			 			<c:forEach var="dto" items="${list}" varStatus="status">
 			 				<tr>
 				 				<td>${dataCount - (page-1) * rows - status.index}</td>
-				 				<td>(썸네일<br>준비중)</td>
 				 				<td>${dto.subject}</td>
 				 				<td>${dto.instName}</td>
 				 				<td>${dto.regDate}</td>

@@ -59,8 +59,7 @@ function drawTotalChart(data) {
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당일 총 접속자</h5>
 			                <h2 class="mt-3 mb-3" style="text-align: center;" >${totalCount}</h2>
 			                <p class="mb-0 text-muted">
-				                <span class="text-nowrap">전 일 대비</span>  
-				                <span class="text-success me-2"></span>
+			                &nbsp;
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
@@ -92,8 +91,7 @@ function drawTotalChart(data) {
 			                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당월 신규 회원</h5>
 			                <h2 class="mt-3 mb-3" style="text-align: center;">${dto.monthNewMember}</h2>
 			                <p class="mb-0 text-muted">
-				                <span class="text-nowrap">전 월 대비</span>  
-				                <span class="text-success me-2">${newMemberPer}% ${monthnewMember - lastMonthNewMember < 0 ? "감소":"증가"}</span>
+			                &nbsp;
 			                </p>
 		                </div> <!-- end card-body-->
 	                </div> <!-- end card-->
@@ -141,15 +139,14 @@ function drawTotalChart(data) {
 		                <h5 class="text-muted fw-normal mt-0" title="Number of Customers">당월 신규 개설 강의</h5>
 		                <h2 class="mt-3 mb-3" style="text-align: center;" >${dto.monthnewLecture}</h2>
 		                <p class="mb-0 text-muted">
-			                <span class="text-nowrap">전 월 대비</span>  
-			                <span class="text-success me-2"> ${newLecturePer}% ${monthnewLecture - lastMonthNewLecture < 0 ? "감소":"증가"}</span>
+		                &nbsp;
 		                </p>
 	                </div> <!-- end card-body-->
                 </div> <!-- end card-->
                </div> <!-- end col-->
 	 		</div><!-- end row -->
 	 		
-	 		<div class="row pt-3">
+	 		<div class="row pt-3 mb-5">
 				<div class="col">
 					<div class="card flex-fill w-100">
 						<div class="card-header">
