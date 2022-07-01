@@ -59,7 +59,7 @@
 				</table>
 			</form>
 			<div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+		        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="showApplyList();">닫기</button>
 		        <button type="button" class="btn btn-primary" onclick="updateApply();">변경하기</button>
 			</div>
 		</div>

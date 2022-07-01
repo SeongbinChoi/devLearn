@@ -41,7 +41,7 @@ public class Lectures {
 	private String qnaAnswerRegDate;
 	
 	private int videoNum;
-	private String Thumbnail;
+	private String thumbnail;
 	private double FileTotalTime;
 	private String videoTitle;
 	private int chapter;
@@ -91,6 +91,12 @@ public class Lectures {
 	}
 	
 
+	public String getThumbnail() {
+		return thumbnail;
+	}
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 	public int getDcPercent() {
 		return dcPercent;
 	}
@@ -247,12 +253,7 @@ public class Lectures {
 	public void setVideoNum(int videoNum) {
 		this.videoNum = videoNum;
 	}
-	public String getThumbnail() {
-		return Thumbnail;
-	}
-	public void setThumbnail(String thumbnail) {
-		Thumbnail = thumbnail;
-	}
+	
 	public double getFileTotalTime() {
 		return FileTotalTime;
 	}
