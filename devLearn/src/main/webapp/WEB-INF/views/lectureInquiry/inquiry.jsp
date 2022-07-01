@@ -273,9 +273,11 @@ $(function() {
 			<li class="nav-item">
 				<a class="nav-link" href="#">수강 전 문의</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="#">커뮤니티</a>
-			</li>
+			<!--  
+				<li class="nav-item">
+					<a class="nav-link" href="#">커뮤니티</a>
+				</li>
+				-->
 			<li class="nav-item">
 				<a class="nav-link" onclick="location.href='${pageContext.request.contextPath}/lecturenews/news?lectureNum=${lectureNum}';">새 소식</a>
 			</li>

@@ -40,7 +40,7 @@
 	<select id="listLecture" parameterType="map" resultType="com.sp.dev.lectures.Lectures">
 		SELECT * FROM (
 			SELECT ROWNUM rnum, tb.* FROM (
-				SELECT lectureNum, l.memberEmail, memberNickname, lectureSubject, lecturePrice
+				SELECT lectureNum, l.memberEmail, memberNickname, lectureSubject, lecturePrice, Thumbnail
 				FROM lecture l
 				JOIN member m ON l.memberEmail=m.memberEmail
 				<where>

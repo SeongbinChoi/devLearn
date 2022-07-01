@@ -107,8 +107,7 @@
 						<div class="col">
 							<div style="cursor:pointer;" onclick="location.href='${pageContext.request.contextPath}/lectures/detail?lectureNum=${dto.lectureNum}';">
 								<div class="card border-light" style="cursor:pointer;">
-									<img src="https://cdn.inflearn.com/public/courses/328742/cover/e1dfb69f-15e7-4ee9-8118-65b400f622f4/328742-eng-resize.png" class="card-img-top" alt="...">
-									<!-- <img src="${Thumbnail}" class="card-img-top" alt="..."> -->
+									<img src="${pageContext.request.contextPath}/uploads/thumbNail/${dto.Thumbnail}" class="card-img-top" alt="...">
 									<div class="card-body">
 										<div class="card-title">${dto.lectureSubject}</div>
 										<div class="instructor">${dto.memberNickname}</div>
